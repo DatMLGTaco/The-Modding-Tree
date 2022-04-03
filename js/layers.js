@@ -8,13 +8,61 @@ addLayer("m", {
     }},
     color: "#4BDC13",
     requires: new Decimal(10), // Can be a function that takes requirement increases into account
-    resource: "prestige points", // Name of prestige currency
-    baseResource: "points", // Name of resource prestige is based on
+    resource: "melge essence", // Name of prestige currency
+    upgrades:{
+        11:{
+        title: "Melge Factor",
+        description: "Kickstart the generation of fabric.",
+        cost: new Decimal(1),     
+        },
+        21:{
+    title: "Woven Thread",
+    description: "Double the creation of fabric.",
+    cost: new Decimal(2),
+    unlocked() {
+        let unlocked1 = false
+        if (hasUpgrade('m', 11)) unlocked1 = true
+        return unlocked1
+    }
+        },
+    22:{
+    title: "Synergy",
+    description: "Melge essence boosts the creation of fabric.",
+    cost: new Decimal(3),
+    unlocked() {
+        let unlocked1 = false
+        if (hasUpgrade('m', 21)) unlocked1 = true
+        return unlocked1
+    },
+    effect() {
+        return player[this.layer].points.add(1).pow(0.5)
+    },
+    effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
+    },
+
+    23:{
+        title: "Duality",
+        description: "Fabric boosts melge essence gain.",
+        cost: new Decimal(4),
+        unlocked() {
+            let unlocked1 = false
+            if (hasUpgrade('m', 22)) unlocked1 = true
+            return unlocked1
+        },
+        effect() {
+            return player.points.add(1).pow(0.15)
+        },
+        effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
+        },
+
+    },
+    baseResource: "fabric", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     exponent: 0.5, // Prestige currency exponent
-    gainMult() { // Calculate the multiplier for main currency from bonuses
-        mult = new Decimal(1)
+    gainMult() {
+        let mult = new Decimal(1)
+        if (hasUpgrade('m', 23)) mult = mult.times(upgradeEffect('m', 23))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -25,4 +73,6 @@ addLayer("m", {
         {key: "m", description: "M: Reset for melge points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     layerShown(){return true}
+
 })
+
