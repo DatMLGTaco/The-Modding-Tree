@@ -8,7 +8,7 @@ var colors = {
 		3: "#7f7f7f",//Branch color 3
 		color: "#dfdfdf",
 		points: "#ffffff",
-		locked: "#bf8f8f",
+		locked: "#8c8570",
 		background: "#0f0f0f",
 		background_tooltip: "rgba(0, 0, 0, 0.75)",
 	},
