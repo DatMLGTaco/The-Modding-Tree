@@ -1,6 +1,6 @@
 let modInfo = {
 	name: "The Melge Tree",
-	id: "melge",
+	id: "melge4",
 	author: "The Melge",
 	pointsName: "fabric",
 	modFiles: ["layers.js", "tree.js"],
@@ -46,10 +46,18 @@ function getPointGen() {
 	if (!hasUpgrade('m', 11)) gain = new Decimal(0) 
 	if (hasUpgrade('m', 21)) gain = gain.times(upgradeEffect('m', 21))
 	if (hasUpgrade('m', 22)) gain = gain.times(upgradeEffect('m', 22))
-	if (hasUpgrade('q', 11)) gain = gain.times(upgradeEffect('q', 11))
+	if (hasUpgrade('i', 11)) gain = gain.times(upgradeEffect('i', 11))
+	if (hasUpgrade('p', 11)) gain = gain.times(upgradeEffect('p', 11))
+	if (hasMilestone('i', 0)) gain = gain.times(5)
+	if (player.i.unlocked) gain = gain.times(player.i.points.add(1).pow(0.3));
 	return gain
 }
+// Display extra things at the top of the page
+var displayThings = [
+	function() {if (player.points.eq(69)) return "Tee hee!"},
+	function() {if (player.m.points.gt(1)) return `You have ${player.m.points} melge points.`},
 
+]
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() { return {
 }}
