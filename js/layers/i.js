@@ -36,7 +36,7 @@ addLayer("i", {
     upgrades:{
         11:{
         title: "Subatomic Breakthrough",
-        description: "Increase fabric gain based on number of quarks.",
+        description: "Increase fabric gain based on number of photons.",
         cost: new Decimal(1), 
         effect() {
             return player[this.layer].points.add(1).times(5).pow(0.85)

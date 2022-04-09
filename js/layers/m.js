@@ -173,7 +173,7 @@ addLayer("m", {
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         x = new Decimal(1)
-        if(getBuyableAmount(this.layer, 11) > 0 ) x = x.times(getBuyableAmount(this.layer, 11).log(2))
+        if(getBuyableAmount(this.layer, 11) > 0 ) x = x.times(getBuyableAmount(this.layer, 11).add(1).log(2))
         return x 
     },
 
@@ -204,7 +204,7 @@ addLayer("m", {
             },
             unlocked() {
                 x = false
-                if(player.hasUpgrade(i, 22)) x = true
+                if(hasUpgrade('i', 22)) x = true
                 return x
             },
         },
