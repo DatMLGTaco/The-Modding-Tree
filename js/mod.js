@@ -2,8 +2,9 @@ let modInfo = {
 	name: "The Melge Tree",
 	id: "melge4",
 	author: "The Melge",
-	pointsName: "fabric",
-	modFiles: ["layers.js", "tree.js"],
+	pointsName:"fabric",
+	modFiles: ["layers/i.js", "layers/p.js", "layers/m.js", "tree.js",],
+
 
 	discordName: "",
 	discordLink: "",
@@ -20,7 +21,7 @@ let VERSION = {
 let changelog = `<h1>Changelog:</h1><br>
 	<h3>v0.0</h3><br>
 		- Melge Tree Created.<br>
-		- Added stuff.`
+		- Removed 💀.`
 
 let winText = `Congratulations! You have reached the end and beaten this game, but for now...`
 
@@ -68,7 +69,7 @@ var displayThings = [
 
 // Determines when the game "ends"
 function isEndgame() {
-	return player.points.gte(new Decimal("e280000000"))
+	return player.points.gte(new Decimal("e280000000000"))
 }
 
 

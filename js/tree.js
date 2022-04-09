@@ -9,7 +9,7 @@ var layoutInfo = {
 }
 
 
-// A "ghost" layer which offsets other layers in the tree
+// A "mong us" layer which offsets other layers in the tree
 addNode("blank", {
     layerShown: "ghost",
 }, 
