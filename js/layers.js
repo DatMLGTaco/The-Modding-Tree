@@ -36,6 +36,23 @@ addLayer("m", {
         }
     },
 },
+12:{
+    title: "Woven Fabric",
+    description: "Melge upgrades 2, 3, and 4 all use a better formula.",
+    cost: new Decimal(2),
+    style() {                     
+        if(hasUpgrade(this.layer, this.id)) return {
+            'background-color': '#ffcb52' 
+    }
+},
+
+    unlocked() {
+        let unlocked1 = false
+        if (hasUpgrade('i', 21)) unlocked1 = true
+        return unlocked1
+    }
+    
+        },  
         21:{
     title: "Woven Thread",
     description: "Fabric boosts the creation of fabric.",
@@ -111,53 +128,37 @@ addLayer("m", {
         effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
         },
 
-            31:{
-                title: "Cohesion",
-                description: "Boosts the effect of Synergy past 2,000 melge essence.",
-                cost: new Decimal(750),
-                style() {                     
-                    if(hasUpgrade(this.layer, this.id)) return {
-                        'background-color': '#ffcb52' 
+    31:{
+        title: "Cohesion",
+        description: "Boosts the effect of Synergy past 2,000 melge essence.",
+        cost: new Decimal(750),
+        style() {                     
+            if(hasUpgrade(this.layer, this.id)) return {
+                'background-color': '#ffcb52' 
                 }
             },
-                unlocked() {
-                    let unlocked1 = false
-                    if (hasUpgrade('m', 22)) unlocked1 = true
-                    return unlocked1
-                },
-                },
-                32:{
-                    title: "Alignment",
-                    description: "Boosts the effect of Duality",
-                    cost: new Decimal(850),
-                    style() {                     
-                        if(hasUpgrade(this.layer, this.id)) return {
-                            'background-color': '#ffcb52' 
-                    }
-                },
-                    unlocked() {
-                        let unlocked1 = false
-                        if (hasUpgrade('m', 23)) unlocked1 = true
-                        return unlocked1
-                    },
-                    },
-        12:{
-            title: "Woven Fabric",
-            description: "Melge upgrades 2, 3, and 4 all use a better formula.",
-            cost: new Decimal(2),
+        unlocked() {
+            let unlocked1 = false
+            if (hasUpgrade('m', 22)) unlocked1 = true
+            return unlocked1
+        },
+        },
+        32:{
+            title: "Alignment",
+            description: "Boosts the effect of Duality",
+            cost: new Decimal(850),
             style() {                     
                 if(hasUpgrade(this.layer, this.id)) return {
                     'background-color': '#ffcb52' 
             }
         },
-
             unlocked() {
                 let unlocked1 = false
-                if (hasUpgrade('i', 21)) unlocked1 = true
+                if (hasUpgrade('m', 23)) unlocked1 = true
                 return unlocked1
-            }
-            
-                },
+            },
+            },
+
     },
 
     baseResource: "fabric", // Name of resource prestige is based on
@@ -179,8 +180,38 @@ addLayer("m", {
         {key: "m", description: "M: Reset for melge points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
 
-    layerShown(){return true}
-    
+    layerShown(){return true},
+
+
+    buyables: {
+        11: {
+            title: "Melge Fabricator",
+            cost(x) { return new Decimal(1).mul(x) },
+            display() { return "\bMelge Fabricator\b\n\n" + "\n Amount: " + getBuyableAmount(this.layer, this.id) + " Melge Fabricators"},
+            canAfford() { return player[this.layer].points.gte(this.cost()) },
+            style: {'height':'122px'},
+            buy() {
+                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+        },
+    },
+    tabFormat: ["main-display",
+    "prestige-button",
+    "resource-display",
+
+    "milestones",
+
+
+    "blank",
+    "upgrades",
+    "blank",
+    "blank",
+    "buyables",
+
+    "blank", "blank"
+],
+
 
 })
 
@@ -411,4 +442,3 @@ addLayer("p", {
     
 
 })
-
