@@ -202,6 +202,11 @@ addLayer("m", {
                 player[this.layer].points = player[this.layer].points.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
+            unlocked() {
+                x = false
+                if(player.hasUpgrade(i, 22)) x = true
+                return x
+            },
         },
     },
     tabFormat: ["main-display",
