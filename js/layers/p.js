@@ -7,7 +7,6 @@ addLayer("p", {
 		points: new Decimal(0),
     }},
     color: "#ffffff",
-    requires: new Decimal(10), // Can be a function that takes requirement increases into account
     resource: "Photons", // Name of prestige currency
     canBuyMax() {return false},
     branches: ["m"],
@@ -37,7 +36,7 @@ addLayer("p", {
         return x }, // Can be a function that takes requirement increases into account
     baseResource: "fabric", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
-    type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     exponent: 0.15, // Prestige currency exponent
     gainMult() {
         let mult = new Decimal(1)
@@ -62,8 +61,9 @@ addLayer("p", {
     } 
     }
     },
-    tabFormat: ["main-display",
-			"prestige-button",
+    tabFormat() { if (player.p.points < 10) return ([["main-display"],
+            "main-display",
+            "prestige-button",
 			"resource-display",
 			"blank",
 			"milestones",
@@ -74,7 +74,23 @@ addLayer("p", {
 			"upgrades",
 
 			"blank", "blank"
-		],
+		]
+    )
+        if (player.p.points > 9)  return ([
+            "main-display",
+        "resource-display",
+        "blank",
+        ["bar", "PhotonicSlider"],
+        "buyables",
+        "blank",
+        "blank",
+        "upgrades",
+
+        "blank", "blank"
+    ]
+)
+
+    },
         
     bars: {
         PhotonicSlider: {

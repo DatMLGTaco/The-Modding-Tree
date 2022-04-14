@@ -159,36 +159,62 @@ addLayer("m", {
             return unlocked1
         },
         },
-    51:{
-        title: "Fabrication Boost",
-        description: "Melge Fabricators add to the melge essence multiplier",
 
-        canAfford() {
-            x = false
-            if (getBuyableAmount(this.layer, 11)>=5) x = true
-        return x
-        },
-        pay(){
-
-            return setBuyableAmount(getBuyableAmount(this.layer, 11)-5)
-        },
-        style() { 
-            g = 100 - Math.ceil(10*getBuyableAmount(this.layer, 11)) 
-            b = 50 - Math.ceil(10*getBuyableAmount(this.layer, 11)) 
-            r = 100 + Math.ceil(10*getBuyableAmount(this.layer, 11)) 
-            if (b<1) b = 0
-            if (g<1) g = 0
-            if (r<101) r = 100, g = 100, b= 100
-            if(r>254) r = 255  
-            return {"background-color": ("rgb("+r+", "+g+", "+b+")") } }, 
-        unlocked() {
-            let unlocked1 = false
-            if (hasUpgrade('m', 23)&&(getBuyableAmount(this.layer, 11) > 5 )) unlocked1 = true
-            return unlocked1
-        },
-        },
     },
+    milestones: {
+      
+            0: {requirementDescription: "5 Melge Fabricators",
+                done() {return player.m.buyables[11].gte(1)}, // Used to determine when to give the milestone,
+                effectDescription() { s = "Melge Fabricators add to the melge essence multiplier" ; return s } ,
+                unlocked() {
+                    let unlocked1 = false
+                    if (hasUpgrade('m', 23)&&(getBuyableAmount(this.layer, 11) > 3 )) unlocked1 = true
+                    return unlocked1
+                },
+                style() { if (hasMilestone('m', 0)){
+                    g = 100 - Math.ceil(6*getBuyableAmount(this.layer, 11)) 
+                    b = 50 - Math.ceil(3*getBuyableAmount(this.layer, 11)) 
+                    r = 100 + Math.ceil(10*getBuyableAmount(this.layer, 11)) 
+                    if (b<1) b = 0
+                    if (g<1) g = 0
+                    if (r<101) r = 100, g = 100, b= 100
+                    if(r>254) r = 255  } else {
+                    g = 50 - Math.ceil(2*getBuyableAmount(this.layer, 11)) 
+                    b = 50 - Math.ceil(2*getBuyableAmount(this.layer, 11)) 
+                    r = 100 + Math.ceil(2*getBuyableAmount(this.layer, 11)) 
+                    if (b<1) b = 0
+                    if (g<1) g = 0
+                    if (r<101) r = 100, g = 50, b= 50 
+                    if(r>254) r = 255
+                    }
+                    return {"background-color": ("rgb("+r+", "+g+", "+b+")") } }, 
+            },
+            
+/*        51:{
 
+    
+    
+            style() { 
+                g = 100 - Math.ceil(10*getBuyableAmount(this.layer, 11)) 
+                b = 50 - Math.ceil(10*getBuyableAmount(this.layer, 11)) 
+                r = 100 + Math.ceil(10*getBuyableAmount(this.layer, 11)) 
+                if (b<1) b = 0
+                if (g<1) g = 0
+                if (r<101) r = 100, g = 100, b= 100
+                if(r>254) r = 255  
+                return {"background-color": ("rgb("+r+", "+g+", "+b+")") } }, 
+            unlocked() {
+                let unlocked1 = false
+                if (hasUpgrade('m', 23)&&(getBuyableAmount(this.layer, 11) > 4 )) unlocked1 = true
+                return unlocked1
+            },
+            }, */
+    }, 		
+    doReset(resettingLayer) {
+        let keep = [];
+        if (hasMilestone("p", 0)) keep.push("upgrades")
+        if (layers[resettingLayer].row > this.row) layerDataReset("m", keep)
+    },
     baseResource: "fabric", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
@@ -196,7 +222,7 @@ addLayer("m", {
     gainMult() {
         let mult = new Decimal(1)
         if (hasUpgrade('m', 23)) mult = mult.times(upgradeEffect('m', 23))
-        if(getBuyableAmount(this.layer, 11) > 5 ) mult = mult.times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))
+        if(getBuyableAmount(this.layer, 11) > 4 ) mult = mult.times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))
         if (player.i.unlocked) mult = mult.times(player.i.points.add(1));
         return mult
     },
@@ -227,14 +253,14 @@ addLayer("m", {
             display() { return "Effect: Generates " + format(new Decimal(5).times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))) + "% of melge gain/second" + "\nBuy 1 Melge Fabricator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Melge Fabricators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id)))},
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             style() { 
-                g = 100 - Math.ceil(10*getBuyableAmount(this.layer, 11)) 
-                b = 50 - Math.ceil(10*getBuyableAmount(this.layer, 11)) 
+                g = 100 - Math.ceil(6*getBuyableAmount(this.layer, 11)) 
+                b = 50 - Math.ceil(3*getBuyableAmount(this.layer, 11)) 
                 r = 100 + Math.ceil(10*getBuyableAmount(this.layer, 11)) 
                 if (b<1) b = 0
                 if (g<1) g = 0
                 if (r<101) r = 100, g = 100, b= 100
                 if(r>254) r = 255  
-                return {"background-color": ("rgb("+r+", "+g+", "+b+")") } },
+                return {"background-color": ("rgb("+r+", "+g+", "+b+")"), } },
             buy() { //amonger type beat
                 player[this.layer].points = player[this.layer].points.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
@@ -246,20 +272,39 @@ addLayer("m", {
             },
         },
     },
+    bars: {
+        MelgeBar: {
+            direction: UP,
+            width: 50,
+            height: 500,
+            progress() { return player[this.layer].points/10 },
+            unlocked: true,
+            fillStyle() {
+                x = {'background-color': '#0F0F0F'}
+                let rgb = Math.ceil(255*tmp.m.bars.MelgeBar.progress) 
+                return {"background-color": ("rgb("+rgb+", "+rgb+", "+rgb+")") } },
+        },
+    
+    },
     tabFormat: ["main-display",
     "prestige-button",
     "resource-display",
 
-    "milestones", //who's mile?
     //im mile(
 //mile long datmlgfingering your datmlgmom😏)
     "blank",
-    "upgrades", 
+    ["row", [["upgrade", 11], ["upgrade", 12]]],
+    ["row", [["upgrade", 21], ["upgrade", 22], ["upgrade", 23]]],
+    ["row", [["upgrade", 31], ["upgrade", 32]]],
     /*"blank,"*/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "blank",
    /**/ "blank"/**/,
     "buyables",
-
-    "blank", "blank"
+    "blank", 
+    ["row", [["milestone", 0]]],
+    ["bar", "PhotonicSlider"],
+    "blank",
+    "bars",
+    "blank"
 ],
 
 

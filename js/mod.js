@@ -50,7 +50,7 @@ function getPointGen() {
 	if (hasUpgrade('i', 11)) gain = gain.times(upgradeEffect('i', 11))
 	if (hasUpgrade('p', 11)) gain = gain.times(upgradeEffect('p', 11))
 	if (hasMilestone('i', 0)) gain = gain.times(5)
-	if (player.i.unlocked) gain = gain.times(player.i.points.add(1).pow(0.3));
+	if (player.i.unlocked) gain = gain.times(player.i.points.max(1).times(50).pow(0.99));
 	return gain
 }
 // Display extra things at the top of the page

@@ -2,8 +2,8 @@
 	min-height: 120px;
 	width: 120px;
 	border-radius: 25%;
-	border: 2px solid;
-	border-color: rgba(0, 0, 0, 0.125);
+	border: 3px solid;
+	border-color: rgba(0, 0, 0, 0.225);
 	font-size: 10px;
 	overflow: visible;
 }

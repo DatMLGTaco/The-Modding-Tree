@@ -1,5 +1,5 @@
 addLayer("i", {
-    name: "Improvements", // This is optional, only used in a few places, If absent it just uses the layer id.
+    name: "Improvers", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "I", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
@@ -8,7 +8,7 @@ addLayer("i", {
     }},
     color: "#fff396",
     requires: new Decimal(10), // Can be a function that takes requirement increases into account
-    resource: "Improvements", // Name of prestige currency
+    resource: "Improvers", // Name of prestige currency
     canBuyMax() {return false},
     branches: ["m"],
 		enGainMult() {
@@ -17,7 +17,7 @@ addLayer("i", {
 		},
         tabFormat: ["main-display",
         ["row",[
-            ["column", [["display-text", function() {return "Your improvements are currently multiplying your fabric gain by " + Math.round(Number((Math.abs(player.i.points.add(1).pow(0.3)) * 100).toPrecision(15))) / 100 * Math.sign(player.i.points.add(1).pow(0.3)) + "x!"}]]]
+            ["column", [["display-text", function() {return "Your Improvers are currently multiplying your fabric gain by " + formatWhole(Math.round(Number((Math.abs(player.i.points.max(1).times(50).pow(0.99)) * 100).toPrecision(15))) / 100 * Math.sign(player.i.points.add(1).pow(0.3))) + "x!"}]]]
         
         ]
                 ],
@@ -82,7 +82,7 @@ addLayer("i", {
         return x }, // Can be a function that takes requirement increases into account
     baseResource: "fabric", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
-    type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
+    type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
     exponent: 0.8, // Prestige currency exponent
 
     gainMult() {
@@ -95,7 +95,7 @@ addLayer("i", {
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     milestones: {
-        0: {requirementDescription: "1 Improvement",
+        0: {requirementDescription: "1 Improver",
             done() {return player.i.best.gte(1)}, // Used to determine when to give the milestone
             effectDescription() { s = "Fabric gain x5"
             if (hasMilestone('p', 0)) s = "Gain 100% of melge essence gain/s"
