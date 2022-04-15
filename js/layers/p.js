@@ -28,7 +28,7 @@ addLayer("p", {
 
     },
     requires() {
-        x = new Decimal(1500000)
+        x = new Decimal(1e9)
         y = new Decimal(1)
         if (player[this.layer].unlocked) y = player[this.layer].points.add(1).pow(1.5)
         if (player[this.layer].points>=10) y=y.times(x)
@@ -56,7 +56,7 @@ addLayer("p", {
         },
         1: {requirementDescription: "10 Photons",
         done() {return player.p.best.gte(10)}, // Used to determine when to give the milestone
-        effectDescription() { s = "Unlock the Photon Bar"
+        effectDescription() { s = "Unlock the creation of Light Energy."
         return s
     } 
     }

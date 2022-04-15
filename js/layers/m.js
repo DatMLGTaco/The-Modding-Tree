@@ -99,7 +99,9 @@ addLayer("m", {
         if (hasUpgrade('i' , 22)) x = new Decimal(1.75)
         if (hasUpgrade('i' , 22)) l = new Decimal(1.05)
         if (hasUpgrade(this.layer, 31)) if (z>2000) y = new Decimal(y.div(z.log(l*1.6))) 
-        return z.add(1).pow(x).log(l.pow(y))
+        eff = z.pow(x).log(l.pow(y)).max(1)
+        if (hasUpgrade('m', 32)) eff = eff.times(upgradeEffect('m', 23))
+        return eff
     },
     effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
     },
@@ -124,7 +126,7 @@ addLayer("m", {
             y = new Decimal(1)
             z = new Decimal(1.45).div(player.points.max(1).log(2))
             if (hasUpgrade(this.layer, 32)) y = new Decimal(1.4), z = z.times(0.1) 
-            return player.points.add(1).pow(x.times(y)).log(new Decimal(2).pow(z))
+            return player.points.add(1).pow(x.times(y)).log(new Decimal(2).pow(z)).max(1)
         },
         effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
         },
@@ -146,7 +148,7 @@ addLayer("m", {
         },
     32:{
         title: "Alignment",
-        description: "Boosts the effect of Duality",
+        description: "Boost the effects of Duality and Duality boosts Synergy.",
         cost: new Decimal(850),
         style() {                     
             if(hasUpgrade(this.layer, this.id)) return {
@@ -164,7 +166,7 @@ addLayer("m", {
     milestones: {
       
             0: {requirementDescription: "5 Melge Fabricators",
-                done() {return player.m.buyables[11].gte(1)}, // Used to determine when to give the milestone,
+                done() {return player.m.buyables[11].gte(5)}, // Used to determine when to give the milestone,
                 effectDescription() { s = "Melge Fabricators add to the melge essence multiplier" ; return s } ,
                 unlocked() {
                     let unlocked1 = false
@@ -213,6 +215,7 @@ addLayer("m", {
     doReset(resettingLayer) {
         let keep = [];
         if (hasMilestone("p", 0)) keep.push("upgrades")
+        if (hasMilestone("i", 0)) keep.push("buyables"), keep.push("milestones")
         if (layers[resettingLayer].row > this.row) layerDataReset("m", keep)
     },
     baseResource: "fabric", // Name of resource prestige is based on
@@ -245,7 +248,7 @@ addLayer("m", {
             title: "Melge Fabricator",
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                let cost = Decimal.pow(2, x.add(6).pow(1.69))
+                let cost = Decimal.pow(2, x.add(3).pow(3.69))
                 return cost.floor()
             },
 //leave this space herea

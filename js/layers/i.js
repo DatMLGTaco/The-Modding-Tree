@@ -36,7 +36,7 @@ addLayer("i", {
     upgrades:{
         11:{
         title: "Subatomic Breakthrough",
-        description: "Increase fabric gain based on number of photons.",
+        description: "Further increase fabric gain based on number of Improvers.",
         cost: new Decimal(1), 
         effect() {
             return player[this.layer].points.add(1).times(5).pow(0.85)
@@ -75,7 +75,7 @@ addLayer("i", {
   },
     },
     requires() {
-        x = new Decimal(1500000)
+        x = new Decimal(1e9)
         y = new Decimal(1)
         if (player.i.unlocked) y = player[this.layer].points.add(1).pow(1.5)
         x = x.times(y)
@@ -95,13 +95,14 @@ addLayer("i", {
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     milestones: {
-        0: {requirementDescription: "1 Improver",
-            done() {return player.i.best.gte(1)}, // Used to determine when to give the milestone
-            effectDescription() { s = "Fabric gain x5"
-            if (hasMilestone('p', 0)) s = "Gain 100% of melge essence gain/s"
-            return s
-        } 
-        }
+        0: {requirementDescription: "20,000,000 Improvers",
+        done() {return player.i.best.gte(20000000)}, // Used to determine when to give the milestone
+        effectDescription() { s = "Keep Melge Fabricators on all resets."
+        if (hasMilestone('p', 0)) s = "The Melge Layer does not reset on layer 2 resets."
+        return s
+    }, 
+    unlocked () {x = false; if (player.i.best > 10000000) x = true; return x},
+    }
     },
     hotkeys: [
         {key: "q", description: "Q: Reset for quarks", onPress(){if (canReset(this.layer)) doReset(this.layer)}},

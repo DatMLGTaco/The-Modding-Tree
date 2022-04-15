@@ -55,8 +55,9 @@ function getPointGen() {
 }
 // Display extra things at the top of the page
 var displayThings = [
+	`You have ${player.m.points} melge points.`,
 	function() {if (player.points.eq(69)) return "Tee hee!"},
-	function() {if (player.m.points.gt(1)) return `You have ${player.m.points} melge points.`},
+	function() {return `You have ${player.m.points} melge points.`},
 
 ]
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
@@ -65,6 +66,8 @@ function addedPlayerData() { return {
 
 // Display extra things at the top of the page
 var displayThings = [
+	`You have ${player.m.points} melge points.`,
+	function() {return `You have ${player.m.points} melge points.`},
 ]
 
 // Determines when the game "ends"
