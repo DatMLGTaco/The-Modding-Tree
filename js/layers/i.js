@@ -35,9 +35,9 @@ addLayer("i", {
     ],
     upgrades:{
         11:{
-        title: "Subatomic Breakthrough",
+        title: "Improver improver",
         description: "Further increase fabric gain based on number of Improvers.",
-        cost: new Decimal(1), 
+        cost: new Decimal(10), 
         effect() {
             return player[this.layer].points.add(1).times(5).pow(0.85)
         },
@@ -51,7 +51,7 @@ addLayer("i", {
 21:{
     title: "Melge Integration",
     description: "Unlock a new melge upgrade.",
-    cost: new Decimal(3), 
+    cost: new Decimal(300), 
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {
             'background-color': '#e8e0a0' 
@@ -61,7 +61,7 @@ addLayer("i", {
   22:{
     title: "Immaterial Fabrication",
     description: "Melge essence boost to fabric exponentially increased.",
-    cost: new Decimal(3), 
+    cost: new Decimal(6000), 
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {
             'background-color': '#e8e0a0' 
@@ -95,17 +95,17 @@ addLayer("i", {
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     milestones: {
-        0: {requirementDescription: "20,000,000 Improvers",
-        done() {return player.i.best.gte(20000000)}, // Used to determine when to give the milestone
+        0: {requirementDescription: "1e11 Improvers",
+        done() {return player.i.best.gte(1e11)}, // Used to determine when to give the milestone
         effectDescription() { s = "Keep Melge Fabricators on all resets."
         if (hasMilestone('p', 0)) s = "The Melge Layer does not reset on layer 2 resets."
         return s
     }, 
-    unlocked () {x = false; if (player.i.best > 10000000) x = true; return x},
+    unlocked () {x = false; if (player.i.best > 1000000000) x = true; return x},
     }
     },
     hotkeys: [
-        {key: "q", description: "Q: Reset for quarks", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+        {key: "i", description: "I: Reset for Improvers", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
 
 

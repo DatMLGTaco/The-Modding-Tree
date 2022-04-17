@@ -5,6 +5,9 @@ addLayer("p", {
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
+        best: new Decimal(0),
+        total: new Decimal(0),
+        power: new Decimal(0),
     }},
     color: "#ffffff",
     resource: "Photons", // Name of prestige currency
@@ -61,11 +64,41 @@ addLayer("p", {
     } 
     }
     },
-    tabFormat() { if (player.p.points < 10) return ([["main-display"],
+    effBase() {
+        let base = new Decimal(2);
+        return base;
+    },
+    effect() {
+        if (!player.p.unlocked) return new Decimal(0);
+        let eff = Decimal.pow(this.effBase(), player.p.points.sub(1).max(0));
+        if (!hasMilestone("p", 1)) eff = new Decimal (0)
+        eff = eff.times(tmp.p.sliderEff)
+        if (tmp.p.buyables[11].effect>=1) eff = eff.times(tmp.p.buyables[11].effect)
+
+        return eff;
+    },
+    effectDescription() {
+        if (hasMilestone("p", 1)) {return "which are generating "+format(tmp.p.effect)+" Light Energy/sec"} else {return ""}
+    },
+    update(diff) {
+        if (player.p.unlocked&&hasMilestone("p", 1)) player.p.power = player.p.power.plus(tmp.p.effect.times(diff));
+    },
+    powerExp() {
+        let exp = new Decimal(1/3);
+        return exp;
+    },
+    powerEff() {
+        if (!player.p.unlocked) return new Decimal(1);
+        if (!hasMilestone("p", 1)) return new Decimal(1);
+        return player.p.power.plus(1).pow(this.powerExp()).times(tmp.p.sliderEff);
+        // 
+    },
+    tabFormat() { if (!hasMilestone("p", 1)){ return ([["main-display"],
             "main-display",
             "prestige-button",
 			"resource-display",
 			"blank",
+
 			"milestones",
 			"blank",
             ["bar", "PhotonicSlider"],
@@ -76,35 +109,90 @@ addLayer("p", {
 			"blank", "blank"
 		]
     )
-        if (player.p.points > 9)  return ([
-            "main-display",
+}
+        if (hasMilestone("p", 1))  return ([
+        "main-display",
+
         "resource-display",
         "blank",
+        ["display-text", "You have " + formatWhole(player[this.layer].power) + " Light Energy, which multiplies fabric gain by " + formatWhole(tmp.p.powerEff) + "x!"],
+        ["display-text", "Your Light Energy has additionally filled the Photon Bar to " + format(tmp.p.bars.PhotonicSlider.progress * 100) + "%, which multiplies the Light Energy gain and effect by " + format(tmp.p.sliderEff) ],
+        "blank",
+        
         ["bar", "PhotonicSlider"],
+        "blank",
+        "blank",
         "buyables",
         "blank",
         "blank",
         "upgrades",
 
-        "blank", "blank"
+        "blank", "blank",
     ]
-)
-
-    },
+        )
         
+    },
+    sliderEff () {
+        x = new Decimal(player[this.layer].points/10) 
+        if (hasMilestone("p", 1)) x = player.p.power.max(2).log(3).div(25)
+        return x.times(100).times(5).pow(0.75).times(player.p.power.max(2).log(3).div(25).times(100)).times(15)
+        //.times(100).times(y).pow(0.75)
+    },
     bars: {
         PhotonicSlider: {
             direction: RIGHT,
-            width: 750,
-            height: 50,
-            progress() { return player[this.layer].points/10 },
+            width: 850,
+            height: 85,
+            progress() {
+                x = new Decimal(player[this.layer].points/10) 
+                if (hasMilestone("p", 1)) x = player.p.power.log(3).div(25)
+                return x },
             unlocked: true,
+
             fillStyle() {
                 x = {'background-color': '#0F0F0F'}
                 let rgb = Math.ceil(255*tmp.p.bars.PhotonicSlider.progress) 
                 return {"background-color": ("rgb("+rgb+", "+rgb+", "+rgb+")") } },
+                display() {
+                    if (hasMilestone("p" , 1)){
+                return '<p style="color:#2e2e2e;">You have <h2 style="color:black;"><b>' + format(player.p.power) + ' Light Energy.</b><p style="color:#2e2e2e;"> '+format(tmp.p.powerEff)+'x fabric gen.</p>'
+                    }else{return ""}
+                }
         },
     
+    },
+
+    buyables: {
+        11: {
+            title: "Photon Accelerator",
+            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
+                let cost = Decimal.pow(2, x.add(9.25).pow(1.25))
+                return formatWhole(cost)
+            },
+//leave this space herea
+//what
+
+            display() { return "Effect: Accelerates Light Energy gain by " + format(tmp.p.buyables[11].effect) + "x/s." + "\nBuy 1 Photon Accelerator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Photon Accelerators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id))) + " Light Energy."},
+            canAfford() { return player.p.power.gte(this.cost()) },
+            effect() {
+                return new Decimal(5).times(getBuyableAmount(this.layer, 11).times(2.5).pow(5)).max(1)
+            },
+            style() { 
+                rgb = new Decimal (tmp.p.power).log(2)
+                if (rgb<101) rgb = 100
+                if(rgb>254) rgb = 255  
+                return {"background-color": ("rgb("+rgb+", "+rgb+", "+rgb+")"), } },
+            buy() { //amonger type beat
+                player[this.layer].power = player[this.layer].power.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                x = false
+                if(hasUpgrade('i', 22)) x = true
+                return x
+            },
+        },
     },
     hotkeys: [
         {key: "q", description: "Q: Reset for quarks", onPress(){if (canReset(this.layer)) doReset(this.layer)}},

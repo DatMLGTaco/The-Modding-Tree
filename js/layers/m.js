@@ -40,7 +40,7 @@ addLayer("m", {
 12:{
     title: "Woven Fabric",
     description: "Melge upgrades 2, 3, and 4 all use a better formula.",
-    cost: new Decimal(2),
+    cost: new Decimal(4e11),
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {
             'background-color': '#ffcb52' 
@@ -109,7 +109,7 @@ addLayer("m", {
     23:{
         title: "Duality",
         description: "Fabric boosts melge essence gain.",
-        cost: new Decimal(4),
+        cost: new Decimal(10),
         style() {                     
             if(hasUpgrade(this.layer, this.id)) return {
                 'background-color': '#ffcb52' 
@@ -248,7 +248,7 @@ addLayer("m", {
             title: "Melge Fabricator",
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                let cost = Decimal.pow(2, x.add(3).pow(3.69))
+                let cost = Decimal.pow(2, x.add(9.25).pow(2.25))
                 return cost.floor()
             },
 //leave this space herea
@@ -277,15 +277,27 @@ addLayer("m", {
     },
     bars: {
         MelgeBar: {
-            direction: UP,
-            width: 50,
-            height: 500,
-            progress() { return player[this.layer].points/10 },
-            unlocked: true,
+            direction: RIGHT,
+            width: 200,
+            height: 25,
+            progress() { return getBuyableAmount(this.layer, 11)/10 },
+            unlocked() {
+                x = false
+                if (getBuyableAmount(this.layer, 11) > 0) x = true
+                return x
+            },
+            display() {
+                return getBuyableAmount(this.layer, 11) + "/10 Fabricators"
+            },
             fillStyle() {
-                x = {'background-color': '#0F0F0F'}
-                let rgb = Math.ceil(255*tmp.m.bars.MelgeBar.progress) 
-                return {"background-color": ("rgb("+rgb+", "+rgb+", "+rgb+")") } },
+                g = 100 - Math.ceil(6*getBuyableAmount(this.layer, 11)) 
+                b = 50 - Math.ceil(3*getBuyableAmount(this.layer, 11)) 
+                r = 100 + Math.ceil(10*getBuyableAmount(this.layer, 11)) 
+                if (b<1) b = 0
+                if (g<1) g = 0
+                if (r<101) r = 100, g = 100, b= 100
+                if(r>254) r = 255  
+                return {"background-color": ("rgb("+r+", "+g+", "+b+")"), } },
         },
     
     },
@@ -297,14 +309,17 @@ addLayer("m", {
 //mile long datmlgfingering your datmlgmom😏)
     "blank",
     ["row", [["upgrade", 11], ["upgrade", 12]]],
+    
     ["row", [["upgrade", 21], ["upgrade", 22], ["upgrade", 23]]],
     ["row", [["upgrade", 31], ["upgrade", 32]]],
     /*"blank,"*/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          "blank",
    /**/ "blank"/**/,
     "buyables",
     "blank", 
+    ["bar", "MelgeBar"],
+    "blank",
     ["row", [["milestone", 0]]],
-    ["bar", "PhotonicSlider"],
+
     "blank",
     "bars",
     "blank"

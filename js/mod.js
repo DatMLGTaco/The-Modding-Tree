@@ -3,7 +3,7 @@ let modInfo = {
 	id: "melge4",
 	author: "The Melge",
 	pointsName:"fabric",
-	modFiles: ["layers/i.js", "layers/p.js", "layers/m.js", "tree.js",],
+	modFiles: ["layers/i.js", "layers/p.js", "layers/m.js", "layers/in.js", "tree.js",],
 
 
 	discordName: "",
@@ -50,14 +50,13 @@ function getPointGen() {
 	if (hasUpgrade('i', 11)) gain = gain.times(upgradeEffect('i', 11))
 	if (hasUpgrade('p', 11)) gain = gain.times(upgradeEffect('p', 11))
 	if (hasMilestone('i', 0)) gain = gain.times(5)
+	if (hasMilestone('p', 1)) gain = gain.times(tmp.p.powerEff)
 	if (player.i.unlocked) gain = gain.times(player.i.points.max(1).times(50).pow(0.99));
 	return gain
 }
 // Display extra things at the top of the page
 var displayThings = [
-	`You have ${player.m.points} melge points.`,
-	function() {if (player.points.eq(69)) return "Tee hee!"},
-	function() {return `You have ${player.m.points} melge points.`},
+
 
 ]
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
@@ -66,8 +65,6 @@ function addedPlayerData() { return {
 
 // Display extra things at the top of the page
 var displayThings = [
-	`You have ${player.m.points} melge points.`,
-	function() {return `You have ${player.m.points} melge points.`},
 ]
 
 // Determines when the game "ends"
