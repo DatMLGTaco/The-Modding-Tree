@@ -15,9 +15,18 @@ addLayer("i", {
 			let mult = new Decimal(1);
 			return mult;
 		},
+        improverEff(){
+        eff = new Decimal(1)
+        x = new Decimal(50)
+        if (player.ee.unlocked) x = x.times(tmp.ee.earthEff)
+        if (player.i.points.times(50).pow(0.9) >= 1) eff = player.i.points.times(x).pow(0.9)
+
+        return eff
+
+        },
         tabFormat: ["main-display",
         ["row",[
-            ["column", [["display-text", function() {return "Your Improvers are currently multiplying your fabric gain by " + formatWhole(Math.round(Number((Math.abs(player.i.points.max(1).times(50).pow(0.99)) * 100).toPrecision(15))) / 100 * Math.sign(player.i.points.add(1).pow(0.3))) + "x!"}]]]
+            ["column", [["display-text", function() {return "Your Improvers are currently multiplying your fabric gain by " + formatWhole(tmp.i.improverEff) + "x!"}]]]
         
         ]
                 ],

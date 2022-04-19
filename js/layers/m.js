@@ -181,12 +181,12 @@ addLayer("m", {
                     if (g<1) g = 0
                     if (r<101) r = 100, g = 100, b= 100
                     if(r>254) r = 255  } else {
-                    g = 50 - Math.ceil(2*getBuyableAmount(this.layer, 11)) 
-                    b = 50 - Math.ceil(2*getBuyableAmount(this.layer, 11)) 
-                    r = 100 + Math.ceil(2*getBuyableAmount(this.layer, 11)) 
+                    g = 50 + Math.ceil(2*getBuyableAmount(this.layer, 11)) 
+                    b = 50 + Math.ceil(2*getBuyableAmount(this.layer, 11)) 
+                    r = 50 + Math.ceil(2*getBuyableAmount(this.layer, 11)) 
                     if (b<1) b = 0
                     if (g<1) g = 0
-                    if (r<101) r = 100, g = 50, b= 50 
+                    if (r<50) r = 50, g = 50, b= 50 
                     if(r>254) r = 255
                     }
                     return {"background-color": ("rgb("+r+", "+g+", "+b+")") } }, 
@@ -248,7 +248,8 @@ addLayer("m", {
             title: "Melge Fabricator",
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                let cost = Decimal.pow(2, x.add(9.25).pow(2.25))
+                let cost = Decimal.pow(2, x.add(9.25).sub(tmp.p.upgrades[13].effect).pow(2.25))
+                if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
                 return cost.floor()
             },
 //leave this space herea

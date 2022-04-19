@@ -25,9 +25,43 @@ addLayer("p", {
         effect() {
             return player[this.layer].points.add(1).times(5)
         },
-        effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },    
+        effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },   
+    }, 
+        12: {
+            title: "Discount One",
+            description: "Photon Accelerators and Melge Fabricators are cheaper based on your light energy!",
+            cost() { return new Decimal(1e11) },
+            currencyDisplayName: "light energy",
+            currencyInternalName: "power",
+            currencyLayer: "p",
+            effect() { 
+                let eff = new Decimal(32).times(player.p.power.add(1).pow(0.25));
+              
+                return eff;
+            },
+            unlocked() { return hasMilestone("p", 1)&&getBuyableAmount("m", 11)>2 },
+            effectDisplay() { return "/"+format(tmp.p.upgrades[12].effect) },
 
-},
+
+        },
+        13: {
+            title: "Discount Two",
+            description: "Photon Accelerator and Melge Fabricator cost base are reduced based on light energy!",
+            cost() { return new Decimal(1e18) },
+            currencyDisplayName: "light energy",
+            currencyInternalName: "power",
+            currencyLayer: "p",
+            effect() { 
+                let eff = (player.p.power.add(1).log(10).div(3.5));
+              
+                return eff;
+            },
+            unlocked() { return hasUpgrade("p", 12)},
+            effectDisplay() { return "-"+format(tmp.p.upgrades[13].effect) },
+
+
+        },
+
 
     },
     requires() {
@@ -59,13 +93,14 @@ addLayer("p", {
         },
         1: {requirementDescription: "10 Photons",
         done() {return player.p.best.gte(10)}, // Used to determine when to give the milestone
-        effectDescription() { s = "Unlock the creation of Light Energy."
+        effectDescription() { s = "Unlock the creation of light energy."
         return s
     } 
     }
     },
     effBase() {
         let base = new Decimal(2);
+        if (player.ee.unlocked) base = base.times(tmp.ee.earthEff)
         return base;
     },
     effect() {
@@ -78,7 +113,7 @@ addLayer("p", {
         return eff;
     },
     effectDescription() {
-        if (hasMilestone("p", 1)) {return "which are generating "+format(tmp.p.effect)+" Light Energy/sec"} else {return ""}
+        if (hasMilestone("p", 1)) {return "which are generating "+format(tmp.p.effect)+" light energy/sec"} else {return ""}
     },
     update(diff) {
         if (player.p.unlocked&&hasMilestone("p", 1)) player.p.power = player.p.power.plus(tmp.p.effect.times(diff));
@@ -115,8 +150,8 @@ addLayer("p", {
 
         "resource-display",
         "blank",
-        ["display-text", "You have " + formatWhole(player[this.layer].power) + " Light Energy, which multiplies fabric gain by " + formatWhole(tmp.p.powerEff) + "x!"],
-        ["display-text", "Your Light Energy has additionally filled the Photon Bar to " + format(tmp.p.bars.PhotonicSlider.progress * 100) + "%, which multiplies the Light Energy gain and effect by " + format(tmp.p.sliderEff) ],
+        ["display-text", "You have " + formatWhole(player[this.layer].power) + " light energy, which multiplies fabric gain by " + formatWhole(tmp.p.powerEff) + "x!"],
+        ["display-text", "Your light energy has additionally filled the Photon Bar to " + format(tmp.p.bars.PhotonicSlider.progress * 100) + "%, which multiplies the light energy gain and effect by " + format(tmp.p.sliderEff) ],
         "blank",
         
         ["bar", "PhotonicSlider"],
@@ -155,7 +190,7 @@ addLayer("p", {
                 return {"background-color": ("rgb("+rgb+", "+rgb+", "+rgb+")") } },
                 display() {
                     if (hasMilestone("p" , 1)){
-                return '<p style="color:#2e2e2e;">You have <h2 style="color:black;"><b>' + format(player.p.power) + ' Light Energy.</b><p style="color:#2e2e2e;"> '+format(tmp.p.powerEff)+'x fabric gen.</p>'
+                return '<p style="color:#2e2e2e;">You have <h2 style="color:black;"><b>' + format(player.p.power) + ' light energy.</b><p style="color:#2e2e2e;"> '+format(tmp.p.powerEff)+'x fabric gen.</p>'
                     }else{return ""}
                 }
         },
@@ -167,13 +202,14 @@ addLayer("p", {
             title: "Photon Accelerator",
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                let cost = Decimal.pow(2, x.add(9.25).pow(1.25))
+                let cost = Decimal.pow(2, x.add(9.25).sub(tmp.p.upgrades[13].effect).pow(1.25))
+                if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
                 return formatWhole(cost)
             },
 //leave this space herea
 //what
 
-            display() { return "Effect: Accelerates Light Energy gain by " + format(tmp.p.buyables[11].effect) + "x/s." + "\nBuy 1 Photon Accelerator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Photon Accelerators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id))) + " Light Energy."},
+            display() { return "Effect: Accelerates light energy gain by " + format(tmp.p.buyables[11].effect) + "x/s." + "\nBuy 1 Photon Accelerator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Photon Accelerators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id))) + " light energy."},
             canAfford() { return player.p.power.gte(this.cost()) },
             effect() {
                 return new Decimal(5).times(getBuyableAmount(this.layer, 11).times(2.5).pow(5)).max(1)
