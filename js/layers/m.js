@@ -163,6 +163,11 @@ addLayer("m", {
         },
 
     },
+    automate(){
+
+        if (canBuyBuyable("m", 11)) buyBuyable("m", 11)
+
+    },
     milestones: {
       
             0: {requirementDescription: "5 Melge Fabricators",
@@ -227,6 +232,7 @@ addLayer("m", {
         if (hasUpgrade('m', 23)) mult = mult.times(upgradeEffect('m', 23))
         if(getBuyableAmount(this.layer, 11) > 4 ) mult = mult.times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))
         if (player.i.unlocked) mult = mult.times(player.i.points.add(1));
+        if (player.ee.unlocked) mult = mult.times(tmp.ee.fireEff)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses

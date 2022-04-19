@@ -13,6 +13,7 @@ addLayer("i", {
     branches: ["m"],
 		enGainMult() {
 			let mult = new Decimal(1);
+            if (player.ee.unlocked) mult = mult.times(tmp.ee.waterEff)
 			return mult;
 		},
         improverEff(){

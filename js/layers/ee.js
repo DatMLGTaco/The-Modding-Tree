@@ -86,7 +86,7 @@ addLayer("ee", {
 
     
     effBase() {
-        let base = new Decimal(1.1);
+        let base = new Decimal(4);
         return base;
     },
 
@@ -113,16 +113,22 @@ addLayer("ee", {
 
 
     fireGen(){
-       return tmp.ee.effect.pow(1.2)
+       firegen = tmp.ee.effect.pow(3).log(1.1)
+
+       return firegen
     },
     fireExp() {
-        let exp = new Decimal(1/3);
+        let exp = new Decimal(1/2.5);
         return exp;
     },
     fireEff() {
         if (!player.ee.unlocked) return new Decimal(1);
         if (!hasMilestone("ee", 0)) return new Decimal(1);
-        return player.ee.fire.plus(1).pow(this.fireExp())
+        x = player.ee.fire.plus(1).pow(this.fireExp())
+        x = x.pow(2)
+
+
+        return x
         // 
     },
 
@@ -150,7 +156,7 @@ addLayer("ee", {
 
 
  waterGen(){
-    return tmp.ee.effect.pow(0.9)
+    return tmp.ee.effect.pow(1.33).log(1.1)
 },
  waterExp() {
     let exp = new Decimal(1/2);
@@ -168,10 +174,11 @@ addLayer("ee", {
 
 
  airGen(){
-    return tmp.ee.effect.times(15)
+    return tmp.ee.effect.times(15).log(1.1).times(15)
 },
  airExp() {
     let exp = new Decimal(1/2);
+    if (player.ee.air.log(100).sub(3).max(0)<1/2) {exp = exp.plus(player.ee.air.log(100).sub(3).max(0))} else {exp = exp.times(2)};
     return exp;
 },
  airEff() {
@@ -232,6 +239,8 @@ addLayer("ee", {
     
     ]
             ],
+            "blank",
+            "blank",
     "milestones",
     "blank",
     "upgrades",

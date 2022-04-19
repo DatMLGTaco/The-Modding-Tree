@@ -49,8 +49,10 @@ function getPointGen() {
 	if (hasUpgrade('m', 22)) gain = gain.times(upgradeEffect('m', 22))
 	if (hasUpgrade('i', 11)) gain = gain.times(upgradeEffect('i', 11))
 	if (hasUpgrade('p', 11)) gain = gain.times(upgradeEffect('p', 11))
+	if (hasUpgrade('sp', 11)) gain = gain.times(upgradeEffect('sp', 11))
 	if (hasMilestone('i', 0)) gain = gain.times(5)
 	if (hasMilestone('p', 1)) gain = gain.times(tmp.p.powerEff)
+	if (player.ee.unlocked) gain = gain.times(tmp.ee.fireEff)
 	if (player.i.unlocked) gain = gain.times(tmp.i.improverEff);
 	return gain
 }

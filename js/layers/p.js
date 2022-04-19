@@ -125,10 +125,12 @@ addLayer("p", {
     powerEff() {
         if (!player.p.unlocked) return new Decimal(1);
         if (!hasMilestone("p", 1)) return new Decimal(1);
-        return player.p.power.plus(1).pow(this.powerExp()).times(tmp.p.sliderEff);
+        x = player.p.power.plus(1).pow(this.powerExp()).times(tmp.p.sliderEff);
+        if (player.ee.unlocked) x = x.times(tmp.ee.airEff)
+        return x
         // 
     },
-    tabFormat() { if (!hasMilestone("p", 1)){ return ([["main-display"],
+    tabFormat() { if (player.p.points < 10){ return ([["main-display"],
             "main-display",
             "prestige-button",
 			"resource-display",
@@ -145,7 +147,7 @@ addLayer("p", {
 		]
     )
 }
-        if (hasMilestone("p", 1))  return ([
+        if (player.p.points > 9)  return ([
         "main-display",
 
         "resource-display",
