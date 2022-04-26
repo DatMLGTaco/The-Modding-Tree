@@ -74,39 +74,7 @@ addLayer("sp", {
 
 
 
-    buyables: {
-        11: {
-            title: "Convert ",
-            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
-                if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                let cost = Decimal.pow(2, x.add(9.25).pow(1.25))
-                return formatWhole(cost)
-            },
-//leave this space herea
-//what
 
-            display() { return "Effect: Accelerates light energy gain by " + format(tmp.sp.buyables[11].effect) + "x/s." + "\nBuy 1 Photon Accelerator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Buyables" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id))) + " light energy."},
-            canAfford() { return player.sp.points.gte(this.cost()) },
-            effect() {
-                return new Decimal(5).times(getBuyableAmount(this.layer, 11).times(2.5).pow(5)).max(1)
-            },
-            style() { 
-                rgb = new Decimal (tmp.p.power).log(2)
-                if (rgb<101) rgb = 100
-                if(rgb>254) rgb = 255  
-                return {"background-color": ("rgb("+rgb+", "+rgb+", "+rgb+")"), } },
-            buy() { //amonger type beat
-                player[this.layer].power = player[this.layer].power.sub(this.cost())
-                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
-            },
-            unlocked() {
-                x = false
-                if(hasUpgrade('i', 22)) x = true
-                return x
-            },
-        },
-    
-    },   
     position: 3,
     milestones: {
         0: {requirementDescription: "1 Subatomic Particle",
@@ -174,13 +142,19 @@ addLayer("sp", {
         subatomic: {
             quarks: {
                 content: [
+                    ["row",[
+                        ["column", [["display-text", function() {
+                
+                            return "You have <style>h2 {color:" + "#00ff00" + "} h2 {text-shadow: 0 0 10px " + "#00ff00" + ";} </style><h2>" + formatWhole(player.sp.quarks) + "</h2> Quarks."}]]]
+                    //<p style='color:      ;'>
+                    ]
+                            ],
 
-                    "buyables",
 
                 ],
                 buttonStyle(){
 
-                    if (player.tab == "sp" && player.subtabs.sp.main == "particles" && player.subtabs.sp.particles == "quarks") return {'background-color' : "#005418"}
+                    if (player.tab == "sp" && player.subtabs.sp.main == "particles" && player.subtabs.sp.particles == "quarks") return {'background-color' : "#00ff00"}
   
                   },
             },
@@ -192,9 +166,9 @@ addLayer("sp", {
             display() {return "<h3>Convert " + player.sp.buyPercent + "% of subatomic particles to quarks. <p>Currently: convert " + tmp.sp.clickables[11].effect + " particles into "+ tmp.sp.clickables[11].effect +" quarks."},
             unlocked() {if (hasUpgrade("sp" , 12)) return true},
             canClick() {if (hasUpgrade("sp" , 12)) return true},
-            onclick() {
-                player.sp.quarks = player.sp.quarks + tmp.sp.clickables[11].effect
-
+            onClick() {
+                player.sp.quarks = new Decimal (player.sp.quarks.plus(tmp.sp.clickables[11].effect))
+                player.sp.points = new Decimal (player.sp.points.sub(tmp.sp.clickables[11].effect))
 
             },
             effect(){return formatWhole(new Decimal(player.sp.points*(player.sp.buyPercent/100)).max(1))},
