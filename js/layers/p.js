@@ -240,7 +240,7 @@ addLayer("p", {
             },
             unlocked() {
                 x = false
-                if(hasUpgrade('i', 22)) x = true
+                if(hasUpgrade('i', 22)&&hasUpgrade('p', 11)&&hasMilestone('p', 1)) x = true
                 return x
             },
         },
