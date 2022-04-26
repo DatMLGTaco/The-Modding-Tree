@@ -124,7 +124,7 @@ addLayer("sp", {
     },
     
     image(){
-        if (!player.sp.unlocked) return ""
+        if (!player.sp.unlocked) return null
         return "https://media1.giphy.com/media/moztbdp3Y93zlq7sIH/giphy.gif?cid=790b7611dc90382df7b886eee3fda23e71749404e9b6e703&rid=giphy.gif&ct=g" },
     style() {
     return {"background-image" : "url('https://media3.giphy.com/media/UZLkKp1DiyP9LRmCcB/giphy.gif?cid=790b76119561afe82af5799af3760b150438217d11c28c33&rid=giphy.gif&ct=g')"
