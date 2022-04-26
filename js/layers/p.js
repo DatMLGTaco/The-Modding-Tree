@@ -1,7 +1,7 @@
 addLayer("p", {
     name: "Photons", // This is optional, only used in a few places, If absent it just uses the layer id.
     symbol: "P", // This appears on the layer's node. Default is the id with the first letter capitalized
-    position: 0, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+    position: 1, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
@@ -17,13 +17,24 @@ addLayer("p", {
 			let mult = new Decimal(1);
 			return mult;
 		},
+        doReset(resettingLayer) {
+            let keep = [];
+            if (hasMilestone("ee", 2)) keep.push("milestones"), keep.push("upgrades")
+            if (layers[resettingLayer].row > this.row) layerDataReset("p", keep)
+        },
     upgrades:{
         11:{
         title: "Subatomic Breakthrough",
-        description: "Increase fabric gain based on number of photons.",
+        description() {
+
+        if (!hasUpgrade("sp", 11)) return "Increase fabric gain based on number of photons.";
+        return "Increase fabric and synergy effect based on number of photons."
+        }, 
         cost: new Decimal(1), 
         effect() {
-            return player[this.layer].points.add(1).times(5)
+            eff = player[this.layer].points.add(1).times(5)
+            if (hasUpgrade('sp', 11)) eff = eff.pow(upgradeEffect('sp', 11))
+            return eff
         },
         effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },   
     }, 
@@ -204,7 +215,9 @@ addLayer("p", {
             title: "Photon Accelerator",
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                let cost = Decimal.pow(2, x.add(9.25).sub(tmp.p.upgrades[13].effect).pow(1.25))
+                base = x.add(9.25)
+                if (hasUpgrade("p", 13)) base = base.sub(tmp.p.upgrades[13].effect)
+                let cost = Decimal.pow(2, base.pow(1.25))
                 if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
                 return formatWhole(cost)
             },
@@ -237,9 +250,9 @@ addLayer("p", {
     ],
     style() {
         x = {'background-color': '#0F0F0F'}
-        let rgb = Math.ceil(5*player[this.layer].points) 
-        if (rgb>100) rgb= Math.ceil(100+player[this.layer].points^0.3)
-        if (rgb>150) rgb= 150
+        let rgb = Math.ceil(5*player[this.layer].points+player[this.layer].buyables[11]) 
+        if (rgb>100) rgb= rgb = 100+Math.ceil(player[this.layer].buyables[11]/5)
+        if (rgb>125) rgb= 125
         return {"background-color": ("rgb("+rgb+", "+rgb+", "+rgb+")") } },
     layerShown(){return true}
     

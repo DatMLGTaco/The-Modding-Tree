@@ -1,7 +1,9 @@
 
 
 addLayer("ee", {
-    symbol: "EE",
+    symbol(){ 
+    return "EE"
+    },
     name: "Elemental Energy",
     startData() { return {                  // startData is a function that returns default data for a layer. 
         unlocked: false,                     // You can add more variables here to add them to your layer.
@@ -22,11 +24,11 @@ addLayer("ee", {
     baseResource: "melge essence",                 // The name of the resource your prestige gain is based on.
     baseAmount() { return player.m.points },  // A function to return the current amount of baseResource.
 
-    requires: new Decimal(1e10),              // The amount of the base needed to  gain 1 of the prestige currency.
+    requires: new Decimal(1e75),              // The amount of the base needed to  gain 1 of the prestige currency.
                                             // Also the amount required to unlock the layer.
 
     type: "normal",                         // Determines the formula used for calculating prestige currency.
-    exponent: 0.025,                          // "normal" prestige gain is (currency^exponent).
+    exponent: 0.015,                          // "normal" prestige gain is (currency^exponent).
 
     gainMult() {                            // Returns your multiplier to your gain of the prestige resource.
         return new Decimal(1)               // Factor in any bonuses multiplying gain here.
@@ -34,7 +36,7 @@ addLayer("ee", {
     gainExp() {                             // Returns the exponent to your gain of the prestige resource.
         return new Decimal(1)
     },
-
+    position: 2,
     /*
 
     Milestones
@@ -48,14 +50,14 @@ addLayer("ee", {
             return s
         } 
         },
-        1: {requirementDescription: "2 EE",
-        done() {return player.ee.best.gte(2)}, // Used to determine when to give the milestone
-        effectDescription() { s = "Keep Melge upgrades, buyables, and milestones on all row 3 resets."
+        1: {requirementDescription: "3 EE",
+        done() {return player.ee.best.gte(3)}, // Used to determine when to give the milestone
+        effectDescription() { s = "Keep Melge upgrades, buyables, and milestones on all row 3 resets or below."
         return s
         } 
         },
-        2: {requirementDescription: "3 EE",
-        done() {return player.ee.best.gte(3)}, // Used to determine when to give the milestone
+        2: {requirementDescription: "15 EE",
+        done() {return player.ee.best.gte(15)}, // Used to determine when to give the milestone
         effectDescription() { s = "Keep all row 2 upgrades and milestones on all row 3 resets."
         return s
         } 
@@ -97,9 +99,7 @@ addLayer("ee", {
         return eff;
     },
 
-    effectDescription() {
-        if (hasMilestone("ee", 0)) {return "which is generating "+format(tmp.ee.earthGen)+" fire, "} else {return ""}
-    },
+
 
     update(diff) {
         if (player.ee.unlocked&&hasMilestone("ee", 0)) player.ee.fire = player.ee.fire.plus(tmp.ee.fireGen.times(diff));
@@ -113,9 +113,10 @@ addLayer("ee", {
 
 
     fireGen(){
-       firegen = tmp.ee.effect.pow(3).log(1.1)
+    if (tmp.ee.effect < 1) return new Decimal (0)
+    firegen = tmp.ee.effect.add(1).pow(3).log(1.1)
 
-       return firegen
+    return firegen
     },
     fireExp() {
         let exp = new Decimal(1/2.5);
@@ -137,8 +138,8 @@ addLayer("ee", {
 
 
  earthGen(){
-     if (tmp.ee.effect < 1) return new Decimal (0)
-    return tmp.ee.effect.log(1.1)
+    if (tmp.ee.effect < 1) return new Decimal (0)
+    return tmp.ee.effect.add(1).log(1.1)
 },
  earthExp() {
     let exp = new Decimal(1/9);
@@ -156,7 +157,8 @@ addLayer("ee", {
 
 
  waterGen(){
-    return tmp.ee.effect.pow(1.33).log(1.1)
+    if (tmp.ee.effect < 1) return new Decimal (0)
+    return tmp.ee.effect.add(1).pow(1.33).log(1.1)
 },
  waterExp() {
     let exp = new Decimal(1/2);
@@ -174,7 +176,8 @@ addLayer("ee", {
 
 
  airGen(){
-    return tmp.ee.effect.times(15).log(1.1).times(15)
+    if (tmp.ee.effect < 1) return new Decimal (0)
+    return tmp.ee.effect.times(15).log(1.1).times(15).max(0)
 },
  airExp() {
     let exp = new Decimal(1/2);

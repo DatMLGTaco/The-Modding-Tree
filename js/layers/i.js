@@ -10,6 +10,11 @@ addLayer("i", {
     requires: new Decimal(10), // Can be a function that takes requirement increases into account
     resource: "Improvers", // Name of prestige currency
     canBuyMax() {return false},
+    doReset(resettingLayer) {
+        let keep = [];
+        if (hasMilestone("ee", 2))  keep.push("milestones"), keep.push("upgrades")
+        if (layers[resettingLayer].row > this.row) layerDataReset("i", keep)
+    },
     branches: ["m"],
 		enGainMult() {
 			let mult = new Decimal(1);

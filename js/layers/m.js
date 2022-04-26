@@ -40,7 +40,7 @@ addLayer("m", {
 12:{
     title: "Woven Fabric",
     description: "Melge upgrades 2, 3, and 4 all use a better formula.",
-    cost: new Decimal(4e11),
+    cost: new Decimal(4e15),
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {
             'background-color': '#ffcb52' 
@@ -100,6 +100,7 @@ addLayer("m", {
         if (hasUpgrade('i' , 22)) l = new Decimal(1.05)
         if (hasUpgrade(this.layer, 31)) if (z>2000) y = new Decimal(y.div(z.log(l*1.6))) 
         eff = z.pow(x).log(l.pow(y)).max(1)
+        if (hasUpgrade('sp', 11)) eff = eff.times(upgradeEffect('p', 11).log(1.01))
         if (hasUpgrade('m', 32)) eff = eff.times(upgradeEffect('m', 23))
         return eff
     },
@@ -175,9 +176,10 @@ addLayer("m", {
                 effectDescription() { s = "Melge Fabricators add to the melge essence multiplier" ; return s } ,
                 unlocked() {
                     let unlocked1 = false
-                    if (hasUpgrade('m', 23)&&(getBuyableAmount(this.layer, 11) > 3 )) unlocked1 = true
+                    //if (hasUpgrade('m', 23)&&(getBuyableAmount(this.layer, 11) > 3 )) unlocked1 = true
                     return unlocked1
                 },
+                
                 style() { if (hasMilestone('m', 0)){
                     g = 100 - Math.ceil(6*getBuyableAmount(this.layer, 11)) 
                     b = 50 - Math.ceil(3*getBuyableAmount(this.layer, 11)) 
@@ -221,6 +223,7 @@ addLayer("m", {
         let keep = [];
         if (hasMilestone("p", 0)) keep.push("upgrades")
         if (hasMilestone("i", 0)) keep.push("buyables"), keep.push("milestones")
+        if (hasMilestone("ee", 1)) keep.push("buyables"), keep.push("milestones"), keep.push("upgrades")
         if (layers[resettingLayer].row > this.row) layerDataReset("m", keep)
     },
     baseResource: "fabric", // Name of resource prestige is based on
@@ -254,12 +257,15 @@ addLayer("m", {
             title: "Melge Fabricator",
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                let cost = Decimal.pow(2, x.add(9.25).sub(tmp.p.upgrades[13].effect).pow(2.25))
+                base = x.add(9.25)
+                if (hasUpgrade("p", 13)) base = base.sub(tmp.p.upgrades[13].effect)
+                let cost = Decimal.pow(2, base.pow(2.25))
                 if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
                 return cost.floor()
             },
 //leave this space herea
 //what
+            purchaseLimit: 10,
             display() { return "Effect: Generates " + format(new Decimal(5).times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))) + "% of melge gain/second" + "\nBuy 1 Melge Fabricator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Melge Fabricators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id)))},
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             style() { 
