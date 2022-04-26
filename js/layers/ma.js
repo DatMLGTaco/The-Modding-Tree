@@ -15,7 +15,7 @@ addLayer("ma", {
     colorBoolean(){
         if (player.ma.color >= 1) player.ma.bool = true
         if (player.ma.color <= 0) player.ma.bool = false
-        player.ma.points = new Decimal (player.ma.color)
+
     },
 
     color(){
@@ -62,9 +62,11 @@ addLayer("ma", {
               };
         if (player.ma.bool == true){
             player.ma.color = player.ma.color - 0.01
-          return getGradientColor('#0051e8', '#00ddff', player.ma.color);
+            if (player.ma.color < 0) player.ma.color = 0
+          return getGradientColor('#0000e8', '#00ddff', player.ma.color);
         } else {
             player.ma.color = player.ma.color + 0.01
+            if (player.ma.color > 1) player.ma.color = 1
             return getGradientColor('#0051e8', '#00ddff', player.ma.color);
         }
         },                     // The color for this layer, which affects many elements.
@@ -100,4 +102,30 @@ addLayer("ma", {
     upgrades: {
         // Look in the upgrades docs to see what goes here!
     },
+    tabFormat: [
+    ["row",[
+        ["column", [["display-text", function() {
+
+            return "<style>h1 {color:" + tmp.ma.color + "} h1 {text-shadow: 0 0 10px " + tmp.ma.color + ";} </style><h1>The Machine"}]]]
+    //<p style='color:      ;'>
+    ]
+            ],
+    "blank",
+    "main-display",
+    "blank",
+    "prestige-button",
+    "blank",
+    "resource-display",
+    "blank",
+
+
+            "blank",
+            "blank",
+    "milestones",
+    "blank",
+    "upgrades",
+    "blank",
+    "blank",
+    "blank", "blank"
+],
 })

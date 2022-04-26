@@ -250,7 +250,7 @@ addLayer("p", {
     ],
     style() {
         x = {'background-color': '#0F0F0F'}
-        let rgb = Math.ceil(5*player[this.layer].points+player[this.layer].buyables[11]) 
+        let rgb = Math.ceil(2*player[this.layer].points+(player[this.layer].buyables[11]/5)) 
         if (rgb>100) rgb= rgb = 100+Math.ceil(player[this.layer].buyables[11]/5)
         if (rgb>125) rgb= 125
         return {"background-color": ("rgb("+rgb+", "+rgb+", "+rgb+")") } },

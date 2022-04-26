@@ -5,7 +5,8 @@ addLayer("sp", {
         unlocked: false,                     // You can add more variables here to add them to your layer.
         points: new Decimal(0),             // "points" is the internal name for the main resource of the layer.
         quarks: new Decimal(0),
-        unlockOrder: new Decimal(0)
+        buyPercent: new Decimal(0),
+        unlockOrder: new Decimal(0),
     }},
 
 
@@ -137,7 +138,7 @@ addLayer("sp", {
                 ],
                 buttonStyle(){
 
-                   return {'background-color' : "#005418"}
+                  if (player.tab == "sp" && player.subtabs.sp.main == "particles" /*&& player.subtabs.e.mRNAupg == "Upgrades"*/) return {'background-color' : "#005418"}
 
                 },
 
@@ -151,12 +152,21 @@ addLayer("sp", {
 
 
                 ],
+                buttonStyle(){
 
+                    if (player.tab == "sp" && player.subtabs.sp.main == "upgrades" /*&& player.subtabs.e.mRNAupg == "Upgrades"*/) return {'background-color' : "#005418"}
+  
+                  },
             },
             milestones: {
                 content: [
                     "milestones"
-                ]
+                ],
+                buttonStyle(){
+
+                    if (player.tab == "sp" && player.subtabs.sp.main == "milestones" /*&& player.subtabs.e.mRNAupg == "Upgrades"*/) return {'background-color' : "#005418"}
+  
+                  },
             }
         },
         subatomic: {
@@ -166,9 +176,26 @@ addLayer("sp", {
                     "buyables",
 
                 ],
+                buttonStyle(){
 
+                    if (player.tab == "sp" && player.subtabs.sp.main == "particles" && player.subtabs.sp.particles == "quarks") return {'background-color' : "#005418"}
+  
+                  },
             },
             // There could be another set of microtabs here
+        }
+    },
+    clickables: {
+        11: {
+            display() {return "<h3>Convert " + player.sp.buyPercent + "% of subatomic particles to quarks. <p>Currently: convert " + tmp.sp.clickables[11].effect + " particles into "+ tmp.sp.clickables[11].effect +" quarks."},
+            unlocked() {if (hasUpgrade("sp" , 12)) return true},
+            canClick() {if (hasUpgrade("sp" , 12)) return true},
+            onclick() {
+                player.sp.quarks = player.sp.quarks + tmp.sp.clickables[11].effect
+
+
+            },
+            effect(){return formatWhole(new Decimal(player.sp.points*(player.sp.buyPercent/100)).max(1))},
         }
     },
     tabFormat: 
@@ -179,9 +206,11 @@ addLayer("sp", {
     "blank",
     "resource-display",
     "blank",
-
+    ["slider", ["buyPercent", "1", "100"]],
     "blank",
-
+    "clickables",
+    "blank",
+    
     ["microtabs", "main"],
     "blank",
 
