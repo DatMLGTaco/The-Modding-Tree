@@ -22,7 +22,7 @@ addLayer("sp", {
                                             // Also the amount required to unlock the layer.
 
     type: "static",                         // Determines the formula used for calculating prestige currency.
-    exponent: 0.5,                          // "normal" prestige gain is (currency^exponent).
+    exponent: 0.8,                          // "normal" prestige gain is (currency^exponent).
 
     gainMult() {                            // Returns your multiplier to your gain of the prestige resource.
         return new Decimal(1)               // Factor in any bonuses multiplying gain here.
@@ -37,14 +37,13 @@ addLayer("sp", {
 
 
 
-
     upgrades:{
         11:{
         title: "Subatomic Breakthrough²",
         description: "Increase Subatomic Breakthrough effect based on Subatomic Particles and add a new effect.",
         cost: new Decimal(1), 
         effect() {
-            return new Decimal(player[this.layer].points.add(1).times(3).pow(0.78))
+            return new Decimal(player[this.layer].points.add(1).times(3).pow(0.7))
         },
         effectDisplay() { return "^" + format(upgradeEffect(this.layer, this.id)) },   
     }, 
@@ -55,23 +54,36 @@ addLayer("sp", {
             currencyDisplayName: "light energy",
             currencyInternalName: "power",
             currencyLayer: "p",
-            effect() { 
-                let eff = (player.p.power.add(1).log(10).div(3.5));
-              
-                return eff;
-            },
 
-            effectDisplay() { return "-"+format(tmp.p.upgrades[13].effect) },
+
+
+        },       
+         13: {
+            title: "Buymax",
+            description: "Allows you to buy max subatomic particles",
+            cost() { return new Decimal(50) },
 
 
         },
+        51: {
+            title: "Entanglement",
+            description: "Quarks boost quark effect.",
+            cost() { return new Decimal(2) },
+            currencyDisplayName: "quarks",
+            currencyInternalName: "quarks",
+            currencyLayer: "sp",
 
+        },
 
     },
 
+    
 
+    canBuyMax() {
 
-
+        if (hasUpgrade("sp", 13))return true
+        return false
+    },
 
 
 
@@ -83,9 +95,9 @@ addLayer("sp", {
             return s
         } 
         },
-        1: {requirementDescription: "10 Photons",
-        done() {return player.p.best.gte(10)}, // Used to determine when to give the milestone
-        effectDescription() { s = "Unlock the creation of light energy."
+        1: {requirementDescription: "10 Subatomic Particles",
+        done() {return player.sp.best.gte(10)}, // Used to determine when to give the milestone
+        effectDescription() { s = "Photon layer (excluding light energy) doesn't reset on reset"
         return s
     } 
     }
@@ -115,7 +127,7 @@ addLayer("sp", {
             },
             upgrades: {
                 content: [
-                    "upgrades",
+                    ["row", [["upgrade", 11], ["upgrade", 12], ["upgrade", 13]]],
 
 
 
@@ -145,31 +157,42 @@ addLayer("sp", {
                     ["row",[
                         ["column", [["display-text", function() {
                 
-                            return "You have <style>h2 {color:" + "#00ff00" + "} h2 {text-shadow: 0 0 10px " + "#00ff00" + ";} </style><h2>" + formatWhole(player.sp.quarks) + "</h2> Quarks."}]]]
-                    //<p style='color:      ;'>
-                    ]
-                            ],
+                            return "You have <style>h2 {color:" + "#00ff00" + "} h2 {text-shadow: 0 0 10px " + "#00ff00" + ";} </style><h2>" + formatWhole(player.sp.quarks) + "</h2> Quarks.<p>" + "Your Quarks are buffing photonic accelerators by " + formatWhole(tmp.sp.quarkEff) + "%"}]]],
 
+                    //<p style='color:      ;'>
+                    ],
+
+                            ],
+                            "blank",
+                            ["row", [["upgrade", 51]]],
+                            "blank",
 
                 ],
                 buttonStyle(){
 
-                    if (player.tab == "sp" && player.subtabs.sp.main == "particles" && player.subtabs.sp.particles == "quarks") return {'background-color' : "#00ff00"}
+                    if (player.tab == "sp" && player.subtabs.sp.main == "particles" && player.subtabs.sp.subatomic == "quarks") return {'background-color' : "#00ff00"}
   
                   },
             },
             // There could be another set of microtabs here
         }
     },
+    quarkEff(){
+
+        if (hasUpgrade("sp", 51)) return new Decimal(player.sp.quarks/2).times(625).times(player.sp.quarks)
+        return new Decimal(player.sp.quarks/2).times(625)
+
+    },
     clickables: {
         11: {
-            display() {return "<h3>Convert " + player.sp.buyPercent + "% of subatomic particles to quarks. <p>Currently: convert " + tmp.sp.clickables[11].effect + " particles into "+ tmp.sp.clickables[11].effect +" quarks."},
+            display() {return "<h3>Convert " + player.sp.buyPercent + "% of subatomic particles into quarks. <p>Currently: convert " + tmp.sp.clickables[11].effect + " particles into "+ tmp.sp.clickables[11].effect +" quarks."},
             unlocked() {if (hasUpgrade("sp" , 12)) return true},
-            canClick() {if (hasUpgrade("sp" , 12)) return true},
+            canClick() {if (hasUpgrade("sp" , 12)&&player.sp.points > 0) return true},
             onClick() {
+                if (player.sp.points > 0){
                 player.sp.quarks = new Decimal (player.sp.quarks.plus(tmp.sp.clickables[11].effect))
                 player.sp.points = new Decimal (player.sp.points.sub(tmp.sp.clickables[11].effect))
-
+                }
             },
             effect(){return formatWhole(new Decimal(player.sp.points*(player.sp.buyPercent/100)).max(1))},
         }
@@ -197,5 +220,8 @@ addLayer("sp", {
         if (player.p.unlocked) x = true
         return x },          // Returns a bool for if this layer's node should be visible in the tree.
     branches: ["p"],
-
+    hotkeys: [
+        {key: "s", description: "S: Reset for subatomic particles", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+    ],
+    increaseUnlockOrder: ["ma"]
 })

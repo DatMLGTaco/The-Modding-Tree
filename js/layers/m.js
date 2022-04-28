@@ -64,7 +64,7 @@ addLayer("m", {
     }
 },
     effect() {
-        let x = 2
+        let x = 3
         if (hasUpgrade(this.layer, 12)) x = 1.35
         return player.points.times(5).add(1).log(x).add(1)
     },
@@ -110,7 +110,7 @@ addLayer("m", {
     23:{
         title: "Duality",
         description: "Fabric boosts melge essence gain.",
-        cost: new Decimal(10),
+        cost: new Decimal(25),
         style() {                     
             if(hasUpgrade(this.layer, this.id)) return {
                 'background-color': '#ffcb52' 

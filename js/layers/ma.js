@@ -63,11 +63,11 @@ addLayer("ma", {
         if (player.ma.bool == true){
             player.ma.color = player.ma.color - 0.01
             if (player.ma.color < 0) player.ma.color = 0
-          return getGradientColor('#0000e8', '#00ddff', player.ma.color);
+          return getGradientColor('#0000e8', '#00ffaa', player.ma.color);
         } else {
             player.ma.color = player.ma.color + 0.01
             if (player.ma.color > 1) player.ma.color = 1
-            return getGradientColor('#0051e8', '#00ddff', player.ma.color);
+            return getGradientColor('#0000e8', '#00ffaa', player.ma.color);
         }
         },                     // The color for this layer, which affects many elements.
     resource: "Computational Power",            // The name of this layer's main prestige resource.

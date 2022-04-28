@@ -32,7 +32,7 @@ addLayer("i", {
         },
         tabFormat: ["main-display",
         ["row",[
-            ["column", [["display-text", function() {return "Your Improvers are currently multiplying your fabric gain by " + formatWhole(tmp.i.improverEff) + "x!"}]]]
+            ["column", [["display-text", function() {return "Your Improvers are currently multiplying your fabric gain by " + formatWhole(tmp.i.improverEff.times(upgradeEffect("i", 11))) + "x!"}]]]
         
         ]
                 ],
@@ -54,7 +54,9 @@ addLayer("i", {
         description: "Further increase fabric gain based on number of Improvers.",
         cost: new Decimal(10), 
         effect() {
-            return player[this.layer].points.add(1).times(5).pow(0.85)
+            x = new Decimal(1)
+            if (hasAchievement("a", 14)) x = x.div(player.i.points.div(1000).max(1))
+            return player[this.layer].points.add(1).times(5).pow(new Decimal(0.85).pow(x))
         },
         effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },    
         style() {                     
@@ -75,7 +77,7 @@ addLayer("i", {
   },
   22:{
     title: "Immaterial Fabrication",
-    description: "Melge essence boost to fabric exponentially increased.",
+    description: "Improvers cheapen the fabrication of melge essence",
     cost: new Decimal(6000), 
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {

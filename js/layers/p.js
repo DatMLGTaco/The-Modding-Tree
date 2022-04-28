@@ -209,7 +209,11 @@ addLayer("p", {
         },
     
     },
-
+    doReset(resettingLayer) {
+        let keep = [];
+        if (hasMilestone("sp", 1)) keep.push("buyables"), keep.push("milestones"), keep.push("upgrades"), keep.push("points")
+        if (layers[resettingLayer].row > this.row) layerDataReset("p", keep)
+    },
     buyables: {
         11: {
             title: "Photon Accelerator",
@@ -227,7 +231,12 @@ addLayer("p", {
             display() { return "Effect: Accelerates light energy gain by " + format(tmp.p.buyables[11].effect) + "x/s." + "\nBuy 1 Photon Accelerator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Photon Accelerators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id))) + " light energy."},
             canAfford() { return player.p.power.gte(this.cost()) },
             effect() {
-                return new Decimal(5).times(getBuyableAmount(this.layer, 11).times(2.5).pow(5)).max(1)
+                eff = new Decimal(5).times(getBuyableAmount(this.layer, 11).times(2.5).pow(5)).max(1)
+
+                if(player.sp.unlocked&&player.sp.quarks >= 0) eff = eff.times(1+tmp.sp.quarkEff/100)
+
+                return eff
+
             },
             style() { 
                 rgb = new Decimal (tmp.p.power).log(2)
@@ -246,7 +255,7 @@ addLayer("p", {
         },
     },
     hotkeys: [
-        {key: "q", description: "Q: Reset for quarks", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+        {key: "p", description: "P: Reset for photons", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     style() {
         x = {'background-color': '#0F0F0F'}
