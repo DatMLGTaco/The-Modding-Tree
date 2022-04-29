@@ -25,7 +25,7 @@ addLayer("i", {
         eff = new Decimal(1)
         x = new Decimal(50)
         if (player.ee.unlocked) x = x.times(tmp.ee.earthEff)
-        if (player.i.points.times(50).pow(0.9) >= 1) eff = player.i.points.times(x).pow(0.9)
+        if (player.i.points.times(50).pow(0.5) >= 1) eff = player.i.points.times(x).pow(0.5)
 
         return eff
 
@@ -56,7 +56,7 @@ addLayer("i", {
         effect() {
             x = new Decimal(1)
             if (hasAchievement("a", 14)) x = x.div(player.i.points.div(1000).max(1))
-            return player[this.layer].points.add(1).times(5).pow(new Decimal(0.85).pow(x))
+            return player[this.layer].points.add(1).times(1.2).pow(new Decimal(0.85).pow(x))
         },
         effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },    
         style() {                     

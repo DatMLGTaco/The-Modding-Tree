@@ -66,7 +66,7 @@ addLayer("m", {
     effect() {
         let x = 3
         if (hasUpgrade(this.layer, 12)) x = 1.35
-        return player.points.times(5).add(1).log(x).add(1)
+        return player.points.add(1).times(5).log(x).div(2).max(1)
     },
     effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
     unlocked() {
@@ -98,11 +98,11 @@ addLayer("m", {
         if (hasUpgrade(this.layer, 12)) x = new Decimal(1.35)
         if (hasUpgrade('i' , 22)) x = new Decimal(1.75)
         if (hasUpgrade('i' , 22)) l = new Decimal(1.05)
-        if (hasUpgrade(this.layer, 31)) if (z>2000) y = new Decimal(y.div(z.log(l*1.6))) 
-        eff = z.pow(x).log(l.pow(y)).max(1)
+        if (hasUpgrade(this.layer, 31)) y = new Decimal(y.div(z.log(l*1.6))) 
+        eff = (z.pow(x).log(l.pow(y)).max(1)).log(2)
         if (hasUpgrade('sp', 11)) eff = eff.times(upgradeEffect('p', 11).log(1.01))
         if (hasUpgrade('m', 32)) eff = eff.times(upgradeEffect('m', 23))
-        return eff
+        return new Decimal(eff).max(1)
     },
     effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
     },
@@ -123,19 +123,21 @@ addLayer("m", {
         },
         effect() {
             let x = new Decimal(0.25)
+            let y = new Decimal(1)
+            let z = new Decimal(1)
             if (hasUpgrade(this.layer, 12)) x = new Decimal(0.3)
             y = new Decimal(1)
-            z = new Decimal(1.45).div(player.points.max(1).log(2))
+            z = new Decimal(1.45).div(player.points.max(1).log(2).max(1))
             if (hasUpgrade(this.layer, 32)) y = new Decimal(1.4), z = z.times(0.1) 
-            return player.points.add(1).pow(x.times(y)).log(new Decimal(2).pow(z)).max(1)
+            return new Decimal (player.points.add(1).pow(x.times(y)).log(new Decimal(2).pow(z)).max(1)).max(1)
         },
         effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
         },
 
     31:{
         title: "Cohesion",
-        description: "Boosts the effect of Synergy past 2,000 melge essence.",
-        cost: new Decimal(750),
+        description: "Boosts the effect of Synergy",
+        cost: new Decimal(185),
         style() {                     
             if(hasUpgrade(this.layer, this.id)) return {
                 'background-color': '#ffcb52' 
@@ -146,11 +148,25 @@ addLayer("m", {
             if (hasUpgrade('m', 22)) unlocked1 = true
             return unlocked1
         },
+        effectDisplay() {
+            let x = new Decimal(1.25)
+            y = new Decimal(0.9)
+            z = new Decimal(player[this.layer].points.add(1))
+            l = new Decimal (1.25)
+            if (hasUpgrade(this.layer, 12)) x = new Decimal(1.35)
+            if (hasUpgrade('i' , 22)) x = new Decimal(1.75)
+            if (hasUpgrade('i' , 22)) l = new Decimal(1.05)
+            y = new Decimal(y.div(z.log(l*1.6))) 
+            old = (z.pow(x).log(l.pow(0.9)).max(1)).log(2)
+            newn = (z.pow(x).log(l.pow(y)).max(1)).log(2)
+            return "+" + format(newn-old) + "x fabric gain"
+
+        }
         },
     32:{
         title: "Alignment",
         description: "Boost the effects of Duality and Duality boosts Synergy.",
-        cost: new Decimal(850),
+        cost: new Decimal(245),
         style() {                     
             if(hasUpgrade(this.layer, this.id)) return {
                 'background-color': '#ffcb52' 
