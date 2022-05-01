@@ -103,11 +103,44 @@ addLayer("ma", {
                 if(tmp.ma.layerShown) player.ma.alwaysShow = true
         
             },
+    
         
     branches: ["i"],
     upgrades: {
         // Look in the upgrades docs to see what goes here!
     },
+    buyables: {
+        11: {
+            title: "CPU",
+            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
+                base = x.add(8.25)
+                if (hasUpgrade("p", 13)) base = (base.sub(tmp.p.upgrades[13].effect))
+                let cost = Decimal.pow(2, base.pow(2.25))
+                if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
+                return cost.floor()
+            },
+        11: {
+            title: "GPU",
+            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
+                base = x.add(8.25)
+                if (hasUpgrade("p", 13)) base = (base.sub(tmp.p.upgrades[13].effect))
+                let cost = Decimal.pow(2, base.pow(2.25))
+                if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
+                return cost.floor()
+            },
+        11: {
+            title: "RAM",
+            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
+                base = x.add(8.25)
+                if (hasUpgrade("p", 13)) base = (base.sub(tmp.p.upgrades[13].effect))
+                let cost = Decimal.pow(2, base.pow(2.25))
+                if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
+                return cost.floor()
+            },
+        },
     tabFormat: [
     ["row",[
         ["column", [["display-text", function() {
@@ -128,7 +161,7 @@ addLayer("ma", {
             "blank",
             "blank",
     "milestones",
-    "blank",
+    "buyables",
     "upgrades",
     "blank",
     "blank",

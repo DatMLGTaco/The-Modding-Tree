@@ -11,6 +11,7 @@ addLayer("a", {
         if (player.a.color <= 0.05) player.a.bool = false
 
     },
+
     color(){
 
 
@@ -80,6 +81,7 @@ addLayer("a", {
                 "achievements"
 
     ],
+
     baseResource: "fabric",                 // The name of the resource your prestige gain is based on.
     baseAmount() { return player.points },  // A function to return the current amount of baseResource.
 
@@ -112,7 +114,8 @@ addLayer("a", {
 
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {
-                    'background-color': tmp.a.color 
+                    'background-color': tmp.a.color, 
+                    'background-image' : "url('https://media.discordapp.net/attachments/795488970238328875/951246404909691022/attachment.gif')"
             }
         },
         },
@@ -123,7 +126,8 @@ addLayer("a", {
 
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {
-                    'background-color': tmp.a.color 
+                    'background-color': tmp.a.color, 
+                    'background-image' : "url('https://cdn.discordapp.com/attachments/791407985649909791/970223116250927104/clone-clones.gif')"
             }
         },
         },
@@ -134,7 +138,8 @@ addLayer("a", {
 
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {
-                    'background-color': tmp.a.color 
+                    'background-color': tmp.a.color,
+                    'background-image' : "url('https://cdn.discordapp.com/attachments/791407985649909791/970226239363244032/ezgif-4-647cc605c7.gif')"
             }
         },
         },
@@ -227,7 +232,19 @@ addLayer("a", {
         },
 
         },
+        33: {
+            name: "25,000,000 seconds.",
+            done() { return player.sp.total>1||player.ee.total>1||player.ma.total>1 },
+            tooltip() {return "Perform a row 2 reset while "},
 
-    }
+            style() {                     
+                if(hasAchievement(this.layer, this.id)) return {
+                    'background-color': tmp.a.color 
+            }
+        },
+
+        },
+    },
+
 })
 

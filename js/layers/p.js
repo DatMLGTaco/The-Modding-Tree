@@ -251,7 +251,7 @@ addLayer("p", {
             display() { return "Effect: Accelerates light energy gain by " + format(tmp.p.buyables[11].effect) + "x/s." + "\nBuy 1 Photon Accelerator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Photon Accelerators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id))) + " light energy."},
             canAfford() { return player.p.power.gte(this.cost()) },
             effect() {
-                eff = new Decimal(5).times(getBuyableAmount(this.layer, 11).times(2.5).pow(5)).max(1)
+                eff = new Decimal(5).times(getBuyableAmount(this.layer, 11).times(3.5).pow(5.5)).max(1)
 
                 if(player.sp.unlocked&&player.sp.quarks >= 0) eff = eff.times(1+tmp.sp.quarkEff/100)
 

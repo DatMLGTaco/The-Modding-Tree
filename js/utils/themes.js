@@ -1,5 +1,5 @@
 // ************ Themes ************
-var themes = ["default","theme"]
+var themes = ["default","lightmode"]
 
 var colors = {
 	default: {
@@ -13,32 +13,26 @@ var colors = {
 		background_tooltip: "rgba(0, 0, 0, 0.75)",
 	},
 
-	aqua: {
-		1: "#bfdfff",
-		2: "#8fa7bf",
-		3: "#5f6f7f",
-		color: "#bfdfff",
-		points: "#dfefff",
-		locked: "#c4a7b3",
-		background: "#001f3f",
-		background_tooltip: "rgba(0, 15, 31, 0.75)",
-	},
 
-	theme: {
+
+	lightmode: {
 		1: "#00FF00",
 		2: "#FF0000",
 		3: "#0000FF",
 		color: "#FF00FF",
 		points: "#FFFF00",
 		locked: "#00FFFF",
-		background: "#BEEB00",
+		background: "#B00BEE",
+		background_image: "https://tenor.com/view/le-fishe-au-chocolat-gif-24351030",
 		background_tooltip: "rgba(0, 15, 31, 0.75)",
+		
 	},
 }
 
 function changeTheme() {
 
 	colors_theme = colors[options.theme || "default"];
+	document.body.style.setProperty('--background_image', colors_theme["background_image"]);
 	document.body.style.setProperty('--background', colors_theme["background"]);
 	document.body.style.setProperty('--background_tooltip', colors_theme["background_tooltip"]);
 	document.body.style.setProperty('--color', colors_theme["color"]);

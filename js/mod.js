@@ -1,6 +1,6 @@
 let modInfo = {
 	name: "The Melge Tree",
-	id: "melge01",
+	id: "melge011",
 	author: "The Melge",
 	pointsName:"fabric",
 	modFiles: ["layers/i.js", "layers/p.js", "layers/m.js", "layers/ma.js", "layers/ee.js", "layers/sp.js", "tree.js", "nodes/achievements.js"],

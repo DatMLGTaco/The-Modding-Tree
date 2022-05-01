@@ -268,7 +268,7 @@ addLayer("m", {
 //what  
             display() { return "Effect: Generates " + format(new Decimal(5).times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))) + "% of melge gain/second" + "\nBuy 1 Melge Fabricator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Melge Fabricators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id)))},
             canAfford() { return player[this.layer].points.gte(this.cost()) },
-            style() { 
+            style() { if (this.canAfford||tmp[this.layer].buyables[this.id]>0){
                 g = 100 - Math.ceil(6*getBuyableAmount(this.layer, 11)) 
                 b = 50 - Math.ceil(3*getBuyableAmount(this.layer, 11)) 
                 r = 100 + Math.ceil(10*getBuyableAmount(this.layer, 11)) 
@@ -276,7 +276,7 @@ addLayer("m", {
                 if (g<1) g = 0
                 if (r<101) r = 100, g = 100, b= 100
                 if(r>254) r = 255  
-                return {"background-color": ("rgb("+r+", "+g+", "+b+")"), } },
+                return {"background-color": ("rgb("+r+", "+g+", "+b+")"), } }},
             buy() { //amonger type beat
                 player[this.layer].points = player[this.layer].points.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
