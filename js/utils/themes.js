@@ -1,5 +1,5 @@
 // ************ Themes ************
-var themes = ["default", "aqua","Eli2Theme"]
+var themes = ["default", "aqua", "Eli2Theme"]
 
 var colors = {
 	default: {
