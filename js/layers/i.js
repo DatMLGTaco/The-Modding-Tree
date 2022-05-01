@@ -113,16 +113,16 @@ addLayer("i", {
         return new Decimal(1)
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
-    milestones: {
+    /*milestones: {
         0: {requirementDescription: "1e11 Improvers",
         done() {return player.i.best.gte(1e11)}, // Used to determine when to give the milestone
-        effectDescription() { s = "Keep Melge Fabricators on all resets."
+        effectDescription() { s = ""
         if (hasMilestone('p', 0)) s = "The Melge Layer does not reset on layer 2 resets."
         return s
     }, 
     unlocked () {x = false; if (player.i.best > 1000000000) x = true; return x},
     }
-    },
+    },*/
     hotkeys: [
         {key: "i", description: "I: Reset for Improvers", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
