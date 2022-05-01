@@ -230,15 +230,16 @@ addLayer("sp", {
 
     "blank", "blank"
     ],
-    alwaysShow(){
 
-        if(tmp.sp.layerShown) player.sp.alwaysShow = true
-
-    },
     layerShown() { 
         x = false
         if (player.p.unlocked||player.sp.alwaysShow == true) x = true
         return x },          // Returns a bool for if this layer's node should be visible in the tree.
+        alwaysShow(){
+
+            if(tmp.sp.layerShown) player.sp.alwaysShow = true
+    
+        },
     branches: ["p"],
     hotkeys: [
         {key: "s", description: "S: Reset for subatomic particles", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
