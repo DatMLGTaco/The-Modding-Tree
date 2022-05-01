@@ -1,5 +1,5 @@
 // ************ Themes ************
-var themes = ["default", "aqua", "Eli2Theme"]
+var themes = ["default","theme"]
 
 var colors = {
 	default: {
@@ -12,6 +12,7 @@ var colors = {
 		background: "#0f0f0f",
 		background_tooltip: "rgba(0, 0, 0, 0.75)",
 	},
+
 	aqua: {
 		1: "#bfdfff",
 		2: "#8fa7bf",
@@ -22,17 +23,19 @@ var colors = {
 		background: "#001f3f",
 		background_tooltip: "rgba(0, 15, 31, 0.75)",
 	},
-	Eli2Theme: {
+
+	theme: {
 		1: "#00FF00",
 		2: "#FF0000",
 		3: "#0000FF",
 		color: "#FF00FF",
 		points: "#FFFF00",
 		locked: "#00FFFF",
-		background: "#FFFFFF",
+		background: "#BEEB00",
 		background_tooltip: "rgba(0, 15, 31, 0.75)",
 	},
 }
+
 function changeTheme() {
 
 	colors_theme = colors[options.theme || "default"];
