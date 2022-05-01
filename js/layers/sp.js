@@ -7,6 +7,7 @@ addLayer("sp", {
         quarks: new Decimal(0),
         buyPercent: new Decimal(0),
         unlockOrder: new Decimal(0),
+        alwaysShow: false
     }},
 
 
@@ -90,22 +91,28 @@ addLayer("sp", {
     position: 3,
     milestones: {
         0: {requirementDescription: "1 Subatomic Particle",
-            done() {return player.p.best.gte(1)}, // Used to determine when to give the milestone
+            done() {return player.sp.total.gte(1)}, // Used to determine when to give the milestone
             effectDescription() { s = "Autobuy all previous buyables."
             return s
         } 
         },
-        1: {requirementDescription: "10 Subatomic Particles",
-        done() {return player.sp.best.gte(10)}, // Used to determine when to give the milestone
+        1: {requirementDescription: "5 Total Subatomic Particles",
+        done() {return player.sp.total.gte(5)}, // Used to determine when to give the milestone
         effectDescription() { s = "Photon layer (excluding light energy) doesn't reset on reset"
         return s
-    } 
-    }
-    },
+        } 
+        },
+        2: {requirementDescription: "10 Total Subatomic Particles",
+        done() {return player.sp.total.gte(10)}, // Used to determine when to give the milestone
+        effectDescription() { s = "Unlock new Photon Upgrades."
+        return s
+        } 
+        },
+        },
     
     image(){
-        if (!player.sp.unlocked) return null
-        return "https://media1.giphy.com/media/moztbdp3Y93zlq7sIH/giphy.gif?cid=790b7611dc90382df7b886eee3fda23e71749404e9b6e703&rid=giphy.gif&ct=g" },
+        if (player.sp.unlocked) {
+        return "https://media1.giphy.com/media/moztbdp3Y93zlq7sIH/giphy.gif?cid=790b7611dc90382df7b886eee3fda23e71749404e9b6e703&rid=giphy.gif&ct=g"} },
     style() {
     return {"background-image" : "url('https://media3.giphy.com/media/UZLkKp1DiyP9LRmCcB/giphy.gif?cid=790b76119561afe82af5799af3760b150438217d11c28c33&rid=giphy.gif&ct=g')"
     }},
@@ -142,6 +149,14 @@ addLayer("sp", {
             },
             milestones: {
                 content: [
+                    ["row",[
+                        ["column", [["display-text", function() {
+                
+                            return "You have made <style>h2 {color:" + "#ffffff" + "} h2 {text-shadow: 0 0 10px " + "#ffffff" + ";} </style><h2>" + formatWhole(player.sp.total) + "</h2> Total Subatomic Particles.<p>"}]]],
+
+                    //<p style='color:      ;'>
+                    ],
+                ],
                     "milestones"
                 ],
                 buttonStyle(){
@@ -215,9 +230,14 @@ addLayer("sp", {
 
     "blank", "blank"
     ],
+    alwaysShow(){
+
+        if(tmp.sp.layerShown) player.sp.alwaysShow = true
+
+    },
     layerShown() { 
         x = false
-        if (player.p.unlocked) x = true
+        if (player.p.unlocked||player.sp.alwaysShow == true) x = true
         return x },          // Returns a bool for if this layer's node should be visible in the tree.
     branches: ["p"],
     hotkeys: [

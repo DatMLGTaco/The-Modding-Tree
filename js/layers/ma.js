@@ -7,7 +7,8 @@ addLayer("ma", {
         points: new Decimal(0),             // "points" is the internal name for the main resource of the layer.
         unlockOrder: new Decimal(0),
         color: 1,
-        bool: true
+        bool: true,
+        alwaysShow: false
     }},
 
 
@@ -95,8 +96,13 @@ addLayer("ma", {
         return x }, // Can be a function that takes requirement increases into account
         layerShown() { 
             x = false
-            if (player.i.unlocked) x = true
+            if (player.i.unlocked||player.ma.alwaysShow == true) x = true
             return x },            // Returns a bool for if this layer's node should be visible in the tree.
+            alwaysShow(){
+
+                if(tmp.ma.layerShown) player.ma.alwaysShow = true
+        
+            },
         
     branches: ["i"],
     upgrades: {

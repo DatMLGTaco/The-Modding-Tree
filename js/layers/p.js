@@ -8,6 +8,7 @@ addLayer("p", {
         best: new Decimal(0),
         total: new Decimal(0),
         power: new Decimal(0),
+        unlockOrder: new Decimal(0),
     }},
     color: "#ffffff",
     resource: "Photons", // Name of prestige currency
@@ -67,8 +68,25 @@ addLayer("p", {
               
                 return eff;
             },
-            unlocked() { return hasUpgrade("p", 12)},
+            unlocked() { return hasAchievement("a", 24)&&getBuyableAmount("m", 11)>4},
             effectDisplay() { return "-"+format(tmp.p.upgrades[13].effect) },
+
+
+        },
+        21: {
+            title: "Refraction",
+            description: "Subatomic Breakthrough multiplies light energy gain at a reduced rate.",
+            cost() { return new Decimal(1e18) },
+            currencyDisplayName: "light energy",
+            currencyInternalName: "power",
+            currencyLayer: "p",
+            effect() { 
+                let eff = format(tmp.p.upgrades[11].effect.log(2))
+              
+                return eff;
+            },
+            unlocked() { return hasUpgrade("p", 12)},
+            effectDisplay() { return "x"+format(tmp.p.upgrades[21].effect) },
 
 
         },
@@ -76,9 +94,10 @@ addLayer("p", {
 
     },
     requires() {
-        x = new Decimal(1e9)
+        x = new Decimal(25e6)
         y = new Decimal(1)
         if (player[this.layer].unlocked) y = player[this.layer].points.add(1).pow(1.5)
+        if (player.p.unlockOrder > 0) x = new Decimal(5e11)
         if (player[this.layer].points>=10) y=y.times(x)
         x = x.times(y)
         return x }, // Can be a function that takes requirement increases into account
@@ -96,8 +115,8 @@ addLayer("p", {
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     milestones: {
-        0: {requirementDescription: "1 Photon",
-            done() {return player.p.best.gte(1)}, // Used to determine when to give the milestone
+        0: {requirementDescription: "3 Photons",
+            done() {return player.p.best.gte(3)}, // Used to determine when to give the milestone
             effectDescription() { s = "Melge upgrades don't reset on all resets on this layer or below."
             return s
         } 
@@ -120,7 +139,7 @@ addLayer("p", {
         if (!hasMilestone("p", 1)) eff = new Decimal (0)
         eff = eff.times(tmp.p.sliderEff)
         if (tmp.p.buyables[11].effect>=1) eff = eff.times(tmp.p.buyables[11].effect)
-
+        if (hasUpgrade("p", 21)) eff = eff.times(upgradeEffect("p", 21))
         return eff;
     },
     effectDescription() {
@@ -263,7 +282,7 @@ addLayer("p", {
         if (rgb>100) rgb= rgb = 100+Math.ceil(player[this.layer].buyables[11]/5)
         if (rgb>125) rgb= 125
         return {"background-color": ("rgb("+rgb+", "+rgb+", "+rgb+")") } },
-    layerShown(){return true}
-    
+    layerShown(){return true},
+    increaseUnlockOrder: ["i"],
 
 })

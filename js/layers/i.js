@@ -5,9 +5,9 @@ addLayer("i", {
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
+        unlockOrder: new Decimal(0),
     }},
     color: "#fff396",
-    requires: new Decimal(10), // Can be a function that takes requirement increases into account
     resource: "Improvers", // Name of prestige currency
     canBuyMax() {return false},
     doReset(resettingLayer) {
@@ -92,10 +92,12 @@ addLayer("i", {
   },
     },
     requires() {
-        x = new Decimal(1e9)
+        x = new Decimal(25e6)
         y = new Decimal(1)
-        if (player.i.unlocked) y = player[this.layer].points.add(1).pow(1.5)
+        if (player.i.unlockOrder > 0 && !hasAchievement("a", 23)) x = new Decimal(5e11)
+        if (player.i.unlocked) y = player[this.layer].points.add(1).pow(2)
         x = x.times(y)
+        if (hasAchievement("a", 23)) x = x.div(player.i.points.add(1).div(25).max(2).log(2).max(1)).max(1)
         return x }, // Can be a function that takes requirement increases into account
     baseResource: "fabric", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
@@ -125,7 +127,7 @@ addLayer("i", {
         {key: "i", description: "I: Reset for Improvers", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
 
-
+    increaseUnlockOrder: ["p"],
     layerShown(){return true}
     
 

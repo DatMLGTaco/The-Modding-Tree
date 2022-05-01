@@ -12,6 +12,7 @@ addLayer("ee", {
         fire: new Decimal(0),
         water: new Decimal(0),
         air: new Decimal(0),
+        alwaysShow: false
     }},
     
     color(){
@@ -257,10 +258,15 @@ addLayer("ee", {
 
     layerShown() { 
         x = false
-        if (player.i.unlocked&&player.p.unlocked&&getBuyableAmount("m", 11)>0) x = true
-        if (player.ee.unlocked) x = true
+        if (player.i.unlocked&&player.p.unlocked&&getBuyableAmount("m", 11)>0||player.ee.unlocked||player.ee.alwaysShow == true) x = true
+
         return x 
     },            // Returns a bool for if this layer's node should be visible in the tree.
+    alwaysShow(){
+
+        if(tmp.ee.layerShown) player.ee.alwaysShow = true
+
+    },
 
     branches: ["m", "p", "i"],
     upgrades: {

@@ -1,6 +1,6 @@
 let modInfo = {
 	name: "The Melge Tree",
-	id: "melge4",
+	id: "melge01",
 	author: "The Melge",
 	pointsName:"fabric",
 	modFiles: ["layers/i.js", "layers/p.js", "layers/m.js", "layers/ma.js", "layers/ee.js", "layers/sp.js", "tree.js", "nodes/achievements.js"],
@@ -50,6 +50,8 @@ function getPointGen() {
 	if (hasUpgrade('i', 11)) gain = gain.times(upgradeEffect('i', 11))
 	if (hasUpgrade('p', 11)) gain = gain.times(upgradeEffect('p', 11))
 	if (hasAchievement("a", 21)) gain = gain.times(1.1)
+	if (hasAchievement("a", 31)) gain = gain.times(1.1)
+	if (hasAchievement("a", 32)) gain = gain.times(1.1)
 	if (hasMilestone('i', 0)) gain = gain.times(5)
 	if (hasMilestone('p', 1)) gain = gain.times(tmp.p.powerEff)
 	if (player.ee.unlocked) gain = gain.times(tmp.ee.fireEff)

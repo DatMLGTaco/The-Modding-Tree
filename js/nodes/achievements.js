@@ -165,6 +165,68 @@ addLayer("a", {
         },
 
 
+        22: {
+            name: "Let there be LIGHT!",
+            done() { return hasMilestone("p", 1) },
+            tooltip() {return "Unlock light energy." },
+
+            style() {                     
+                if(hasAchievement(this.layer, this.id)) return {
+                    'background-color': tmp.a.color 
+            }
+        },
+
+        },
+
+
+        23: {
+            name: "Recursive Improvement.",
+            done() { return player.i.points.gt(10) },
+            tooltip() {return "Get 10 Improvers. Reward: Divides Improver cost by " + format(player.i.points.add(1).div(25).max(1).log(2).max(1))+ " and treats them as if they were unlocked first." },
+
+            style() {                     
+                if(hasAchievement(this.layer, this.id)) return {
+                    'background-color': tmp.a.color 
+            }
+        },
+
+        },
+        24: {
+            name: "Sustainable Sourcing",
+            done() { return player.i.points.gt(10) },
+            tooltip() {return "Get 5 Melge Fabricators. Melge Fabricators add to Melge Essence Multiplier. Currently: " + format(new Decimal(1).times(getBuyableAmount("m", 11).times(2.5).pow(5)).max(1))+ "x." },
+
+            style() {                     
+                if(hasAchievement(this.layer, this.id)) return {
+                    'background-color': tmp.a.color 
+            }
+        },
+
+        },
+        31: {
+            name: "Rank Up",
+            done() { return player.sp.unlocked||player.ee.unlocked||player.ma.unlocked },
+            tooltip() {return "Perform a Row 3 reset. Reward: Generate Fabric 10% faster."},
+
+            style() {                     
+                if(hasAchievement(this.layer, this.id)) return {
+                    'background-color': tmp.a.color 
+            }
+        },
+
+        },
+        32: {
+            name: "Ranked Up",
+            done() { return player.sp.total>1||player.ee.total>1||player.ma.total>1 },
+            tooltip() {return "Perform 2 Row 3 resets. Reward: Generate Fabric 10% faster."},
+
+            style() {                     
+                if(hasAchievement(this.layer, this.id)) return {
+                    'background-color': tmp.a.color 
+            }
+        },
+
+        },
 
     }
 })

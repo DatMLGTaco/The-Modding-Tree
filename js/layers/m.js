@@ -40,7 +40,7 @@ addLayer("m", {
 12:{
     title: "Woven Fabric",
     description: "Melge upgrades 2, 3, and 4 all use a better formula.",
-    cost: new Decimal(4e15),
+    cost: new Decimal(4e11),
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {
             'background-color': '#ffcb52' 
@@ -64,9 +64,9 @@ addLayer("m", {
     }
 },
     effect() {
-        let x = 3
+        let x = 3.5
         if (hasUpgrade(this.layer, 12)) x = 1.35
-        return player.points.add(1).times(5).log(x).div(2).max(1)
+        return player.points.times(5).add(1).log(x).add(1)
     },
     effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
     unlocked() {
@@ -92,17 +92,16 @@ addLayer("m", {
     },
     effect() {
         let x = new Decimal(1.25)
-        y = new Decimal(0.9)
+        y = new Decimal(0.8)
         z = new Decimal(player[this.layer].points.add(1))
-        l = new Decimal (1.25)
+        l = new Decimal (2.25)
         if (hasUpgrade(this.layer, 12)) x = new Decimal(1.35)
         if (hasUpgrade('i' , 22)) x = new Decimal(1.75)
-        if (hasUpgrade('i' , 22)) l = new Decimal(1.05)
-        if (hasUpgrade(this.layer, 31)) y = new Decimal(y.div(z.log(l*1.6))) 
-        eff = (z.pow(x).log(l.pow(y)).max(1)).log(2)
-        if (hasUpgrade('sp', 11)) eff = eff.times(upgradeEffect('p', 11).log(1.01))
+        if (hasUpgrade('i' , 22)) l = new Decimal(1.15)
+        if (hasUpgrade(this.layer, 31)) if (z>=50) y = new Decimal(y.div(z.log(l*1.6))) 
+        eff = z.pow(x).log(l.pow(y)).max(1)
         if (hasUpgrade('m', 32)) eff = eff.times(upgradeEffect('m', 23))
-        return new Decimal(eff).max(1)
+        return eff
     },
     effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
     },
@@ -110,7 +109,7 @@ addLayer("m", {
     23:{
         title: "Duality",
         description: "Fabric boosts melge essence gain.",
-        cost: new Decimal(25),
+        cost: new Decimal(10),
         style() {                     
             if(hasUpgrade(this.layer, this.id)) return {
                 'background-color': '#ffcb52' 
@@ -123,21 +122,19 @@ addLayer("m", {
         },
         effect() {
             let x = new Decimal(0.25)
-            let y = new Decimal(1)
-            let z = new Decimal(1)
             if (hasUpgrade(this.layer, 12)) x = new Decimal(0.3)
             y = new Decimal(1)
             z = new Decimal(1.45).div(player.points.max(1).log(2).max(1))
             if (hasUpgrade(this.layer, 32)) y = new Decimal(1.4), z = z.times(0.1) 
-            return new Decimal (player.points.add(1).pow(x.times(y)).log(new Decimal(2).pow(z)).max(1)).max(1)
+            return new Decimal(1).plus(player.points.add(1).pow(x.times(y)).log(new Decimal(2).pow(z))).max(1).div(3)
         },
         effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
         },
 
     31:{
         title: "Cohesion",
-        description: "Boosts the effect of Synergy",
-        cost: new Decimal(185),
+        description: "Boosts the effect of Synergy past 50 melge essence.",
+        cost: new Decimal(75),
         style() {                     
             if(hasUpgrade(this.layer, this.id)) return {
                 'background-color': '#ffcb52' 
@@ -148,25 +145,11 @@ addLayer("m", {
             if (hasUpgrade('m', 22)) unlocked1 = true
             return unlocked1
         },
-        effectDisplay() {
-            let x = new Decimal(1.25)
-            y = new Decimal(0.9)
-            z = new Decimal(player[this.layer].points.add(1))
-            l = new Decimal (1.25)
-            if (hasUpgrade(this.layer, 12)) x = new Decimal(1.35)
-            if (hasUpgrade('i' , 22)) x = new Decimal(1.75)
-            if (hasUpgrade('i' , 22)) l = new Decimal(1.05)
-            y = new Decimal(y.div(z.log(l*1.6))) 
-            old = (z.pow(x).log(l.pow(0.9)).max(1)).log(2)
-            newn = (z.pow(x).log(l.pow(y)).max(1)).log(2)
-            return "+" + format(newn-old) + "x fabric gain"
-
-        }
         },
     32:{
         title: "Alignment",
         description: "Boost the effects of Duality and Duality boosts Synergy.",
-        cost: new Decimal(245),
+        cost: new Decimal(120),
         style() {                     
             if(hasUpgrade(this.layer, this.id)) return {
                 'background-color': '#ffcb52' 
@@ -180,22 +163,23 @@ addLayer("m", {
         },
 
     },
+
     automate(){
-
+        if (hasMilestone('sp', 0)){
         if (canBuyBuyable("m", 11)) buyBuyable("m", 11)
-
+        if (canBuyBuyable("p", 11)) buyBuyable("p", 11)
+        }
     },
-    milestones: {
+/*    milestones: {
       
             0: {requirementDescription: "5 Melge Fabricators",
                 done() {return player.m.buyables[11].gte(5)}, // Used to determine when to give the milestone,
                 effectDescription() { s = "Melge Fabricators add to the melge essence multiplier" ; return s } ,
                 unlocked() {
                     let unlocked1 = false
-                    //if (hasUpgrade('m', 23)&&(getBuyableAmount(this.layer, 11) > 3 )) unlocked1 = true
+                    if (hasUpgrade('m', 23)&&(getBuyableAmount(this.layer, 11) > 3 )) unlocked1 = true
                     return unlocked1
                 },
-                
                 style() { if (hasMilestone('m', 0)){
                     g = 100 - Math.ceil(6*getBuyableAmount(this.layer, 11)) 
                     b = 50 - Math.ceil(3*getBuyableAmount(this.layer, 11)) 
@@ -215,7 +199,7 @@ addLayer("m", {
                     return {"background-color": ("rgb("+r+", "+g+", "+b+")") } }, 
             },
             
-/*        51:{
+        51:{
 
     
     
@@ -233,13 +217,13 @@ addLayer("m", {
                 if (hasUpgrade('m', 23)&&(getBuyableAmount(this.layer, 11) > 4 )) unlocked1 = true
                 return unlocked1
             },
-            }, */
-    }, 		
+            }, 
+    }, 	*/	
     doReset(resettingLayer) {
         let keep = [];
         if (hasMilestone("p", 0)) keep.push("upgrades")
         if (hasMilestone("i", 0)) keep.push("buyables"), keep.push("milestones")
-        if (hasMilestone("ee", 1)) keep.push("buyables"), keep.push("milestones"), keep.push("upgrades")
+        if (hasMilestone("ee", 1)) keep.push("buyables"), keep.push("milestones"), keep.push("upgrades"), keep.push("points")
         if (layers[resettingLayer].row > this.row) layerDataReset("m", keep)
     },
     baseResource: "fabric", // Name of resource prestige is based on
@@ -252,6 +236,7 @@ addLayer("m", {
         if(getBuyableAmount(this.layer, 11) > 4 ) mult = mult.times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))
         if (player.i.unlocked) mult = mult.times(player.i.points.add(1));
         if (player.ee.unlocked) mult = mult.times(tmp.ee.fireEff)
+        if (hasUpgrade('sp', 11)) mult = mult.times(upgradeEffect('sp', 11))
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -274,14 +259,13 @@ addLayer("m", {
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
                 base = x.add(9.25)
-                if (hasUpgrade("p", 13)) base = base.sub(tmp.p.upgrades[13].effect)
-                let cost = Decimal.pow(2, base.pow(2.25))
+                if (hasUpgrade("p", 13)) base = (base.sub(tmp.p.upgrades[13].effect)).pow(2.25)
+                let cost = Decimal.pow(2, base)
                 if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
                 return cost.floor()
             },
 //leave this space herea
 //what
-            purchaseLimit: 10,
             display() { return "Effect: Generates " + format(new Decimal(5).times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))) + "% of melge gain/second" + "\nBuy 1 Melge Fabricator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Melge Fabricators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id)))},
             canAfford() { return player[this.layer].points.gte(this.cost()) },
             style() { 
