@@ -284,7 +284,7 @@ addLayer("m", {
             purchaseLimit: 10,
             unlocked() {
                 x = false
-                if(hasUpgrade('i', 22)) x = true
+                if(hasUpgrade('i', 22)||tmp.m.buyables[11] > 0) x = true
                 return x
             },
         },
