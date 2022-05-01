@@ -223,7 +223,7 @@ addLayer("m", {
         let keep = [];
         if (hasMilestone("p", 0)) keep.push("upgrades")
         if (hasMilestone("i", 0)) keep.push("milestones")
-        if (hasMilestone("ee", 1))keep.push("milestones"), keep.push("upgrades"), keep.push("points")
+        if (hasMilestone("ee", 1))keep.push("milestones"), keep.push("upgrades")
         if (layers[resettingLayer].row > this.row) layerDataReset("m", keep)
     },
     baseResource: "fabric", // Name of resource prestige is based on
