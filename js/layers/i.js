@@ -12,7 +12,7 @@ addLayer("i", {
     canBuyMax() {return false},
     doReset(resettingLayer) {
         let keep = [];
-        if (hasMilestone("ee", 2))  keep.push("milestones"), keep.push("upgrades")
+        if (hasMilestone("ee", 2))  keep.push("milestones")
         if (layers[resettingLayer].row > this.row) layerDataReset("i", keep)
     },
     branches: ["m"],

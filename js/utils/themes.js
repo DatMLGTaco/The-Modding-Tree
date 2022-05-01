@@ -1,5 +1,5 @@
 // ************ Themes ************
-var themes = ["default", "aqua"]
+var themes = ["default", "aqua","Eli2Theme"]
 
 var colors = {
 	default: {
@@ -13,6 +13,16 @@ var colors = {
 		background_tooltip: "rgba(0, 0, 0, 0.75)",
 	},
 	aqua: {
+		1: "#bfdfff",
+		2: "#8fa7bf",
+		3: "#5f6f7f",
+		color: "#bfdfff",
+		points: "#dfefff",
+		locked: "#c4a7b3",
+		background: "#001f3f",
+		background_tooltip: "rgba(0, 15, 31, 0.75)",
+	},
+	Eli2Theme: {
 		1: "#bfdfff",
 		2: "#8fa7bf",
 		3: "#5f6f7f",

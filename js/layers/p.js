@@ -230,7 +230,8 @@ addLayer("p", {
     },
     doReset(resettingLayer) {
         let keep = [];
-        if (hasMilestone("sp", 1)) keep.push("buyables"), keep.push("milestones"), keep.push("upgrades"), keep.push("points")
+        if (hasMilestone("sp", 1)) keep.push("milestones"), keep.push("upgrades"), keep.push("points")
+        if (hasMilestone("ee", 2)) keep.push("milestones")
         if (layers[resettingLayer].row > this.row) layerDataReset("p", keep)
     },
     buyables: {
