@@ -53,13 +53,19 @@ addLayer("ee", {
         },
         1: {requirementDescription: "3 EE",
         done() {return player.ee.best.gte(3)}, // Used to determine when to give the milestone
-        effectDescription() { s = "Keep Melge upgrades, buyables, and milestones on all row 3 resets or below."
+        effectDescription() { s = "Keep Melge upgrades and milestones on all row 3 resets or below."
         return s
         } 
         },
         2: {requirementDescription: "15 EE",
         done() {return player.ee.best.gte(15)}, // Used to determine when to give the milestone
-        effectDescription() { s = "Keep all row 2 upgrades and milestones on all row 3 resets."
+        effectDescription() { s = "Keep all row 2 milestones on all row 3 resets."
+        return s
+        } 
+        },
+        3: {requirementDescription: "30 EE",
+        done() {return player.ee.best.gte(30)}, // Used to determine when to give the milestone
+        effectDescription() { s = "You can buy max Elemental Energy"
         return s
         } 
         },
