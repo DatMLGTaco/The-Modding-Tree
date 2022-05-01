@@ -94,10 +94,10 @@ addLayer("p", {
 
     },
     requires() {
-        x = new Decimal(25e6)
+        x = new Decimal(2500)
         y = new Decimal(1)
         if (player[this.layer].unlocked) y = player[this.layer].points.add(1).pow(1.5)
-        if (player.p.unlockOrder > 0) x = new Decimal(5e11)
+        if (player.p.unlockOrder > 0 && !hasAchievement("a", 23)) x = new Decimal(5e11), y = y.times(3)
         if (player[this.layer].points>=10) y=y.times(x)
         x = x.times(y)
         return x }, // Can be a function that takes requirement increases into account
@@ -115,8 +115,8 @@ addLayer("p", {
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     milestones: {
-        0: {requirementDescription: "3 Photons",
-            done() {return player.p.best.gte(3)}, // Used to determine when to give the milestone
+        0: {requirementDescription: "5 Photons",
+            done() {return player.p.best.gte(5)}, // Used to determine when to give the milestone
             effectDescription() { s = "Melge upgrades don't reset on all resets on this layer or below."
             return s
         } 
@@ -275,7 +275,7 @@ addLayer("p", {
         },
     },
     hotkeys: [
-        {key: "p", description: "P: Reset for photons", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
+        {key: "p", description: "P: Reset for photons", onPress(){if (canReset(this.layer)&&player.p.points<10) doReset(this.layer)}},
     ],
     style() {
         x = {'background-color': '#0F0F0F'}

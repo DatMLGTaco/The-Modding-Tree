@@ -258,12 +258,13 @@ addLayer("m", {
             title: "Melge Fabricator",
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                base = x.add(8.25)
-                if (hasUpgrade("p", 13)) base = (base.sub(tmp.p.upgrades[13].effect))
-                let cost = Decimal.pow(2, base.pow(2.25))
+                base = x.add(9.25)
+                if (hasUpgrade("p", 13)) base = base.sub(tmp.p.upgrades[13].effect)
+                let cost = Decimal.pow(2, base.pow(1.25))
                 if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
-                return cost.floor()
+                return formatWhole(cost)
             },
+//leave this space
 //leave this space herea
 //what  
             display() { return "Effect: Generates " + format(new Decimal(5).times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))) + "% of melge gain/second" + "\nBuy 1 Melge Fabricator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Melge Fabricators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id)))},

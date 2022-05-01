@@ -23,11 +23,11 @@ addLayer("i", {
 		},
         improverEff(){
         eff = new Decimal(1)
-        x = new Decimal(50)
+        x = new Decimal(8.333)
         if (player.ee.unlocked) x = x.times(tmp.ee.earthEff)
-        if (player.i.points.times(50).pow(0.5) >= 1) eff = player.i.points.times(x).pow(0.5)
-
-        return eff
+        if (player.i.points.times(50).pow(0.5) >= 1) eff = player.i.points.times(x)
+        if (hasUpgrade("i", 33)) eff = eff.times(6)
+        return eff.pow(0.5)
 
         },
         tabFormat: ["main-display",
@@ -90,11 +90,56 @@ addLayer("i", {
 
     }
   },
+  31:{
+    title: "Upgrade 4.",
+    description: "Removes 4 Photonic Accelerators from the cost base and adds 4 Photonic Accelerators to their effect.",
+    cost: new Decimal(10e12), 
+    style() {                     
+        if(hasUpgrade(this.layer, this.id)) return {
+            'background-color': '#e8e0a0' 
+}
+},
+    effect() {
+        x = new Decimal(player.p.points.add(1))
+        return x.pow(1.1)
+
+    }
+  },
+  32:{
+    title: "Upgrade 5.",
+    description: "Flat 5x Improver and Light Energy gain multiplier.",
+    cost: new Decimal(10e12), 
+    style() {                     
+        if(hasUpgrade(this.layer, this.id)) return {
+            'background-color': '#e8e0a0' 
+}
+},
+    effect() {
+        x = new Decimal(player.p.points.add(1))
+        return x.pow(1.1)
+
+    }
+  },
+  33:{
+    title: "Upgrade 6.",
+    description: "Multiplies the improver effect by 6x",
+    cost: new Decimal(10e12), 
+    style() {                     
+        if(hasUpgrade(this.layer, this.id)) return {
+            'background-color': '#e8e0a0' 
+}
+},
+    effect() {
+        x = new Decimal(player.p.points.add(1))
+        return x.pow(1.1)
+
+    }
+  },
     },
     requires() {
-        x = new Decimal(25e6)
+        x = new Decimal(2500)
         y = new Decimal(1)
-        if (player.i.unlockOrder > 0 && !hasAchievement("a", 23)) x = new Decimal(5e11)
+        if (player.i.unlockOrder > 0 && !hasAchievement("a", 23)) x = new Decimal(5e11), y = y.times(3)
         if (player.i.unlocked) y = player[this.layer].points.add(1).pow(2)
         x = x.times(y)
         if (hasAchievement("a", 23)) x = x.div(player.i.points.add(1).div(25).max(2).log(2).max(1)).max(1)
@@ -102,7 +147,7 @@ addLayer("i", {
     baseResource: "fabric", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.8, // Prestige currency exponent
+    exponent: 0.3, // Prestige currency exponent
 
     gainMult() {
         let mult = new Decimal(1)

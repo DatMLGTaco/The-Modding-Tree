@@ -189,9 +189,11 @@ addLayer("a", {
             done() { return player.i.points.gt(10) },
             tooltip() {return "Get 10 Improvers. Reward: Divides Improver cost by " + format(player.i.points.add(1).div(25).max(1).log(2).max(1))+ " and treats them as if they were unlocked first." },
 
+
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {
-                    'background-color': tmp.a.color 
+                    'background-color': tmp.a.color, 
+                    'background-image' : "url('https://cdn.discordapp.com/attachments/791407985649909791/970223116250927104/clone-clones.gif')"
             }
         },
 
@@ -199,7 +201,7 @@ addLayer("a", {
         24: {
             name: "Sustainable Sourcing",
             done() { return player.i.points.gt(10) },
-            tooltip() {return "Get 5 Melge Fabricators. Melge Fabricators add to Melge Essence Multiplier. Currently: " + format(new Decimal(1).times(getBuyableAmount("m", 11).times(2.5).pow(5)).max(1))+ "x." },
+            tooltip() {return "Get 5 Melge Fabricators. Reward: Melge Fabricators add to Melge Essence Multiplier and keep one fabricator on reset. Currently: " + format(new Decimal(1).times(getBuyableAmount("m", 11).times(2.5).pow(5)).max(1))+ "x." },
 
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {
@@ -223,7 +225,7 @@ addLayer("a", {
         32: {
             name: "Ranked Up",
             done() { return player.sp.total>1||player.ee.total>1||player.ma.total>1 },
-            tooltip() {return "Perform 2 Row 3 resets. Reward: Generate Fabric 10% faster."},
+            tooltip() {return "Have 2 or more of any row 3 resource. Reward: Generate Fabric 10% faster."},
 
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {

@@ -111,36 +111,44 @@ addLayer("ma", {
     },
     buyables: {
         11: {
-            title: "CPU",
+            title: "Photon Accelerator",
+            // COST FUNCTION.
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                base = x.add(8.25)
-                if (hasUpgrade("p", 13)) base = (base.sub(tmp.p.upgrades[13].effect))
-                let cost = Decimal.pow(2, base.pow(2.25))
+                base = x.add(9.25)
+                if (hasUpgrade("p", 13)) base = base.sub(tmp.p.upgrades[13].effect)
+                let cost = Decimal.pow(2, base.pow(1.25))
                 if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
-                return cost.floor()
+                return formatWhole(cost)
             },
-        11: {
-            title: "GPU",
-            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
-                if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                base = x.add(8.25)
-                if (hasUpgrade("p", 13)) base = (base.sub(tmp.p.upgrades[13].effect))
-                let cost = Decimal.pow(2, base.pow(2.25))
-                if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
-                return cost.floor()
+            // END COST FUNCTION.
+
+            // DESCRIPTION
+            display() { return "placeholder description"},
+            // END DESCRIPTION
+
+            canAfford() { return player.p.power.gte(this.cost()) },
+
+            effect() {
+                effect = 0
+                
+                return effect
             },
-        11: {
-            title: "RAM",
-            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
-                if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                base = x.add(8.25)
-                if (hasUpgrade("p", 13)) base = (base.sub(tmp.p.upgrades[13].effect))
-                let cost = Decimal.pow(2, base.pow(2.25))
-                if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
-                return cost.floor()
+
+            style() { 
+
+                return {"background-color": tmp.ma.color, } },
+            buy() { //amonger type beat
+                player[this.layer].power = player[this.layer].power.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                x = false
+                if(hasUpgrade('i', 22)&&hasUpgrade('p', 11)&&hasMilestone('p', 1)) x = true
+                return x
             },
         },
+    },
     tabFormat: [
     ["row",[
         ["column", [["display-text", function() {
