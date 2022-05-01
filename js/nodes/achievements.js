@@ -64,7 +64,7 @@ addLayer("a", {
     }
     },                          // The color for this layer, which affects many elements.
 
-    resource: "prestige points",            // The name of this layer's main prestige resource.
+    resource: "Achievements",           // The name of this layer's main prestige resource.
     row: "side",                                 // The row this layer is on (0 is the first row).
     tabFormat: [
         ["row",[
