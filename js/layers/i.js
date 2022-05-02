@@ -6,6 +6,7 @@ addLayer("i", {
         unlocked: false,
 		points: new Decimal(0),
         unlockOrder: new Decimal(0),
+        achievement: false
     }},
     color: "#fff396",
     resource: "Improvers", // Name of prestige currency
@@ -14,11 +15,13 @@ addLayer("i", {
         let keep = [];
         if (hasMilestone("ee", 2))  keep.push("milestones")
         if (layers[resettingLayer].row > this.row) layerDataReset("i", keep)
+        if (player.m.upgrades.length<=1) tmp.i.achievement = true
     },
     branches: ["m"],
 		enGainMult() {
 			let mult = new Decimal(1);
             if (player.ee.unlocked) mult = mult.times(tmp.ee.waterEff)
+            if (hasUpgrade("i", 32)) mult = mult.times(upgradeEffect("i", 32))
 			return mult;
 		},
         improverEff(){
@@ -41,11 +44,12 @@ addLayer("i", {
         "blank",
         "resource-display",
         "blank",
-        "milestones",
+
         "blank",
         "upgrades",
         "blank",
         "blank",
+        "milestones",
         "blank", "blank"
     ],
     upgrades:{
@@ -68,7 +72,7 @@ addLayer("i", {
 21:{
     title: "Melge Integration",
     description: "Unlock a new melge upgrade.",
-    cost: new Decimal(300), 
+    cost: new Decimal(30), 
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {
             'background-color': '#e8e0a0' 
@@ -78,7 +82,7 @@ addLayer("i", {
   22:{
     title: "Immaterial Fabrication",
     description: "Improvers cheapen the fabrication of melge essence",
-    cost: new Decimal(6000), 
+    cost: new Decimal(200), 
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {
             'background-color': '#e8e0a0' 
@@ -93,7 +97,7 @@ addLayer("i", {
   31:{
     title: "Upgrade 4.",
     description: "Removes 4 Photonic Accelerators from the cost base and adds 4 Photonic Accelerators to their effect.",
-    cost: new Decimal(10e12), 
+    cost: new Decimal(1e8), 
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {
             'background-color': '#e8e0a0' 
@@ -108,7 +112,7 @@ addLayer("i", {
   32:{
     title: "Upgrade 5.",
     description: "Flat 5x Improver and Light Energy gain multiplier.",
-    cost: new Decimal(10e12), 
+    cost: new Decimal(2e6), 
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {
             'background-color': '#e8e0a0' 
@@ -123,7 +127,7 @@ addLayer("i", {
   33:{
     title: "Upgrade 6.",
     description: "Multiplies the improver effect by 6x",
-    cost: new Decimal(10e12), 
+    cost: new Decimal(1e6), 
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {
             'background-color': '#e8e0a0' 
@@ -152,22 +156,29 @@ addLayer("i", {
     gainMult() {
         let mult = new Decimal(1)
         if (hasUpgrade('i', 23)) mult = mult.times(upgradeEffect('i', 23))
+        if (hasUpgrade("i", 32)) mult = mult.times(upgradeEffect("i", 32))
+        if (player.ee.unlocked) mult = mult.times(tmp.ee.waterEff)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         return new Decimal(1)
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
-    /*milestones: {
-        0: {requirementDescription: "1e11 Improvers",
-        done() {return player.i.best.gte(1e11)}, // Used to determine when to give the milestone
-        effectDescription() { s = ""
-        if (hasMilestone('p', 0)) s = "The Melge Layer does not reset on layer 2 resets."
+    milestones: {
+        0: {requirementDescription: "50,000,000 Improvers",
+        done() {return player.i.best.gte(5e7)}, // Used to determine when to give the milestone
+        effectDescription() { s = "Keep all Melge Upgrades on improver resets."
+
         return s
     }, 
-    unlocked () {x = false; if (player.i.best > 1000000000) x = true; return x},
+    style() {                     
+        if(hasMilestone(this.layer, this.id)) return {
+            'background-color': '#e8e0a0' 
+}
+},
+    unlocked () {x = false; if (player.i.best >= 1000000) x = true; return x},
     }
-    },*/
+    },
     hotkeys: [
         {key: "i", description: "I: Reset for Improvers", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],

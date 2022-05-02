@@ -236,8 +236,8 @@ addLayer("a", {
         },
         33: {
             name: "25,000,000 seconds.",
-            done() { return player.sp.total>1||player.ee.total>1||player.ma.total>1 },
-            tooltip() {return "Perform a row 2 reset while "},
+            done() { return tmp.i.achievement == true },
+            tooltip() {return "Perform a row 2 reset without having any Melge Upgrades (other than Melge Factor)."},
 
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {

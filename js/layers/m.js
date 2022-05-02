@@ -40,7 +40,7 @@ addLayer("m", {
 12:{
     title: "Woven Fabric",
     description: "Melge upgrades 2, 3, and 4 all use a better formula.",
-    cost: new Decimal(4e11),
+    cost: new Decimal(5e10),
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {
             'background-color': '#ffcb52' 
@@ -142,7 +142,7 @@ addLayer("m", {
             },
         unlocked() {
             let unlocked1 = false
-            if (hasUpgrade('m', 22)) unlocked1 = true
+            if (hasUpgrade('m', 22)&&hasAchievement("a", 21)) unlocked1 = true
             return unlocked1
         },
         },
@@ -157,7 +157,7 @@ addLayer("m", {
     },
         unlocked() {
             let unlocked1 = false
-            if (hasUpgrade('m', 23)) unlocked1 = true
+            if (hasUpgrade('m', 23)&&hasAchievement("a", 21)) unlocked1 = true
             return unlocked1
         },
         },
@@ -221,7 +221,8 @@ addLayer("m", {
     }, 	*/	
     doReset(resettingLayer) {
         let keep = [];
-        if (hasMilestone("p", 0)) keep.push("upgrades")
+        if (hasMilestone("p", 0)&& resettingLayer=="p") keep.push("upgrades")
+        if (hasMilestone("i", 0)&& resettingLayer=="i") keep.push("upgrades"), keep.push("buyables")
         if (hasMilestone("i", 0)) keep.push("milestones")
         if (hasMilestone("ee", 1))keep.push("milestones"), keep.push("upgrades")
         if (layers[resettingLayer].row > this.row) layerDataReset("m", keep)
@@ -258,11 +259,11 @@ addLayer("m", {
             title: "Melge Fabricator",
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                base = x.add(9.25)
+                base = x.add(10.25)
                 if (hasUpgrade("p", 13)) base = base.sub(tmp.p.upgrades[13].effect)
-                let cost = Decimal.pow(2, base.pow(1.25))
+                let cost = Decimal.pow(2, base.pow(1.625))
                 if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
-                return formatWhole(cost)
+                return cost
             },
 //leave this space
 //leave this space herea

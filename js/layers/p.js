@@ -97,7 +97,7 @@ addLayer("p", {
         x = new Decimal(2500)
         y = new Decimal(1)
         if (player[this.layer].unlocked) y = player[this.layer].points.add(1).pow(1.5)
-        if (player.p.unlockOrder > 0 && !hasAchievement("a", 23)) x = new Decimal(5e11), y = y.times(3)
+        if (player.p.unlockOrder > 0) x = new Decimal(5e11), y = y.times(3)
         if (player[this.layer].points>=10) y=y.times(x)
         x = x.times(y)
         return x }, // Can be a function that takes requirement increases into account
@@ -140,6 +140,7 @@ addLayer("p", {
         eff = eff.times(tmp.p.sliderEff)
         if (tmp.p.buyables[11].effect>=1) eff = eff.times(tmp.p.buyables[11].effect)
         if (hasUpgrade("p", 21)) eff = eff.times(upgradeEffect("p", 21))
+        if (hasUpgrade("i", 32)) eff = eff.times(upgradeEffect("i", 32))
         return eff;
     },
     effectDescription() {
@@ -239,7 +240,9 @@ addLayer("p", {
             title: "Photon Accelerator",
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                base = x.add(9.25)
+                let k = 9.25
+                if (hasUpgrade("i", 31)) k = k - 4
+                base = x.add(k)
                 if (hasUpgrade("p", 13)) base = base.sub(tmp.p.upgrades[13].effect)
                 let cost = Decimal.pow(2, base.pow(1.25))
                 if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
@@ -251,7 +254,9 @@ addLayer("p", {
             display() { return "Effect: Accelerates light energy gain by " + format(tmp.p.buyables[11].effect) + "x/s." + "\nBuy 1 Photon Accelerator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Photon Accelerators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id))) + " light energy."},
             canAfford() { return player.p.power.gte(this.cost()) },
             effect() {
-                eff = new Decimal(5).times(getBuyableAmount(this.layer, 11).times(3.5).pow(5.5)).max(1)
+                let k = new Decimal(1)
+                if (hasUpgrade("i", 31)) k = 4
+                eff = new Decimal(5).times((getBuyableAmount(this.layer, 11).times(k)).times(3.5).pow(5.5)).max(1)
 
                 if(player.sp.unlocked&&player.sp.quarks >= 0) eff = eff.times(1+tmp.sp.quarkEff/100)
 

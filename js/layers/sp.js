@@ -19,7 +19,7 @@ addLayer("sp", {
     baseResource: "Light Energy",                 // The name of the resource your prestige gain is based on.
     baseAmount() { return player.p.power },  // A function to return the current amount of baseResource.
 
-    requires: new Decimal(1e21),              // The amount of the base needed to  gain 1 of the prestige currency.
+    requires: new Decimal(1e25),              // The amount of the base needed to  gain 1 of the prestige currency.
                                             // Also the amount required to unlock the layer.
 
     type: "static",                         // Determines the formula used for calculating prestige currency.
@@ -68,7 +68,7 @@ addLayer("sp", {
         },
         51: {
             title: "Entanglement",
-            description: "Quarks boost quark effect.",
+            description: "Quarks boost quark effect. Unlocks Entanglement buyable",
             cost() { return new Decimal(2) },
             currencyDisplayName: "quarks",
             currencyInternalName: "quarks",
@@ -172,7 +172,7 @@ addLayer("sp", {
                     ["row",[
                         ["column", [["display-text", function() {
                 
-                            return "You have <style>h2 {color:" + "#00ff00" + "} h2 {text-shadow: 0 0 10px " + "#00ff00" + ";} </style><h2>" + formatWhole(player.sp.quarks) + "</h2> Quarks.<p>" + "Your Quarks are buffing photonic accelerators by " + formatWhole(tmp.sp.quarkEff) + "%"}]]],
+                            return "You have <style>h2 {color:" + "#00ff00" + "} h2 {text-shadow: 0 0 10px " + "#00ff00" + ";} </style><h2>" + formatWhole(player.sp.quarks) + "</h2> Quarks.<p>" + "Your Quarks are buffing photonic accelerators by " + formatWhole(tmp.sp.quarkEff) + "%<style>h2 {color:" + "#000000" + "} h2 {text-shadow: 0 0 10px " + "#00ff00" + ";} </style>"}]]],
 
                     //<p style='color:      ;'>
                     ],
@@ -180,6 +180,8 @@ addLayer("sp", {
                             ],
                             "blank",
                             ["row", [["upgrade", 51]]],
+                            "blank",
+                            ["row", [["buyable", 11]]],
                             "blank",
 
                 ],
@@ -192,10 +194,51 @@ addLayer("sp", {
             // There could be another set of microtabs here
         }
     },
-    quarkEff(){
+    buyables: {
+        11: {
+            title: "Entanglers",
+            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
 
-        if (hasUpgrade("sp", 51)) return new Decimal(player.sp.quarks/2).times(625).times(player.sp.quarks)
-        return new Decimal(player.sp.quarks/2).times(625)
+                return x.pow(2)
+            },
+//leave this space herea
+//what
+
+            display() { return "<p style=color:#FFFFFF;>Your " + getBuyableAmount(this.layer, this.id) +  " Entanglers are buffing the quark effect by " + format(tmp.sp.buyables[11].effect) + "x per quark.\n" + "\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id))) + " quarks."},
+            canAfford() { return player.sp.quarks.gte(this.cost()) },
+            effect() {
+                let x = getBuyableAmount(this.layer, 11)
+                let k = new Decimal(1.2)
+                eff = x.times(k).max(1).log(1.01).max(1)
+                return eff
+
+            },
+            style() { 
+                if (tmp.sp.buyables[11].canAfford) {x = "rgba(0,0,0,0.5)"} else {x = "rgba(0,0,0,0)"}
+                return { 
+
+                    'background-color' : x,
+                   //'background-image' : "url('https://c.tenor.com/la6A3cTgnTMAAAAM/static-tv.gif')",
+                    "width" : "150px",
+                    "height" : "150px",
+                    "border": "2px solid",
+            } },
+            buy() { //amonger type beat
+                player[this.layer].quarks = player[this.layer].quarks.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                x = false
+                if(hasUpgrade('sp', 51)) x = true
+                return x
+            },
+        },
+    },
+    quarkEff(){
+        x = new Decimal(player.sp.quarks/2).times(625)
+        if (hasUpgrade("sp", 51)) x = new Decimal(player.sp.quarks/2).times(625).times(player.sp.quarks)
+        if (getBuyableAmount("sp", 11) > 0) x = x.times(tmp.sp.buyables[11].effect).times(player.sp.quarks)
+        return x
 
     },
     clickables: {
