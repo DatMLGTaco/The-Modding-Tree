@@ -51,7 +51,7 @@ addLayer("p", {
               
                 return eff;
             },
-            unlocked() { return hasMilestone("p", 1)&&getBuyableAmount("m", 11)>2 },
+            unlocked() { return hasAchievement("a", 22) },
             effectDisplay() { return "/"+format(tmp.p.upgrades[12].effect) },
 
 
@@ -68,7 +68,7 @@ addLayer("p", {
               
                 return eff;
             },
-            unlocked() { return hasAchievement("a", 24)&&getBuyableAmount("m", 11)>4},
+            unlocked() { return hasAchievement("a", 24)},
             effectDisplay() { return "-"+format(tmp.p.upgrades[13].effect) },
 
 
@@ -85,7 +85,7 @@ addLayer("p", {
               
                 return eff;
             },
-            unlocked() { return hasUpgrade("p", 12)},
+            unlocked() { return hasUpgrade("p", 12)&&getBuyableAmount("p", 11)>10},
             effectDisplay() { return "x"+format(tmp.p.upgrades[21].effect) },
 
 
@@ -231,8 +231,10 @@ addLayer("p", {
     },
     doReset(resettingLayer) {
         let keep = [];
-        if (hasMilestone("sp", 1)) keep.push("milestones"), keep.push("upgrades"), keep.push("points")
+        if (hasMilestone("sp", 0)) keep.push("upgrades")
+        if (hasMilestone("sp", 0)&& resettingLayer=="sp") keep.push("milestones"), keep.push("points")
         if (hasMilestone("ee", 2)) keep.push("milestones")
+        if (player.m.upgrades.length<=1) tmp.i.achievement = true
         if (layers[resettingLayer].row > this.row) layerDataReset("p", keep)
     },
     buyables: {

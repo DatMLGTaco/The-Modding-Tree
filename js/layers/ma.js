@@ -90,7 +90,7 @@ addLayer("ma", {
         return new Decimal(1)
     },
     requires() {
-        x = new Decimal(1e25)
+        x = new Decimal(1e19)
         y = new Decimal(1)
 
         return x }, // Can be a function that takes requirement increases into account
@@ -111,7 +111,7 @@ addLayer("ma", {
     },
     buyables: {
         11: {
-            title: "Photon Accelerator",
+            title: "CPU Component",
             // COST FUNCTION.
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)

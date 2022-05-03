@@ -4,8 +4,10 @@ addLayer("a", {
         unlocked: true,                     // You can add more variables here to add them to your layer.
         points: new Decimal(0),             // "points" is the internal name for the main resource of the layer.
         color: 1,
-        bool: true
+        bool: true,
+        infinitemoney: false
     }},
+
     colorBoolean(){
         if (player.a.color >= 1) player.a.bool = true
         if (player.a.color <= 0.05) player.a.bool = false
@@ -68,6 +70,8 @@ addLayer("a", {
     resource: "Achievements",           // The name of this layer's main prestige resource.
     row: "side",                                 // The row this layer is on (0 is the first row).
     tabFormat: [
+        "clickables",
+        "blank",
         ["row",[
             ["column", [["display-text", function() {
     
@@ -103,6 +107,26 @@ addLayer("a", {
     upgrades: {
         // Look in the upgrades docs to see what goes here!
     },
+    clickables: {
+        11: {
+            display() {return "Gib 1 trillion bobux (1e100 fabric)"},
+            unlocked() {return true},
+            canClick() {return true},
+            onClick() {
+                player.points=player.points.plus(1e100)
+
+                }
+            },
+            12: {
+                display() {return "Gib 1 trillion bobux (1e100 fabric) a lot (like forever not really)"},
+                unlocked() {return true},
+                canClick() {return true},
+                onClick() {
+                    tmp.a.infinitemoney = !tmp.a.infinitemoney;
+    
+                    }
+                },
+        },
 
     achievements: {
         rows: 16,

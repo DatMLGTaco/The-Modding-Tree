@@ -62,7 +62,7 @@ addLayer("sp", {
          13: {
             title: "Buymax",
             description: "Allows you to buy max subatomic particles",
-            cost() { return new Decimal(50) },
+            cost() { return new Decimal(3) },
 
 
         },

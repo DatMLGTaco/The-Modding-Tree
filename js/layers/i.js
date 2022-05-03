@@ -176,8 +176,21 @@ addLayer("i", {
             'background-color': '#e8e0a0' 
 }
 },
-    unlocked () {x = false; if (player.i.best >= 1000000) x = true; return x},
-    }
+    unlocked () {x = false; if (player.i.best >= 1000000||hasMilestone("ee", 2)) x = true; return x},
+    },
+    1: {requirementDescription: "500,000,000 Improvers",
+    done() {return player.i.best.gte(5e8)&&hasMilestone("ee", 2)}, // Used to determine when to give the milestone
+    effectDescription() { s = "Keep the first three improver upgrades on all resets."
+
+    return s
+}, 
+style() {                     
+    if(hasMilestone(this.layer, this.id)) return {
+        'background-color': '#e8e0a0' 
+}
+},
+unlocked () {x = false; if (hasMilestone("i", 0)&&hasMilestone("ee", 2)) x = true; return x},
+}
     },
     hotkeys: [
         {key: "i", description: "I: Reset for Improvers", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
