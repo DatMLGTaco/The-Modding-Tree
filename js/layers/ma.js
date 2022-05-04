@@ -8,7 +8,9 @@ addLayer("ma", {
         unlockOrder: new Decimal(0),
         color: 1,
         bool: true,
-        alwaysShow: false
+        alwaysShow: false,
+        threads: new Decimal (3),
+        ramDisplay: "1KB",
     }},
 
 
@@ -64,11 +66,11 @@ addLayer("ma", {
         if (player.ma.bool == true){
             player.ma.color = player.ma.color - 0.01
             if (player.ma.color < 0) player.ma.color = 0
-          return getGradientColor('#00eee8', '#00ffaa', player.ma.color);
+          return getGradientColor('#00eee8', '#00ff00', player.ma.color);
         } else {
             player.ma.color = player.ma.color + 0.01
             if (player.ma.color > 1) player.ma.color = 1
-            return getGradientColor('#00eee8', '#00ffaa', player.ma.color);
+            return getGradientColor('#00eee8', '#00ff00', player.ma.color);
         }
         },                     // The color for this layer, which affects many elements.
     resource: "Computational Power",            // The name of this layer's main prestige resource.
@@ -109,35 +111,181 @@ addLayer("ma", {
     upgrades: {
         // Look in the upgrades docs to see what goes here!
     },
+    style() {
+        return {"background-image" : "url('https://i.gifer.com/NvL.gif')"
+        }},
     buyables: {
-        11: {
-            title: "CPU Component",
+        24: {
+            title: "DISPLAY",
             // COST FUNCTION.
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
-                if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                base = x.add(9.25)
-                if (hasUpgrade("p", 13)) base = base.sub(tmp.p.upgrades[13].effect)
-                let cost = Decimal.pow(2, base.pow(1.25))
-                if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
-                return formatWhole(cost)
+                return formatWhole(1)
             },
             // END COST FUNCTION.
 
             // DESCRIPTION
-            display() { return "placeholder description"},
+            display() { return "Add an additional DISPLAY to the machine.\n Amount: " + getBuyableAmount(this.layer, this.id)},
             // END DESCRIPTION
 
-            canAfford() { return player.p.power.gte(this.cost()) },
+            canAfford() { return player.ma.threads.gte(this.cost()) },
 
             effect() {
-                effect = 0
+                effect = new Decimal(0)
                 
                 return effect
             },
 
             style() { 
 
-                return {"background-color": tmp.ma.color, } },
+                return {"background-color": tmp.ma.color, 
+                "border": "4px dotted",
+                "width" : "150px",
+                "height" : "150px",} },
+            buy() { //amonger type beat
+                player[this.layer].power = player[this.layer].power.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                x = false
+                
+                return x
+            },
+        },
+        25: {
+            title: "Motherboard",
+            // COST FUNCTION.
+            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                return formatWhole(1)
+            },
+            // END COST FUNCTION.
+
+            // DESCRIPTION
+            display() { return "The brain and heart of The Machine.\n Amount: " + getBuyableAmount(this.layer, this.id)},
+            // END DESCRIPTION
+
+            canAfford() { return false },
+
+            effect() {
+                effect = new Decimal(0)
+                
+                return effect
+            },
+            branches(){ return [[31, tmp.ma.color],[32, tmp.ma.color],[33, tmp.ma.color],[24, tmp.ma.color],]},
+
+            style() { 
+
+                return {"background-color": tmp.ma.color, 
+            
+                "width" : "150px",
+                "height" : "150px",} },
+            buy() { //amonger type beat
+                player[this.layer].power = player[this.layer].power.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                x = false
+                if(hasUpgrade('i', 22)&&hasUpgrade('p', 11)&&hasMilestone('p', 1)) x = true
+                return x
+            },
+        },
+        31: {
+            title: "CPU",
+            // COST FUNCTION.
+            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                return formatWhole(1)
+            },
+            // END COST FUNCTION.
+
+            // DESCRIPTION
+            display() { return "Add an additional CPU to the machine.\n Amount: " + getBuyableAmount(this.layer, this.id)},
+            // END DESCRIPTION
+
+            canAfford() { return player.ma.threads.gte(this.cost()) },
+
+            effect() {
+                effect = new Decimal(0)
+                
+                return effect
+            },
+
+            style() { 
+
+                return {"background-color": tmp.ma.color, 
+                "border": "4px dotted",
+                "width" : "150px",
+                "height" : "150px",} },
+            buy() { //amonger type beat
+                player[this.layer].power = player[this.layer].power.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                x = false
+                if(hasUpgrade('i', 22)&&hasUpgrade('p', 11)&&hasMilestone('p', 1)) x = true
+                return x
+            },
+        },
+        32: {
+            title: "GPU",
+            // COST FUNCTION.
+            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                return formatWhole(1)
+            },
+            // END COST FUNCTION.
+
+            // DESCRIPTION
+            display() { return "Add an additional GPU to the machine.\n Amount: " + getBuyableAmount(this.layer, this.id)},
+            // END DESCRIPTION
+
+            canAfford() { return player.ma.threads.gte(this.cost()) },
+
+            effect() {
+                effect = new Decimal(0)
+                
+                return effect
+            },
+
+            style() { 
+
+                return {"background-color": tmp.ma.color, 
+                "border": "4px dotted",
+                "width" : "150px",
+                "height" : "150px",} },
+            buy() { //amonger type beat
+                player[this.layer].power = player[this.layer].power.sub(this.cost())
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                x = false
+                if(hasUpgrade('i', 22)&&hasUpgrade('p', 11)&&hasMilestone('p', 1)) x = true
+                return x
+            },
+        },
+        33: {
+            title: "RAM",
+            // COST FUNCTION.
+            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                return formatWhole(1)
+            },
+            // END COST FUNCTION.
+
+            // DESCRIPTION
+            display() { return "Add an additional " + tmp.ma.ramDisplay + " RAM to the machine.\n Amount: " + getBuyableAmount(this.layer, this.id)},
+            // END DESCRIPTION
+
+            canAfford() { return player.ma.threads.gte(this.cost()) },
+
+            effect() {
+                effect = new Decimal(0)
+                
+                return effect
+            },
+
+            style() { 
+
+                return {"background-color": tmp.ma.color, 
+                "border": "4px dotted",
+                "width" : "150px",
+                "height" : "150px",} },
             buy() { //amonger type beat
                 player[this.layer].power = player[this.layer].power.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
@@ -165,11 +313,19 @@ addLayer("ma", {
     "resource-display",
     "blank",
 
+    ["row",[
+        ["column", [["display-text", function() {
 
+            return "<style>p {color:" + "#ffffff" + "} p {text-shadow: 0 0 10px " + tmp.ma.color + ";} </style><p>Components and Effects: </p><p>" + getBuyableAmount(this.layer, 25).add(1) + " Motherboard"}]]]
+    //<p style='color:      ;'>
+    ]
+            ],
             "blank",
             "blank",
     "milestones",
-    "buyables",
+    ["row", [["buyable", 24],"blank","blank",["buyable", 25],"blank","blank", ["buyable", 26],]],
+    "blank",     
+    ["row", [["buyable", 31], "blank","blank", ["buyable", 32], "blank","blank",["buyable", 33],]],
     "upgrades",
     "blank",
     "blank",

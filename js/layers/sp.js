@@ -7,7 +7,8 @@ addLayer("sp", {
         quarks: new Decimal(0),
         buyPercent: new Decimal(0),
         unlockOrder: new Decimal(0),
-        alwaysShow: false
+        alwaysShow: false,
+
     }},
 
 
