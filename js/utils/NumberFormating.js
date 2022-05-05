@@ -101,6 +101,35 @@ function formatSmall(x, precision=2) {
     return format(x, precision, true)    
 }
 
+function formatUnit(num, unit) {
+	finalUnit = ""
+    num = new Decimal(num)
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "K"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "M"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "G"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "T"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "P"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "E"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "Z"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "Y"
+	return new Decimal(format(num)) + " " + finalUnit + unit
+}
+
+function formatUnitWhole(num, unit, capitalize) {
+	finalUnit = ""
+    num = new Decimal(num)
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "kilo"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "mega"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "giga"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "tera"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "peta"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "exa"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "zetta"
+	if (num.gte(1024)) num = num.div(1024), finalUnit = "yotta"
+    if (capitalize) {finalUnit = finalUnit.charAt(0).toUpperCase() + finalUnit.slice(1);}
+	return new Decimal(format(num)) + " " + finalUnit + unit
+}
+
 function invertOOM(x){
     let e = x.log10().ceil()
     let m = x.div(Decimal.pow(10, e))

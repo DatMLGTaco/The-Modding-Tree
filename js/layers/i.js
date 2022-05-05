@@ -119,8 +119,8 @@ addLayer("i", {
 }
 },
     effect() {
-        x = new Decimal(player.p.points.add(1))
-        return x.pow(1.1)
+        x = new Decimal(5)
+        return x
 
     }
   },

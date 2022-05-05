@@ -25,8 +25,25 @@ function canBuyBuyable(layer, id) {
 	return (b.unlocked && run(b.canAfford, b) && player[layer].buyables[id].lt(b.purchaseLimit) && !tmp[layer].deactivated)
 }
 
+function isPlural(input) {
+	if (input>1||input<1) return "s"
+	return ""
+}
 
-
+/*
+function setUnit(num, unit) {
+	finalUnit = ""
+	if (new Decimal (num).gte(1024)) num = num.div(1024), finalUnit = "K"
+	if (new Decimal (num).gte(1024)) num = num.div(1024), finalUnit = "M"
+	if (new Decimal (num).gte(1024)) num = num.div(1024), finalUnit = "G"
+	if (new Decimal (num).gte(1024)) num = num.div(1024), finalUnit = "T"
+	if (new Decimal (num).gte(1024)) num = num.div(1024), finalUnit = "P"
+	if (new Decimal (num).gte(1024)) num = num.div(1024), finalUnit = "E"
+	if (new Decimal (num).gte(1024)) num = num.div(1024), finalUnit = "Z"
+	if (new Decimal (num).gte(1024)) num = num.div(1024), finalUnit = "Y"
+	return num + finalUnit + unit
+}
+*/
 function canAffordPurchase(layer, thing, cost) {
 	if (thing.currencyInternalName) {
 		let name = thing.currencyInternalName

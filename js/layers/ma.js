@@ -202,9 +202,9 @@ addLayer("ma", {
 
             canAfford() { return player.ma.threads.gte(this.cost()) },
 
-            effect() {
-                effect = new Decimal(0)
-                
+            effect(x=player[this.layer].buyables[this.id]) {
+                effect = new Decimal(2).pow(x)
+                effect = effect.log(1.2).max(1)
                 return effect
             },
 
@@ -315,8 +315,17 @@ addLayer("ma", {
 
     ["row",[
         ["column", [["display-text", function() {
-
-            return "<style>p {color:" + "#ffffff" + "} p {text-shadow: 0 0 10px " + tmp.ma.color + ";} </style><p>Components and Effects: </p><p>" + getBuyableAmount(this.layer, 25).add(1) + " Motherboard"}]]]
+            motherboards = getBuyableAmount(this.layer, 25).add(1)
+            cpus = getBuyableAmount(this.layer, 31)
+            cpuPlural = "is"
+            if (isPlural(cpus)=="s") cpuPlural = "are"
+            gpus = getBuyableAmount(this.layer, 32)
+            gpuPlural = "is"
+            if (isPlural(gpus)=="s") gpuPlural = "are"
+            displayText = "<style>p {color:" + "#ffffff" + "} p {text-shadow: 0 0 10px " + tmp.ma.color + ";} </style><p>You have " + player.ma.threads +" thread" + isPlural(player.ma.threads) + ".</p> <p>Components and Effects: </p><p>" + motherboards + " Motherboard"+isPlural(motherboards)+": provides functionality to the machine. </p><p> "
+            displayText = displayText + cpus+ " CPU"+isPlural(cpus)+": Your CPU"+isPlural(cpus)+" "+cpuPlural+" collectively running at " + formatUnit(new Decimal(2).pow(cpus).sub(1).max(0).times(1048576), "Hz.") + " The improver effect is multiplied by " + tmp.ma.buyables[31].effect+"x"
+            displayText = displayText +"</p><p>"+ gpus+ " GPU"+isPlural(gpus)+": Your GPU"+isPlural(gpus)+" "+gpuPlural+" collectively providing a capacity of " + formatUnit(new Decimal(2).pow(gpus).sub(1).max(0).times(1048576), "B") + " of VRAM. VRAM is multiplying improver gain by " + tmp.ma.buyables[32].effect+"x"
+            return displayText}]]]
     //<p style='color:      ;'>
     ]
             ],
