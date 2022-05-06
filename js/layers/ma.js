@@ -192,15 +192,15 @@ addLayer("ma", {
             title: "CPU",
             // COST FUNCTION.
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
-                return formatWhole(1)
+                return new Decimal (x + 1)
             },
             // END COST FUNCTION.
 
             // DESCRIPTION
-            display() { return "Add an additional CPU to the machine.\n Amount: " + getBuyableAmount(this.layer, this.id)},
+            display() { return "Add an additional CPU to the machine.\n Amount: " + getBuyableAmount(this.layer, this.id) + "\n Cost:" + tmp.ma.buyables[31].cost},
             // END DESCRIPTION
 
-            canAfford() { return player.ma.threads.gte(this.cost()) },
+            canAfford() { return player.ma.threads.gte(tmp.ma.buyables[31].cost) },
 
             effect(x=player[this.layer].buyables[this.id]) {
                 effect = new Decimal(2).pow(x)
@@ -215,13 +215,13 @@ addLayer("ma", {
                 "width" : "150px",
                 "height" : "150px",} },
             buy() { //amonger type beat
-                player[this.layer].power = player[this.layer].power.sub(this.cost())
+                player[this.layer].threads = player[this.layer].threads.sub(tmp.ma.buyables[31].cost)
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
             unlocked() {
                 x = false
                 if(hasUpgrade('i', 22)&&hasUpgrade('p', 11)&&hasMilestone('p', 1)) x = true
-                return x
+                return true
             },
         },
         32: {
@@ -322,9 +322,13 @@ addLayer("ma", {
             gpus = getBuyableAmount(this.layer, 32)
             gpuPlural = "is"
             if (isPlural(gpus)=="s") gpuPlural = "are"
+            ram = getBuyableAmount(this.layer, 32)
+            ramPlural = "is"
+            if (isPlural(ram)=="s") ramPlural = "are"
             displayText = "<style>p {color:" + "#ffffff" + "} p {text-shadow: 0 0 10px " + tmp.ma.color + ";} </style><p>You have " + player.ma.threads +" thread" + isPlural(player.ma.threads) + ".</p> <p>Components and Effects: </p><p>" + motherboards + " Motherboard"+isPlural(motherboards)+": provides functionality to the machine. </p><p> "
             displayText = displayText + cpus+ " CPU"+isPlural(cpus)+": Your CPU"+isPlural(cpus)+" "+cpuPlural+" collectively running at " + formatUnit(new Decimal(2).pow(cpus).sub(1).max(0).times(1048576), "Hz.") + " The improver effect is multiplied by " + tmp.ma.buyables[31].effect+"x"
             displayText = displayText +"</p><p>"+ gpus+ " GPU"+isPlural(gpus)+": Your GPU"+isPlural(gpus)+" "+gpuPlural+" collectively providing a capacity of " + formatUnit(new Decimal(2).pow(gpus).sub(1).max(0).times(1048576), "B") + " of VRAM. VRAM is multiplying improver gain by " + tmp.ma.buyables[32].effect+"x"
+            displayText = displayText +"</p><p>"+ ram+ " RAM: Your RAM Stick" +isPlural(ram)+ " " +ramPlural+ " providing " + formatUnit(new Decimal(2).pow(ram).sub(1).max(0).times(1048576), "B") + " of ram, which provides a " + tmp.ma.buyables[32].effect + "x buff to your CPU"+isPlural(cpus)+" and GPU"+isPlural(gpus)+"."
             return displayText}]]]
     //<p style='color:      ;'>
     ]
