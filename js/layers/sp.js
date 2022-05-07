@@ -20,7 +20,7 @@ addLayer("sp", {
     baseResource: "Light Energy",                 // The name of the resource your prestige gain is based on.
     baseAmount() { return player.p.power },  // A function to return the current amount of baseResource.
 
-    requires: new Decimal(1e25),              // The amount of the base needed to  gain 1 of the prestige currency.
+    requires: new Decimal(1e23),              // The amount of the base needed to  gain 1 of the prestige currency.
                                             // Also the amount required to unlock the layer.
 
     type: "static",                         // Determines the formula used for calculating prestige currency.
@@ -93,7 +93,7 @@ addLayer("sp", {
     milestones: {
         0: {requirementDescription: "1 Subatomic Particle",
             done() {return player.sp.total.gte(1)}, // Used to determine when to give the milestone
-            effectDescription() { s = "Autobuy all previous buyables."
+            effectDescription() { s = "Autobuy melge fabricators and photonic accelerators."
             return s
         } 
         },

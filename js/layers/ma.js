@@ -318,16 +318,16 @@ addLayer("ma", {
             motherboards = getBuyableAmount(this.layer, 25).add(1)
             cpus = getBuyableAmount(this.layer, 31)
             cpuPlural = "is"
-            if (isPlural(cpus)=="s") cpuPlural = "are"
+            if (isPlural(cpus)=="s") cpuPlural = "are collectively"
             gpus = getBuyableAmount(this.layer, 32)
             gpuPlural = "is"
-            if (isPlural(gpus)=="s") gpuPlural = "are"
+            if (isPlural(gpus)=="s") gpuPlural = "are collectively"
             ram = getBuyableAmount(this.layer, 32)
             ramPlural = "is"
             if (isPlural(ram)=="s") ramPlural = "are"
             displayText = "<style>p {color:" + "#ffffff" + "} p {text-shadow: 0 0 10px " + tmp.ma.color + ";} </style><p>You have " + player.ma.threads +" thread" + isPlural(player.ma.threads) + ".</p> <p>Components and Effects: </p><p>" + motherboards + " Motherboard"+isPlural(motherboards)+": provides functionality to the machine. </p><p> "
-            displayText = displayText + cpus+ " CPU"+isPlural(cpus)+": Your CPU"+isPlural(cpus)+" "+cpuPlural+" collectively running at " + formatUnit(new Decimal(2).pow(cpus).sub(1).max(0).times(1048576), "Hz.") + " The improver effect is multiplied by " + tmp.ma.buyables[31].effect+"x"
-            displayText = displayText +"</p><p>"+ gpus+ " GPU"+isPlural(gpus)+": Your GPU"+isPlural(gpus)+" "+gpuPlural+" collectively providing a capacity of " + formatUnit(new Decimal(2).pow(gpus).sub(1).max(0).times(1048576), "B") + " of VRAM. VRAM is multiplying improver gain by " + tmp.ma.buyables[32].effect+"x"
+            displayText = displayText + cpus+ " CPU"+isPlural(cpus)+": Your CPU"+isPlural(cpus)+" "+cpuPlural+"  running at " + formatUnit(new Decimal(2).pow(cpus).sub(1).max(0).times(1048576), "Hz.") + " The improver effect is multiplied by " + tmp.ma.buyables[31].effect+"x"
+            displayText = displayText +"</p><p>"+ gpus+ " GPU"+isPlural(gpus)+": Your GPU"+isPlural(gpus)+" "+gpuPlural+"  providing a capacity of " + formatUnit(new Decimal(2).pow(gpus).sub(1).max(0).times(1048576), "B") + " of VRAM. VRAM is multiplying improver gain by " + tmp.ma.buyables[32].effect+"x"
             displayText = displayText +"</p><p>"+ ram+ " RAM: Your RAM Stick" +isPlural(ram)+ " " +ramPlural+ " providing " + formatUnit(new Decimal(2).pow(ram).sub(1).max(0).times(1048576), "B") + " of ram, which provides a " + tmp.ma.buyables[32].effect + "x buff to your CPU"+isPlural(cpus)+" and GPU"+isPlural(gpus)+"."
             return displayText}]]]
     //<p style='color:      ;'>

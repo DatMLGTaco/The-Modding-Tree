@@ -18,11 +18,7 @@ addLayer("p", {
 			let mult = new Decimal(1);
 			return mult;
 		},
-        doReset(resettingLayer) {
-            let keep = [];
-            if (hasMilestone("ee", 2)) keep.push("milestones"), keep.push("upgrades")
-            if (layers[resettingLayer].row > this.row) layerDataReset("p", keep)
-        },
+
     upgrades:{
         11:{
         title: "Subatomic Breakthrough",
@@ -76,7 +72,7 @@ addLayer("p", {
         21: {
             title: "Refraction",
             description: "Subatomic Breakthrough multiplies light energy gain at a reduced rate.",
-            cost() { return new Decimal(1e18) },
+            cost() { return new Decimal(1e21) },
             currencyDisplayName: "light energy",
             currencyInternalName: "power",
             currencyLayer: "p",
