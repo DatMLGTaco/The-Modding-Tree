@@ -101,7 +101,7 @@ function formatSmall(x, precision=2) {
     return format(x, precision, true)    
 }
 
-function formatUnit(num, unit) {
+function formatUnit(num, unit, nostring) {
 	finalUnit = ""
     num = new Decimal(num)
 	if (num.gte(1024)) num = num.div(1024), finalUnit = "K"
@@ -112,6 +112,7 @@ function formatUnit(num, unit) {
 	if (num.gte(1024)) num = num.div(1024), finalUnit = "E"
 	if (num.gte(1024)) num = num.div(1024), finalUnit = "Z"
 	if (num.gte(1024)) num = num.div(1024), finalUnit = "Y"
+    if (nostring === true) return new Decimal(format(num))
 	return new Decimal(format(num)) + " " + finalUnit + unit
 }
 

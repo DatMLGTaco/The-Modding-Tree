@@ -30,6 +30,7 @@ addLayer("i", {
         if (player.ee.unlocked) x = x.times(tmp.ee.earthEff)
         if (player.i.points.times(50).pow(0.5) >= 1) eff = player.i.points.times(x)
         if (hasUpgrade("i", 33)) eff = eff.times(6)
+        if (getBuyableAmount("ma", 31) > 0) eff = eff.times (tmp.ma.buyables[31].effect)
         return eff.pow(0.5)
 
         },
@@ -158,6 +159,7 @@ addLayer("i", {
         if (hasUpgrade('i', 23)) mult = mult.times(upgradeEffect('i', 23))
         if (hasUpgrade("i", 32)) mult = mult.times(upgradeEffect("i", 32))
         if (player.ee.unlocked) mult = mult.times(tmp.ee.waterEff)
+        if (getBuyableAmount("ma", 32) > 0) mult = mult.times (tmp.ma.buyables[32].effect)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses

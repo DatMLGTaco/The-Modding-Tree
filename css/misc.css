@@ -7,7 +7,10 @@
 	border: 5px solid;
 	border-color: rgba(0.1, 0, 0, 0.075);
 }
-
+.outlinedBlack {
+    color: black;
+    text-shadow: 1px 1px white, -1px -1px #444;
+}
 .tabButton {
 	background-color: transparent;
 	color: var(--color);

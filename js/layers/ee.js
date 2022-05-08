@@ -277,7 +277,9 @@ addLayer("ee", {
         if(tmp.ee.layerShown) player.ee.alwaysShow = true
 
     },
-
+    style() {
+        return {"background-image" : "url('https://media3.giphy.com/media/mwJ6amxyHcZ767AmK2/giphy.gif?cid=790b7611f821a565daaf450595b4c506c805057ede2d14a6&rid=giphy.gif&ct=g')"
+        }},
     branches: ["m", "p", "i"],
     upgrades: {
         // Look in the upgrades docs to see what goes here!
