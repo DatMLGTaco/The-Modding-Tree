@@ -224,7 +224,7 @@ addLayer("a", {
         },
         24: {
             name: "Sustainable Sourcing",
-            done() { return player.i.points.gt(10) },
+            done() { return getBuyableAmount(this.layer, 11) > 4  },
             tooltip() {return "Get 5 Melge Fabricators. Reward: Melge Fabricators add to Melge Essence Multiplier and keep one fabricator on reset. Currently: " + format(new Decimal(1).times(getBuyableAmount("m", 11).times(2.5).pow(5)).max(1))+ "x." },
 
             style() {                     

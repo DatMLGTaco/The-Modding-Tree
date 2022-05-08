@@ -1,6 +1,6 @@
-addLayer("p", {
-    name: "Photons", // This is optional, only used in a few places, If absent it just uses the layer id.
-    symbol: "P", // This appears on the layer's node. Default is the id with the first letter capitalized
+addLayer("is", {
+    name: "Isotopic Separator", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "IS", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 3, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
         unlocked: false,
@@ -10,83 +10,16 @@ addLayer("p", {
         power: new Decimal(0),
         unlockOrder: new Decimal(0),
     }},
-    color: "#ffffff",
-    resource: "Photons", // Name of prestige currency
+    color: "#aaaaaa",
+    resource: "Hellish Energy", // Name of prestige currency
     canBuyMax() {return false},
-    branches: ["m"],
+    branches: ["sp", "ee", "ma"],
 		enGainMult() {
 			let mult = new Decimal(1);
 			return mult;
 		},
 
     upgrades:{
-        11:{
-        title: "Subatomic Breakthrough",
-        description() {
-
-        if (!hasUpgrade("sp", 11)) return "Increase fabric gain based on number of photons.";
-        return "Increase fabric and synergy effect based on number of photons."
-        }, 
-        cost: new Decimal(1), 
-        effect() {
-            eff = player[this.layer].points.add(1).times(5)
-            if (hasUpgrade('sp', 11)) eff = eff.pow(upgradeEffect('sp', 11))
-            return eff
-        },
-        effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" },   
-    }, 
-        12: {
-            title: "Discount One",
-            description: "Photon Accelerators and Melge Fabricators are cheaper based on your light energy!",
-            cost() { return new Decimal(1e11) },
-            currencyDisplayName: "light energy",
-            currencyInternalName: "power",
-            currencyLayer: "p",
-            effect() { 
-                let eff = new Decimal(32).times(player.p.power.add(1).pow(0.25));
-              
-                return eff;
-            },
-            unlocked() { return hasAchievement("a", 22)&&hasUpgrade("p", 11)&&getBuyableAmount("p", 11)>0},
-            effectDisplay() { return "/"+format(tmp.p.upgrades[12].effect) },
-
-
-        },
-        13: {
-            title: "Discount Two",
-            description: "Photon Accelerator and Melge Fabricator cost base are reduced based on light energy!",
-            cost() { return new Decimal(1e18) },
-            currencyDisplayName: "light energy",
-            currencyInternalName: "power",
-            currencyLayer: "p",
-            effect() { 
-                let eff = (player.p.power.add(1).log(10).div(3.5));
-              
-                return eff;
-            },
-            unlocked() { return hasAchievement("a", 24)&&hasUpgrade("p", 11)&&hasUpgrade("p", 12)&&getBuyableAmount("p", 11)>0},
-            effectDisplay() { return "-"+format(tmp.p.upgrades[13].effect) },
-
-
-        },
-        21: {
-            title: "Refraction",
-            description: "Subatomic Breakthrough multiplies light energy gain at a reduced rate.",
-            cost() { return new Decimal(1e21) },
-            currencyDisplayName: "light energy",
-            currencyInternalName: "power",
-            currencyLayer: "p",
-            effect() { 
-                let eff = format(tmp.p.upgrades[11].effect.log(2))
-              
-                return eff;
-            },
-            unlocked() { return hasUpgrade("p", 12)&&getBuyableAmount("p", 11)>10&&player.sp.unlocked},
-            effectDisplay() { return "x"+format(tmp.p.upgrades[21].effect) },
-
-
-        },
-
 
     },
     requires() {
@@ -109,7 +42,7 @@ addLayer("p", {
     gainExp() { // Calculate the exponent on main currency from bonuses
         return new Decimal(1)
     },
-    row: 1, // Row the layer is in on the tree (0 is the first row)
+    row: 3, // Row the layer is in on the tree (0 is the first row)
     milestones: {
         0: {requirementDescription: "5 Photons",
             done() {return player.p.best.gte(5)}, // Used to determine when to give the milestone
@@ -286,7 +219,7 @@ addLayer("p", {
         if (rgb>100) rgb= rgb = 100+Math.ceil(player[this.layer].buyables[11]/5)
         if (rgb>125) rgb= 125
         return {"background-color": ("rgb("+rgb+", "+rgb+", "+rgb+")") } },
-    layerShown(){return true},
+    layerShown(){return false},
     increaseUnlockOrder: ["i"],
 
 })

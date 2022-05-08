@@ -40,7 +40,7 @@ addLayer("m", {
 12:{
     title: "Woven Fabric",
     description: "Melge upgrades 2, 3, and 4 all use a better formula.",
-    cost: new Decimal(5e10),
+    cost: new Decimal(1.5e8),
     style() {                     
         if(hasUpgrade(this.layer, this.id)) return {
             'background-color': '#ffcb52' 
