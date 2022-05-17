@@ -29,7 +29,10 @@ addLayer("ee", {
     baseResource: "melge essence",                 // The name of the resource your prestige gain is based on.
     baseAmount() { return player.m.points },  // A function to return the current amount of baseResource.
 
-    requires: new Decimal(1e60),              // The amount of the base needed to  gain 1 of the prestige currency.
+    requires(){ 
+        
+        if (hasAchievement("a", 34)) return new Decimal(1e60).div(player.ma.ram.pow(1.1).times(99.333).plus(6))
+        return new Decimal(1e60)},              // The amount of the base needed to  gain 1 of the prestige currency.
                                             // Also the amount required to unlock the layer.
 
     type: "static",                         // Determines the formula used for calculating prestige currency.

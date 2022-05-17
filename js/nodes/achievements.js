@@ -174,7 +174,8 @@ addLayer("a", {
 
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {
-                    'background-color': tmp.a.color 
+                    'background-color': tmp.a.color ,
+                    'background-image' : "url('https://media3.giphy.com/media/SunpAqc7UbJSQIzTQR/giphy.gif?cid=790b7611616c428a0ecb1158170416aaa08d4858d41f41f2&rid=giphy.gif&ct=g')"
             }
         },
 
@@ -187,7 +188,9 @@ addLayer("a", {
 
             style() {                     
                 if(hasAchievement("a", 21)) return {
-                    'background-color': tmp.a.color 
+                    'background-color': tmp.a.color ,
+                    'background-image' : "url('https://th.bing.com/th/id/OIP.mL-bd-doLaBqNivCQe9NRwAAAA?pid=ImgDet&rs=1')"
+                    
             }
         },
             
@@ -201,7 +204,9 @@ addLayer("a", {
 
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {
-                    'background-color': tmp.a.color 
+                    'background-color': tmp.a.color,
+                    'background-image' : "url('https://cdn.discordapp.com/attachments/791407985649909791/975831020517601280/unknown.png')"
+
             }
         },
 
@@ -229,7 +234,8 @@ addLayer("a", {
 
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {
-                    'background-color': tmp.a.color 
+                    'background-color': tmp.a.color,
+                    'background-image' : "url('https://cdn.discordapp.com/attachments/791407985649909791/975830605101150208/73154-recycling-symbol-icon.png')"
             }
         },
 
@@ -241,7 +247,8 @@ addLayer("a", {
 
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {
-                    'background-color': tmp.a.color 
+                    'background-color': tmp.a.color,
+                    'background-image' : "url('https://cdn.discordapp.com/attachments/791407985649909791/975831973555736597/unknown.png')"
             }
         },
 
@@ -253,7 +260,8 @@ addLayer("a", {
 
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {
-                    'background-color': tmp.a.color 
+                    'background-color': tmp.a.color,
+                    'background-image' : "url('https://cdn.discordapp.com/attachments/791407985649909791/975832230167474206/unknown.png')" 
             }
         },
 
@@ -265,7 +273,21 @@ addLayer("a", {
 
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {
-                    'background-color': tmp.a.color 
+                    'background-color': tmp.a.color,
+                    'background-image' : "url('https://media.discordapp.net/attachments/791407985649909791/975832873187831878/73154-recycling-symbol-icon.png')"  
+            }
+        },
+
+        },
+        34: {
+            name: "Really Awesome Magic",
+            done() { return player.ee.points.gte(30) },
+            tooltip() {return "Get 30 Elemental Energy. Reward: RAM reduces EE requirement. Currently: /" +formatWhole(player.ma.ram.times(1.333).plus(6).pow(0.9))},
+
+            style() {                     
+                if(hasAchievement(this.layer, this.id)) return {
+                    'background-color': tmp.a.color ,
+                    'background-image' : "url('https://media2.giphy.com/media/f2Rnxg8GW8TAAO40m9/giphy.gif?cid=790b76111e0dec1a291ce0ae5010a52bad8e3e6d37fac322&rid=giphy.gif&ct=g')"
             }
         },
 

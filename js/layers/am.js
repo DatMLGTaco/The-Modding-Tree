@@ -1,7 +1,7 @@
-addLayer("is", {
-    name: "Isotopic Separator", // This is optional, only used in a few places, If absent it just uses the layer id.
-    symbol: "IS", // This appears on the layer's node. Default is the id with the first letter capitalized
-    position: 3, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
+addLayer("am", {
+    name: "Atomic Manipulator", // This is optional, only used in a few places, If absent it just uses the layer id.
+    symbol: "AM", // This appears on the layer's node. Default is the id with the first letter capitalized
+    position: 2, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
         unlocked: false,
 		points: new Decimal(0),
@@ -13,12 +13,16 @@ addLayer("is", {
     color: "#aaaaaa",
     resource: "Hellish Energy", // Name of prestige currency
     canBuyMax() {return false},
-    branches: ["sp", "ee", "ma"],
+    branches: [["sp", "#9c9c9c"], ["ee", "#9c9c9c"], ["ma", "#9c9c9c"]],
 		enGainMult() {
 			let mult = new Decimal(1);
 			return mult;
 		},
+        canReset(){
 
+            return hasUpgrade("ma", 64)
+
+        },
     upgrades:{
 
     },
@@ -210,16 +214,14 @@ addLayer("is", {
             },
         },
     },
-    hotkeys: [
-        {key: "p", description: "P: Reset for photons", onPress(){if (canReset(this.layer)&&player.p.points<10) doReset(this.layer)}},
-    ],
+
     style() {
         x = {'background-color': '#0F0F0F'}
         let rgb = Math.ceil(2*player[this.layer].points+(player[this.layer].buyables[11]/5)) 
         if (rgb>100) rgb= rgb = 100+Math.ceil(player[this.layer].buyables[11]/5)
         if (rgb>125) rgb= 125
         return {"background-color": ("rgb("+rgb+", "+rgb+", "+rgb+")") } },
-    layerShown(){return false},
-    increaseUnlockOrder: ["i"],
+    layerShown(){return player.ma.unlocked},
+    
 
 })

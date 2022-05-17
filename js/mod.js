@@ -3,7 +3,7 @@ let modInfo = {
 	id: "melge011",
 	author: "The Melge",
 	pointsName:"fabric",
-	modFiles: ["layers/i.js", "layers/p.js", "layers/m.js", "layers/ma.js", "layers/ee.js", "layers/sp.js", "layers/he.js", "layers/is.js", "tree.js", "nodes/achievements.js"],
+	modFiles: ["layers/i.js", "layers/p.js", "layers/m.js", "layers/ma.js", "layers/ee.js", "layers/sp.js", "layers/he.js", "layers/am.js", "tree.js", "nodes/achievements.js"],
 
 
 	discordName: "",

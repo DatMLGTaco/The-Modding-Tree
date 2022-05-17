@@ -10,10 +10,10 @@ addLayer("he", {
         power: new Decimal(0),
         unlockOrder: new Decimal(0),
     }},
-    color: "#ffffff",
+    color: "#ff3030",
     resource: "Hellish Energy", // Name of prestige currency
     canBuyMax() {return false},
-    branches: ["sp", "ee"],
+    branches: [["sp", "#945151"], ["ee", "#945151"], ["ma", "#945151"]],
 		enGainMult() {
 			let mult = new Decimal(1);
 			return mult;
@@ -24,7 +24,7 @@ addLayer("he", {
 
     },
     requires() {
-        x = new Decimal(2500)
+        x = new Decimal(2500e2500)
         y = new Decimal(1)
         if (player[this.layer].unlocked) y = player[this.layer].points.add(1).pow(1.5)
         if (player.p.unlockOrder > 0) x = new Decimal(5e11), y = y.times(3)
@@ -220,7 +220,7 @@ addLayer("he", {
         if (rgb>100) rgb= rgb = 100+Math.ceil(player[this.layer].buyables[11]/5)
         if (rgb>125) rgb= 125
         return {"background-color": ("rgb("+rgb+", "+rgb+", "+rgb+")") } },
-    layerShown(){return false},
+    layerShown(){return player.ma.unlocked},
     increaseUnlockOrder: ["i"],
 
 })
