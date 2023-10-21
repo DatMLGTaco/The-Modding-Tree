@@ -174,7 +174,7 @@ addLayer("ma", {
 
 
 
-
+/* upgrades below */
 
 
 
@@ -378,7 +378,7 @@ addLayer("ma", {
             branches(){
                 x = "#a0a0a0"
                 if (hasUpgrade(this.layer, this.id)) x = tmp.ma.color
-                return [[62, x, 30]]}, 
+                return [[62, x, 30], [41, x, 30]]}, 
 
             },
             64: {
@@ -484,6 +484,41 @@ addLayer("ma", {
                 player[this.layer].threads = player[this.layer].threads.add(1);
             }},
             canSellOne() { return true },
+        },
+        12: {
+            title: "MORE FANS",
+            // COST FUNCTION.
+            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
+                return x^1.2
+            },
+            // END COST FUNCTION.
+
+            // DESCRIPTION
+            display() { return "Add fans to the machine.\n Amount: " + getBuyableAmount(this.layer, this.id) + "\n Cost: " + tmp.ma.buyables[12].cost+ " research points." + "\n Effect: " + tmp.ma.buyables[12].effect},
+            // END DESCRIPTION
+
+            canAfford() { return player.ma.research.gte(tmp.ma.buyables[12].cost) },
+
+            effect(x=player[this.layer].buyables[this.id]) {
+                effect = new Decimal(x).times(20).pow(0.9)
+                return new Decimal(format(effect))
+            },
+
+            style() { 
+
+                return {"background-color": tmp.ma.color, 
+                "border": "1px dashed",
+                "width" : "120px",
+                "height" : "120px",} },
+            buy() { //amonger type beat
+                player[this.layer].research = player[this.layer].research.sub(tmp.ma.buyables[12].cost)
+                setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            },
+            unlocked() {
+                x = false
+                if(hasUpgrade('i', 22)&&hasUpgrade('p', 11)&&hasMilestone('p', 1)) x = true
+                return true
+            },
         },
         24: {
             title: "DISPLAY",
@@ -786,7 +821,8 @@ content: [  ["row",[
     ["row", [["upgrade", 51],"blank","blank",["upgrade", 52], "blank", "blank", ["upgrade", 53], "blank", "blank", ["upgrade", 54],]],
     "blank",
     ["row", [["upgrade", 41],["upgrade", 41],"blank","blank","blank","blank",["upgrade", 62],"blank","blank",["upgrade", 63],"blank","blank",["upgrade", 64],]],
-        
+    "blank",
+    ["row", [["upgrade", 41],["upgrade", 41],"blank","blank","blank","blank",["buyable", 12],]],
     
     
     ],
