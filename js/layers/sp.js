@@ -24,7 +24,7 @@ addLayer("sp", {
                                             // Also the amount required to unlock the layer.
 
     type: "static",                         // Determines the formula used for calculating prestige currency.
-    exponent: 5,                          // "normal" prestige gain is (currency^exponent).
+    exponent: 0.85,                          // "normal" prestige gain is (currency^exponent).
 
     gainMult() {                            // Returns your multiplier to your gain of the prestige resource.
         return new Decimal(1)               // Factor in any bonuses multiplying gain here.
@@ -97,14 +97,14 @@ addLayer("sp", {
             return s
         } 
         },
-        1: {requirementDescription: "5 Total Subatomic Particles",
-        done() {return player.sp.total.gte(5)}, // Used to determine when to give the milestone
+        1: {requirementDescription: "25 Total Subatomic Particles",
+        done() {return player.sp.total.gte(25)}, // Used to determine when to give the milestone
         effectDescription() { s = "Photon layer (excluding light energy) doesn't reset on reset"
         return s
         } 
         },
-        2: {requirementDescription: "10 Total Subatomic Particles",
-        done() {return player.sp.total.gte(10)}, // Used to determine when to give the milestone
+        2: {requirementDescription: "50 Total Subatomic Particles",
+        done() {return player.sp.total.gte(50)}, // Used to determine when to give the milestone
         effectDescription() { s = "Unlock new Photon Upgrades."
         return s
         } 

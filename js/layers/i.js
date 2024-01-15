@@ -6,6 +6,7 @@ addLayer("i", {
         unlocked: false,
 		points: new Decimal(0),
         unlockOrder: new Decimal(0),
+        barprogress: new Decimal(0),
         achievement: false
     }},
     color: "#fff396",
@@ -31,22 +32,32 @@ addLayer("i", {
         if (player.i.points.times(50).pow(0.5) >= 1) eff = player.i.points.times(x)
         if (hasUpgrade("i", 33)) eff = eff.times(6)
         if (getBuyableAmount("ma", 31) > 0) eff = eff.times (tmp.ma.buyables[31].effect)
-        return eff.pow(0.5)
+        if (hasMilestone("i", 1)) eff = eff.div(new Decimal(1).add(player.i.barprogress))
+        return eff.pow(0.85)
 
         },
         tabFormat: ["main-display",
         ["row",[
-            ["column", [["display-text", function() {return "Your Improvers are currently multiplying your fabric gain by " + formatWhole(tmp.i.improverEff.times(upgradeEffect("i", 11))) + "x!"}]]]
+            ["column", [["display-text", function() {if (!hasMilestone("i", 1))return "Your Improvers are currently multiplying your fabric gain by " + formatWhole(player.i.improverEff.times(upgradeEffect("i", 11))) + "x!"
+            return "Your Improvers are currently multiplying your fabric gain by " + formatWhole(tmp.i.improverEff.times(upgradeEffect("i", 11))) + "x,"}]]]
         
         ]
                 ],
+        ["row",[
+            ["column", [["display-text", function() {if (!hasMilestone("i", 1))return ""
+            return "and your melge essence gain by " + formatWhole(tmp.i.improverEff.times(upgradeEffect("i", 11)).div(new Decimal(50).div(player.i.barprogress.add(1)))) + "x,"}]]]
+        
+        ]
+                ],
+                
+        "blank",
+        ["row",[["clickable", "11"], "blank",["bar", "ImproverBar"], "blank",["clickable", "12"]]],
         "blank",
         "prestige-button",
         "blank",
         "resource-display",
         "blank",
 
-        "blank",
         "upgrades",
         "blank",
         "blank",
@@ -152,7 +163,7 @@ addLayer("i", {
     baseResource: "fabric", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
     type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
-    exponent: 0.3, // Prestige currency exponent
+    exponent: 0.4, // Prestige currency exponent
 
     gainMult() {
         let mult = new Decimal(1)
@@ -167,8 +178,8 @@ addLayer("i", {
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     milestones: {
-        0: {requirementDescription: "50,000,000 Improvers",
-        done() {return player.i.best.gte(5e7)}, // Used to determine when to give the milestone
+        0: {requirementDescription: "3 Improvers",
+        done() {return player.i.best.gte(3)}, // Used to determine when to give the milestone
         effectDescription() { s = "Keep all Melge Upgrades on improver resets."
 
         return s
@@ -176,24 +187,75 @@ addLayer("i", {
     style() {                     
         if(hasMilestone(this.layer, this.id)) return {
             'background-color': '#e8e0a0' 
-}
-},
-    unlocked () {x = false; if (player.i.best >= 1000000||hasMilestone("ee", 2)) x = true; return x},
+    }
     },
-    1: {requirementDescription: "500,000,000 Improvers",
-    done() {return player.i.best.gte(5e8)&&hasMilestone("ee", 2)}, // Used to determine when to give the milestone
-    effectDescription() { s = "Keep the first three improver upgrades on all resets."
+        unlocked () {x = false; if (player.i.best >= 1000000||hasMilestone("ee", 2)) x = true; return true},
+        },
+        1: {requirementDescription: "5 Improvers",
+        done() {return player.i.best.gte(5)}, // Used to determine when to give the milestone
+        effectDescription() { s = "Unlock the Improver Bar."
 
-    return s
-}, 
-style() {                     
-    if(hasMilestone(this.layer, this.id)) return {
-        'background-color': '#e8e0a0' 
+        return s
+    }, 
+    style() {                     
+        if(hasMilestone(this.layer, this.id)) return {
+            'background-color': '#e8e0a0' 
+    }
+    },
+    unlocked () {x = false; if (hasMilestone("i", 0)&&hasMilestone("ee", 2)) x = true; return true},
 }
 },
-unlocked () {x = false; if (hasMilestone("i", 0)&&hasMilestone("ee", 2)) x = true; return x},
-}
+    bars: {
+        ImproverBar: {
+            direction: RIGHT,
+            width: 375,
+            height: 30,
+            progress() { return player.i.barprogress/10 },
+            unlocked() {
+                x = false
+                if (hasMilestone(this.layer, 1)) x = true
+                return x
+            },
+            display() {
+                return player.i.barprogress + "/10 Fabricators"
+            },
+            fillStyle() {
+                g = 0 + Math.ceil(25.5*player.i.barprogress) 
+                b = 0
+                r = 0 + Math.ceil(25.5*player.i.barprogress) 
+                return {"background-color": ("rgb("+r+", "+g+", "+b+")"), } },
+        },
+    
     },
+    clickables: {
+        rows: 1,
+        cols: 2,
+        12: {
+            display() {return "+"},
+            style: {"height": "35px", "width": "35px","min-height": "25px"},
+
+            unlocked() {return true},
+            canClick() {return true},
+            onClick() {
+                x = new Decimal(player.i.barprogress)
+                if (player.i.barprogress >= 10) x=9
+                y= x.add(new Decimal(1))
+                player.i.barprogress = new Decimal(y)
+                }
+            },
+        11: {
+            display() {return "-"},
+            style: {"height": "35px", "width": "35px","min-height": "25px"},
+            unlocked() {return true},
+            canClick() {return true},
+            onClick() {
+                x = new Decimal(player.i.barprogress)
+                if (player.i.barprogress <= 0) x=1
+                y= x.sub(1)
+                player.i.barprogress = new Decimal(y)
+                }
+            },
+        },
     hotkeys: [
         {key: "i", description: "I: Reset for Improvers", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],

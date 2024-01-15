@@ -109,16 +109,16 @@ addLayer("a", {
     },
     clickables: {
         11: {
-            display() {return "Gib 1 trillion bobux (1e100 fabric)"},
+            display() {return "Gib 1 bobux (100 fabric)"},
             unlocked() {return true},
             canClick() {return true},
             onClick() {
-                player.points=player.points.plus(1e100)
+                player.points=player.points.plus(100)
 
                 }
             },
             12: {
-                display() {return "Gib 1 trillion bobux (1e100 fabric) a lot (like forever not really)"},
+                display() {return "Gib 100 bobux (10000 fabric) a lot (like forever not really)"},
                 unlocked() {return true},
                 canClick() {return true},
                 onClick() {
@@ -229,7 +229,7 @@ addLayer("a", {
         },
         24: {
             name: "Sustainable Sourcing",
-            done() { return getBuyableAmount(this.layer, 11) > 4  },
+            done() { return getBuyableAmount("m", 11) > 4  },
             tooltip() {return "Get 5 Melge Fabricators. Reward: Melge Fabricators add to Melge Essence Multiplier and keep one fabricator on reset. Currently: " + format(new Decimal(1).times(getBuyableAmount("m", 11).times(2.5).pow(5)).max(1))+ "x." },
 
             style() {                     
