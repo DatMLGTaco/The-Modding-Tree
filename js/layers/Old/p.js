@@ -29,8 +29,7 @@ addLayer("p", {
         }, 
         cost: new Decimal(1), 
         effect() {
-            x=player[this.layer].points
-            eff = x.add(1).times(5+x)
+            eff = player[this.layer].points.add(1).times(5)
             if (hasUpgrade('sp', 11)) eff = eff.pow(upgradeEffect('sp', 11))
             return eff
         },
@@ -70,23 +69,6 @@ addLayer("p", {
 
 
         },
-        14: {
-            title: "Efficiency",
-            description: "Unlocks One New Melge Upgrade",
-            cost() { return new Decimal(1e21) },
-            currencyDisplayName: "light energy",
-            currencyInternalName: "power",
-            currencyLayer: "p",
-            effect() { 
-                let eff = format(tmp.p.upgrades[11].effect.log(2))
-              
-                return eff;
-            },
-            unlocked() { return hasUpgrade("p", 12)&&getBuyableAmount("p", 11)>10&&player.sp.unlocked},
-            effectDisplay() { return "x"+format(tmp.p.upgrades[21].effect) },
-
-
-        },
         21: {
             title: "Refraction",
             description: "Subatomic Breakthrough multiplies light energy gain at a reduced rate.",
@@ -104,8 +86,6 @@ addLayer("p", {
 
 
         },
-
-
 
 
     },
@@ -229,7 +209,7 @@ addLayer("p", {
             height: 85,
             progress() {
                 x = new Decimal(player[this.layer].points/10) 
-                if (hasMilestone("p", 1)) x = player.p.power.log(7).div(25)
+                if (hasMilestone("p", 1)) x = player.p.power.log(3).div(25)
                 return x },
             unlocked: true,
 
