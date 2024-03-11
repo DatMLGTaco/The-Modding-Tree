@@ -3,7 +3,7 @@ let modInfo = {
 	id: "melge011",
 	author: "The Melge",
 	pointsName:"fabric",
-	modFiles: ["layers/m.js"],
+	modFiles: ["layers/i.js", "layers/p.js", "layers/m.js", "layers/ma.js", "layers/ee.js", "layers/sp.js", "layers/he.js", "layers/am.js", "tree.js", "nodes/achievements.js"],
 
 
 	discordName: "",
@@ -44,7 +44,7 @@ function getPointGen() {
 		return new Decimal(0)
 
 	let gain = new Decimal(1)
-/* 	if (!hasUpgrade('m', 11)) gain = new Decimal(0) 
+	if (!hasUpgrade('m', 11)) gain = new Decimal(0) 
 	if (hasUpgrade('m', 21)) gain = gain.times(upgradeEffect('m', 21))
 	if (hasUpgrade('m', 22)) gain = gain.times(upgradeEffect('m', 22))
 	if (hasUpgrade('i', 11)) gain = gain.times(upgradeEffect('i', 11))
@@ -55,7 +55,7 @@ function getPointGen() {
 	if (hasMilestone('i', 0)) gain = gain.times(5)
 	if (hasMilestone('p', 1)) gain = gain.times(tmp.p.powerEff)
 	if (player.ee.unlocked) gain = gain.times(tmp.ee.fireEff)
-	if (player.i.unlocked) gain = gain.times(tmp.i.improverEff); */
+	if (player.i.unlocked) gain = gain.times(tmp.i.improverEff);
 	return gain
 }
 // Display extra things at the top of the page
