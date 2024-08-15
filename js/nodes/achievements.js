@@ -139,7 +139,7 @@ addLayer("a", {
             style() {                     
                 if(hasAchievement(this.layer, this.id)) return {
                     'background-color': tmp.a.color, 
-                    'background-image' : "url('https://media.discordapp.net/attachments/795488970238328875/951246404909691022/attachment.gif')"
+                    'background-image' : "url('https://i.insider.com/58c94fe96ad50a8f038b4e57?width=750&format=jpeg&auto=webp')"
             }
         },
         },
@@ -189,7 +189,7 @@ addLayer("a", {
             style() {                     
                 if(hasAchievement("a", 21)) return {
                     'background-color': tmp.a.color ,
-                    'background-image' : "url('https://th.bing.com/th/id/OIP.mL-bd-doLaBqNivCQe9NRwAAAA?pid=ImgDet&rs=1')"
+                    'background-image' : "url('https://img.stablecog.com/insecure/256w/aHR0cHM6Ly9iLnN0YWJsZWNvZy5jb20vMWYzM2Y2ODUtOGU1My00ZmE3LTg3NGUtZTE3NzZmZDgxNzZhLmpwZWc.webp')"
                     
             }
         },
@@ -216,7 +216,7 @@ addLayer("a", {
         23: {
             name: "Recursive Improvement.",
             done() { return player.i.points.gt(10) },
-            tooltip() {return "Get 10 Improvers. Reward: Divides Improver cost by " + format(player.i.points.add(1).div(25).max(1).log(2).max(1))+ " and treats them as if they were unlocked first." },
+            tooltip() {return "Get 10 Improvers. Reward: Divides Improver cost by " + format(player.i.points.add(1).div(2).max(1).log(2).max(1))+ " and treats them as if they were unlocked first." },
 
 
             style() {                     

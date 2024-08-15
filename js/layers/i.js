@@ -27,32 +27,48 @@ addLayer("i", {
         improverEff(){
         eff = new Decimal(1)
         x = new Decimal(8.333)
+        y = new Decimal(0.98)
         if (player.ee.unlocked) x = x.times(tmp.ee.earthEff)
-        if (player.i.points.times(50).pow(0.5) >= 1) eff = player.i.points.times(x)
+        if (player.i.points.times(50).pow(0.5) >= 1) eff = (player.i.points.times(x)).pow(y)
         if (hasUpgrade("i", 33)) eff = eff.times(6)
         if (getBuyableAmount("ma", 31) > 0) eff = eff.times (tmp.ma.buyables[31].effect)
         return eff.pow(0.5)
 
         },
-        tabFormat: ["main-display",
-        ["row",[
-            ["column", [["display-text", function() {return "Your Improvers are currently multiplying your fabric gain by " + formatWhole(tmp.i.improverEff.times(upgradeEffect("i", 11))) + "x!"}]]]
-        
-        ]
-                ],
-        "blank",
-        "prestige-button",
-        "blank",
-        "resource-display",
-        "blank",
+        tabFormat:{
+            "Improvement":{
+                content: [
+            "main-display",
+            ["row",[
+                ["column", [["display-text", function() {return "Your Improvers are currently multiplying your fabric gain by " + formatWhole(tmp.i.improverEff.times(upgradeEffect("i", 11))) + "x!"}]]]
+            
+            ]
+                    ],
+            "blank",
+            "prestige-button",
+            "blank",
+            "resource-display",
+            "blank",
+    
+            "blank",
+            ["row", [["upgrade", 11]]],
+            ["row", [["upgrade", 21],["upgrade", 22]]],
+            ["row", [["upgrade", 31],["upgrade", 32],["upgrade", 33]]],
+            "blank",
+            "blank",
+            "milestones",
+            "blank", "blank"
+            ]},
+        "Automation":{
 
-        "blank",
-        "upgrades",
-        "blank",
-        "blank",
-        "milestones",
-        "blank", "blank"
-    ],
+            content: [ 
+                "blank",
+                ["row", [["upgrade", 101]]],
+                ["row", [["upgrade", 201],["upgrade", 202]]],
+            ],
+
+        }
+        },
     upgrades:{
         11:{
         title: "Improver improver",
@@ -140,12 +156,80 @@ addLayer("i", {
 
     }
   },
+  101:{
+
+    title: "Automation: 1",
+    description: "Melge Upgrade 1 doesn't reset.",
+    cost: new Decimal(2), 
+    style() {   
+        a={
+        'border': '1px dotted',
+        'border-radius': '2px',
+        'width' : '500px',
+        'height' : '25px',
+        }
+        if(hasUpgrade(this.layer, this.id)) a = {
+            'background-color': '#e8e0a0', 
+            'border-radius': '2px',
+            'border': '1px dotted',
+            'width' : '500px',
+            'height' : '25px',
+
+}
+return a
+},
+  },
+  201:{
+
+    title: "Automation: 2",
+    description: "Melge Upgrades 2, 3, and 4 don't reset.",
+    cost: new Decimal(10), 
+    style() {   
+        a={
+        'border': '1px dotted',
+        'border-radius': '2px',
+        'width' : '250px',
+        'height' : '25px',
+        }
+        if(hasUpgrade(this.layer, this.id)) a = {
+            'background-color': '#e8e0a0', 
+            'border': '1px dotted',
+            'border-radius': '2px',
+            'width' : '250px',
+            'height' : '25px',
+
+}
+return a
+},
+  },
+  202:{
+
+    title: "Automation: 3",
+    description: "Unlocks a method to generate melge essence automatically...",
+    cost: new Decimal(10), 
+    style() {   
+        a={
+        'border': '1px dotted',
+        'border-radius': '2px',
+        'width' : '250px',
+        'height' : '25px',
+        }
+        if(hasUpgrade(this.layer, this.id)) a = {
+            'background-color': '#e8e0a0', 
+            'border': '1px dotted',
+            'border-radius': '2px',
+            'width' : '250px',
+            'height' : '25px',
+
+}
+return a
+},
+  },
     },
     requires() {
-        x = new Decimal(2500)
+        x = new Decimal(1500)
         y = new Decimal(1)
         if (player.i.unlockOrder > 0 && !hasAchievement("a", 23)) x = new Decimal(5e11), y = y.times(3)
-        if (player.i.unlocked) y = player[this.layer].points.add(1).pow(2)
         x = x.times(y)
         if (hasAchievement("a", 23)) x = x.div(player.i.points.add(1).div(25).max(2).log(2).max(1)).max(1)
         return x }, // Can be a function that takes requirement increases into account
@@ -167,9 +251,9 @@ addLayer("i", {
     },
     row: 1, // Row the layer is in on the tree (0 is the first row)
     milestones: {
-        0: {requirementDescription: "50,000,000 Improvers",
-        done() {return player.i.best.gte(5e7)}, // Used to determine when to give the milestone
-        effectDescription() { s = "Keep all Melge Upgrades on improver resets."
+        0: {requirementDescription: "5 Total Improvers",
+        done() {return player.i.total.gte(5)}, // Used to determine when to give the milestone
+        effectDescription() { s = "Multiply Improver Effect by 10"
 
         return s
     }, 
@@ -178,11 +262,11 @@ addLayer("i", {
             'background-color': '#e8e0a0' 
 }
 },
-    unlocked () {x = false; if (player.i.best >= 1000000||hasMilestone("ee", 2)) x = true; return x},
+    unlocked () {x = true; return x},
     },
-    1: {requirementDescription: "500,000,000 Improvers",
-    done() {return player.i.best.gte(5e8)&&hasMilestone("ee", 2)}, // Used to determine when to give the milestone
-    effectDescription() { s = "Keep the first three improver upgrades on all resets."
+    1: {requirementDescription: "25 Total Improvers",
+    done() {return player.i.total.gte(25)}, // Used to determine when to give the milestone
+    effectDescription() { s = "among us placeholder sus!"
 
     return s
 }, 
@@ -191,7 +275,7 @@ style() {
         'background-color': '#e8e0a0' 
 }
 },
-unlocked () {x = false; if (hasMilestone("i", 0)&&hasMilestone("ee", 2)) x = true; return x},
+unlocked () {x = false; if (hasMilestone("i", 0)) x = true; return x},
 }
     },
     hotkeys: [

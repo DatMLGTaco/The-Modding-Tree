@@ -91,11 +91,11 @@ addLayer("m", {
         return unlocked1
     },
     effect() {
-        let x = new Decimal(1.25)
+        let x = new Decimal(1.35)
         y = new Decimal(0.8)
         z = new Decimal(player[this.layer].points.add(1))
         l = new Decimal (2.25)
-        if (hasUpgrade(this.layer, 12)) x = new Decimal(1.35)
+        if (hasUpgrade(this.layer, 12)) x = new Decimal(1.5)
         if (hasUpgrade('i' , 22)) x = new Decimal(1.75)
         if (hasUpgrade('i' , 22)) l = new Decimal(1.15)
         if (hasUpgrade(this.layer, 31)) if (z>=50) y = new Decimal(y.div(z.log(l*1.6))) 
@@ -172,7 +172,7 @@ addLayer("m", {
     },
 /*    milestones: {
       
-            0: {requirementDescription: "5 Melge Fabricators",
+            0: {requirementDescription: "150 Melge Essence",
                 done() {return player.m.buyables[11].gte(5)}, // Used to determine when to give the milestone,
                 effectDescription() { s = "Melge Fabricators add to the melge essence multiplier" ; return s } ,
                 unlocked() {
@@ -221,11 +221,15 @@ addLayer("m", {
     }, 	*/	
     doReset(resettingLayer) {
         let keep = [];
-        if (hasMilestone("p", 0)&& resettingLayer=="p") keep.push("upgrades")
-        if (hasMilestone("i", 0)&& resettingLayer=="i") keep.push("upgrades"), keep.push("buyables")
+        let keepupgrades = [];
+        if (hasUpgrade("i", 101)) keepupgrades.push(11)
+        if (hasUpgrade("i", 201)) keepupgrades.push(21,22,23)
         if (hasMilestone("i", 0)) keep.push("milestones")
         if (hasMilestone("ee", 1))keep.push("milestones"), keep.push("upgrades")
-        if (layers[resettingLayer].row > this.row) layerDataReset("m", keep)
+        if (layers[resettingLayer].row > this.row) {
+            layerDataReset("m", keep)
+            player[this.layer].upgrades = keepupgrades
+        }
     },
     baseResource: "fabric", // Name of resource prestige is based on
     baseAmount() {return player.points}, // Get the current amount of baseResource
@@ -233,7 +237,7 @@ addLayer("m", {
     exponent: 0.5, // Prestige currency exponent
     gainMult() {
         let mult = new Decimal(1)
-        if (hasUpgrade('m', 23)) mult = mult.times(upgradeEffect('m', 23))
+        if (hasUpgrade('m', 23)&upgradeEffect('m', 23)>1) mult = mult.times(upgradeEffect('m', 23))
         if(getBuyableAmount(this.layer, 11) > 4 ) mult = mult.times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))
         if (player.i.unlocked) mult = mult.times(player.i.points.add(1));
         if (player.ee.unlocked) mult = mult.times(tmp.ee.fireEff)
@@ -258,7 +262,7 @@ addLayer("m", {
         11: {
             title: "Melge Fabricator",
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
-                if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
+                // if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
                 base = x.add(10.25)
                 if (hasUpgrade("p", 13)) base = base.sub(tmp.p.upgrades[13].effect)
                 let cost = Decimal.pow(2, base.pow(1.625))

@@ -285,7 +285,7 @@ addLayer("ma", {
 
         42: {
             title: "Realistic Microprocessors",
-            description: "Replaces the crappy 'micro' processors with actual microprocessors. RAM, VRAM, and Hz multiplied by 1024.",
+            description: "Replaces the crappy transistors with actual microprocessors. RAM, VRAM, and Hz multiplied by 1024.",
             cost: new Decimal(10),   
             currencyDisplayName: "research points",
             currencyInternalName: "research",
