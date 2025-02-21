@@ -9,6 +9,9 @@ addLayer("p", {
         total: new Decimal(0),
         power: new Decimal(0),
         unlockOrder: new Decimal(0),
+        frequency: 0.02,
+        amplitude: 30,
+        speed: 0.03,
     }},
     color: "#ffffff",
     resource: "Photons", // Name of prestige currency
@@ -44,7 +47,7 @@ addLayer("p", {
             currencyLayer: "p",
             effect() { 
                 let eff = new Decimal(32).times(player.p.power.add(1).pow(0.25));
-              
+                if (hasUpgrade("p", 14)) eff = eff.times(upgradeEffect("p", 14))
                 return eff;
             },
             unlocked() { return hasAchievement("a", 22)&&hasUpgrade("p", 11)&&getBuyableAmount("p", 11)>0},
@@ -54,18 +57,38 @@ addLayer("p", {
         },
         13: {
             title: "Discount Two",
-            description: "Photon Accelerator and Melge Fabricator cost base are reduced based on light energy!",
+            description: "Photon Accelerator cost base is reduced based on light energy!",
             cost() { return new Decimal(1e18) },
             currencyDisplayName: "light energy",
             currencyInternalName: "power",
             currencyLayer: "p",
-            effect() { 
-                let eff = (player.p.power.add(1).log(10).div(3.5));
-              
+            effect() {
+                let effBase = player.p.power
+                let logBase = 10
+                if (hasUpgrade("p", 14)) effBase = effBase.times(upgradeEffect("p", 14)); logBase = 9
+                let eff = (effBase.add(1).log(logBase).div(3.5));
+
                 return eff;
             },
             unlocked() { return hasAchievement("a", 24)&&hasUpgrade("p", 11)&&hasUpgrade("p", 12)&&getBuyableAmount("p", 11)>0},
             effectDisplay() { return "-"+format(tmp.p.upgrades[13].effect) },
+
+
+        },
+        14: {
+            title: "Discount Three",
+            description: "Discounts One & Two are multiplied by light energy effect at a reduced rate.",
+            cost() { return new Decimal(1e18) },
+            currencyDisplayName: "light energy",
+            currencyInternalName: "power",
+            currencyLayer: "p",
+            effect() {
+                let eff = format(tmp.p.powerEff.log(1.9))
+
+                return eff;
+            },
+            unlocked() { return hasAchievement("a", 24)&&hasUpgrade("p", 11)&&hasUpgrade("p", 12)&&getBuyableAmount("p", 11)>0},
+            effectDisplay() { return format(tmp.p.upgrades[14].effect) },
 
 
         },
@@ -77,8 +100,8 @@ addLayer("p", {
             currencyInternalName: "power",
             currencyLayer: "p",
             effect() { 
-                let eff = format(tmp.p.upgrades[11].effect.log(2))
-              
+                let eff = tmp.p.upgrades[11].effect.log(2)
+                if (hasUpgrade("p", 22)) eff = eff.times(upgradeEffect("p", 22))
                 return eff;
             },
             unlocked() { return hasUpgrade("p", 12)&&getBuyableAmount("p", 11)>10&&player.sp.unlocked},
@@ -86,11 +109,28 @@ addLayer("p", {
 
 
         },
+        22: {
+            title: "Prismatic Lens",
+            description: "Light Energy multiplies Refraction at a reduced rate.",
+            cost() { return new Decimal(1e40) },
+            currencyDisplayName: "light energy",
+            currencyInternalName: "power",
+            currencyLayer: "p",
+            effect() {
+                let eff = format(tmp.p.powerEff.log(2))
+
+                return eff;
+            },
+            unlocked() { return hasUpgrade("p", 12)&&getBuyableAmount("p", 11)>10&&player.sp.unlocked},
+            effectDisplay() { return "x"+format(tmp.p.upgrades[22].effect) },
+
+
+        },
 
 
     },
     requires() {
-        x = new Decimal(1500)
+        x = new Decimal(800)
         y = new Decimal(1)
         if (player[this.layer].unlocked) y = player[this.layer].points.add(1).pow(1.5)
         if (player.p.unlockOrder > 0) x = new Decimal(5e11), y = y.times(3)
@@ -157,6 +197,7 @@ addLayer("p", {
         return x
         // 
     },
+
     tabFormat() { if (player.p.points < 10){ return ([["main-display"],
             "main-display",
             "prestige-button",
@@ -166,6 +207,7 @@ addLayer("p", {
 			"milestones",
 			"blank",
             ["bar", "PhotonicSlider"],
+
             "blank",
             "blank",
 			"upgrades",
@@ -175,23 +217,56 @@ addLayer("p", {
     )
 }
         if (player.p.points > 9)  return ([
-        "main-display",
+            "main-display",
 
-        "resource-display",
-        "blank",
-        ["display-text", "You have " + formatWhole(player[this.layer].power) + " light energy, which multiplies fabric gain by " + formatWhole(tmp.p.powerEff) + "x!"],
-        ["display-text", "Your light energy has additionally filled the Photon Bar to " + format(tmp.p.bars.PhotonicSlider.progress * 100) + "%, which multiplies the light energy gain and effect by " + format(tmp.p.sliderEff) ],
-        "blank",
-        
-        ["bar", "PhotonicSlider"],
-        "blank",
-        "blank",
-        "buyables",
-        "blank",
-        "blank",
-        "upgrades",
+            "resource-display",
+            "blank",
+            ["display-text", "You have " + formatWhole(player[this.layer].power) + " light energy, which multiplies fabric gain by " + formatWhole(tmp.p.powerEff) + "x!"],
+            ["display-text", "Your light energy has additionally filled the Photon Bar to " + format(tmp.p.bars.PhotonicSlider.progress * 100) + "%, which multiplies the light energy gain and effect by " + format(tmp.p.sliderEff) ],
+            "blank",
+            ["bar", "PhotonicSlider"],
 
-        "blank", "blank",
+               /* ["wave", {
+                    borderColor: '#4CAF50',
+                    borderWidth: '2px',
+                    borderRadius: '15px',
+                    position: 'center',
+                    width: "50%",
+                    height: "60px",
+                    strokeWidth: 3,
+                    amplitude: 10,
+                    frequency: 0.13,
+                    speed: -15,
+                    background: "linear-gradient(to right, #ffffff, #000000)",
+                    waveGradient: {
+                        type: "linear",
+                        x0: 0, y0: 0.5, // Start at left center
+                        x1: 1, y1: 0.5, // End at right center
+                        stops: [
+                            { offset: 0, color: "#4CAF50" },
+                            { offset: 1, color: "#2196F3" }
+                        ]
+                    },
+                    waveGradient: {
+                        type: "radial",
+                        x0: 0.5, y0: 0.5, r0: 0,    // Center start
+                        x1: 0.5, y1: 0.5, r1: 0.5,  // Radius half of canvas
+                        stops: [
+                            { offset: 0, color: "#FF5722" },
+                            { offset: 1, color: "#FFC107" }
+                        ]
+                    }
+                }],*/
+
+            "blank",
+
+                "blank",
+            "buyables",
+            "blank",
+            "blank",
+            "upgrades",
+
+            "blank", "blank",
     ]
         )
         
@@ -201,6 +276,12 @@ addLayer("p", {
         if (hasMilestone("p", 1)) x = player.p.power.max(2).log(3).div(25)
         return x.times(100).times(5).pow(0.75).times(player.p.power.max(2).log(3).div(25).times(100)).times(15)
         //.times(100).times(y).pow(0.75)
+    },
+    wave: {
+      VisibleSlider:{
+          frequency: 0.13, amplitude: 52, speed: -15, color: "#0F0F0F"
+
+      }
     },
     bars: {
         PhotonicSlider: {
@@ -227,11 +308,19 @@ addLayer("p", {
     },
     doReset(resettingLayer) {
         let keep = [];
+        let keepupgrades = [];
+        if (hasUpgrade("i", 401)) keepupgrades.push(11)
+        if (hasUpgrade("i", 501)) keepupgrades.push(21,22,23)
+        if (hasUpgrade("i", 502)) keepupgrades.push(12)
+        if (hasUpgrade("i", 603)) keepupgrades.push(31)
+        if (hasUpgrade("i", 604)) keepupgrades.push(32)
         if (hasMilestone("sp", 1)) keep.push("upgrades")
         if (hasMilestone("sp", 1)&& resettingLayer=="sp") keep.push("milestones"), keep.push("points")
         if (hasMilestone("ee", 2)) keep.push("milestones")
         if (player.m.upgrades.length<=1) tmp.i.achievement = true
-        if (layers[resettingLayer].row > this.row) layerDataReset("p", keep)
+        if (layers[resettingLayer].row > this.row){
+            layerDataReset(this.layer, keep)
+        }
     },
     buyables: {
         11: {
@@ -278,7 +367,7 @@ addLayer("p", {
         },
     },
     hotkeys: [
-        {key: "p", description: "P: Reset for photons", onPress(){if (canReset(this.layer)&&player.p.points<10) doReset(this.layer)}},
+        {key: "p", description: "P: Reset for photons", onPress(){if (canReset(this.layer)&&player.p.points<11) doReset(this.layer)}},
     ],
     style() {
         x = {'background-color': '#0F0F0F'}
@@ -290,3 +379,7 @@ addLayer("p", {
     increaseUnlockOrder: ["i"],
 
 })
+
+
+
+

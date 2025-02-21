@@ -24,7 +24,7 @@ addLayer("he", {
 
     },
     requires() {
-        x = new Decimal(2500e2500)
+        x = new Decimal(2500)
         y = new Decimal(1)
         if (player[this.layer].unlocked) y = player[this.layer].points.add(1).pow(1.5)
         if (player.p.unlockOrder > 0) x = new Decimal(5e11), y = y.times(3)

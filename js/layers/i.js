@@ -13,8 +13,30 @@ addLayer("i", {
     canBuyMax() {return false},
     doReset(resettingLayer) {
         let keep = [];
-        if (hasMilestone("ee", 2))  keep.push("milestones")
-        if (layers[resettingLayer].row > this.row) layerDataReset("i", keep)
+        let keepupgrades = [];
+        keep.push("milestones")
+        if (hasMilestone("ee", "3")) keep.push("upgrades")
+        if (hasMilestone("ee", "1") && hasUpgrade("i", 101))keepupgrades.push(101)
+        if (hasMilestone("ee", "1") && hasUpgrade("i", 201))keepupgrades.push(201)
+        if (hasMilestone("ee", "1") && hasUpgrade("i", 202))keepupgrades.push(202)
+        if (hasMilestone("ee", "1") && hasUpgrade("i", 301))keepupgrades.push(301)
+        if (hasMilestone("ee", "1") && hasUpgrade("i", 302))keepupgrades.push(302)
+        if (hasMilestone("ee", "1") && hasUpgrade("i", 303))keepupgrades.push(303)
+        if (hasMilestone("ee", "1") && hasUpgrade("i", 304))keepupgrades.push(304)
+        if (layers[resettingLayer].row <= layers["ee"].row) {
+            if(hasUpgrade("i", 401)) keepupgrades.push(401)
+            if(hasUpgrade("i", 501)) keepupgrades.push(501)
+            if(hasUpgrade("i", 502)) keepupgrades.push(502)
+            if(hasUpgrade("i", 601)) keepupgrades.push(601)
+            if(hasUpgrade("i", 602)) keepupgrades.push(602)
+            if(hasUpgrade("i", 603)) keepupgrades.push(603)
+            if(hasUpgrade("i", 604)) keepupgrades.push(604)
+        }
+        if (layers[resettingLayer].row > this.row) {
+            layerDataReset("i", keep)
+            player[this.layer].upgrades = keepupgrades
+        }
+
         if (player.m.upgrades.length<=1) tmp.i.achievement = true
     },
     branches: ["m"],
@@ -25,6 +47,7 @@ addLayer("i", {
 			return mult;
 		},
         improverEff(){
+        if (player.i.points < 1) return new Decimal(1);
         eff = new Decimal(1)
         x = new Decimal(8.333)
         y = new Decimal(0.98)
@@ -61,10 +84,33 @@ addLayer("i", {
             ]},
         "Automation":{
 
-            content: [ 
+            content: [
+                ["row",[
+                    ["column", [["display-text", function() {return "<style>imp {font-size: 60px} imp {color:" + tmp.i.color + "} imp {text-shadow: 2px 0 #000, -2px 0 #fff1a8, 0 2px #fff1a8, 0 -2px #fff1a8, 1px 1px #fff1a8, -1px -1px #fff1a8, 1px -1px #fff1a8, -1px 1px " + tmp.i.color + ",0px 20px 20px " + tmp.i.color + ";} </style><imp>. . . Automation . . .</imp>"}]]]
+                ]],
+                "blank",
+                "blank",
+                ["row",[
+                    ["column", [["display-text", function() {return "<style>melg {font-size: 60px} melg {color:" + "#ffe438" + "} melg {text-shadow: 2px 0 #000, -2px 0 #bfa, 0 2px #bfa, 0 -2px #bfa, 1px 1px #bfa, -1px -1px #bfa, 1px -1px #bfa, -1px 1px " + tmp.ma.color + ",0px 20px 20px " + tmp.ma.color + ";} </style><melg>. . Automelge . .</melg>"}]]]
+                ]],
+                ["row",[
+                    ["column", [["display-text", function() { let x = 3; if (hasMilestone("ee", "1")) {x = 4} return "<span style = 'font-size: 20px'><span style='color:" + "#ffe438" + "'><span style = 'text-shadow: 2px 0 #000'>Upgrades in this section reset on row " + x + " reset.</span></span>"}]]]
+                ]],
                 "blank",
                 ["row", [["upgrade", 101]]],
                 ["row", [["upgrade", 201],["upgrade", 202]]],
+                ["row", [["upgrade", 301],["upgrade", 302],["upgrade", 303],["upgrade", 304]]],
+                "blank",
+                ["row",[
+                    ["column", [["display-text", function() {if (hasMilestone("sp", "1"))return "<span style = 'font-size: 60px'><span style = 'text-shadow: 2px 0 #000, -2px 0 #fff, 0 2px #fff, 0 -2px #fff, 1px 1px #fff, -1px -1px #fff, 1px -1px #fff, -1px 1px #fff, 0px 10px 20px #ffffff '>. . Autophoto . .</span></span>"}]]]
+                ]],
+                ["row",[
+                    ["column", [["display-text", function() {if (hasMilestone("sp", "1"))return "<span style = 'font-size: 20px'><span style = 'text-shadow: 2px 0 #000'>Upgrades in this section reset on row 4 reset.</span></span>"}]]]
+                ]],
+                "blank",
+                ["row", [["upgrade", 401]]],
+                ["row", [["upgrade", 501],["upgrade", 502]]],
+                ["row", [["upgrade", 601],["upgrade", 602],["upgrade", 603],["upgrade", 604]]],
             ],
 
         }
@@ -157,11 +203,21 @@ addLayer("i", {
     }
   },
   101:{
+    fullDisplay() {
+       return "<h3><b>Automation: 1</b></h3><p>Melge Upgrade 1 doesn't reset</p><br><p>Cost: 200 Melge Essence</p>"
 
-    title: "Automation: 1",
-    description: "Melge Upgrade 1 doesn't reset.",
-    cost: new Decimal(2), 
-    style() {   
+    },
+    canAfford() {
+        if ( player.m.points.greaterThan(new Decimal(200))) return true
+        return false
+    },
+
+    pay() {
+        //player["i"].points = player["i"].points.sub(new Decimal(1))
+        player.m.points = player.m.points.sub(new Decimal(200))
+    },
+
+    style() {
         a={
         'border': '1px dotted',
         'border-radius': '2px',
@@ -169,7 +225,7 @@ addLayer("i", {
         'height' : '25px',
         }
         if(hasUpgrade(this.layer, this.id)) a = {
-            'background-color': '#e8e0a0', 
+            'background-color': '#e8e0a0',
             'border-radius': '2px',
             'border': '1px dotted',
             'width' : '500px',
@@ -181,10 +237,21 @@ return a
   },
   201:{
 
-    title: "Automation: 2",
-    description: "Melge Upgrades 2, 3, and 4 don't reset.",
-    cost: new Decimal(10), 
-    style() {   
+      fullDisplay() {
+          return "<h3><b>Automation: 2</b></h3><p>Melge Upgrades 2, 3, and 4 don't reset</p><br><p>Cost: 1 Improver & 2000 Melge Essence</p>"
+
+      },
+      canAfford() {
+          if (player.i.points.greaterThan(new Decimal(1)) && player.m.points.greaterThan(new Decimal(200))) return true
+          return false
+      },
+
+      pay() {
+          player["i"].points = player["i"].points.sub(new Decimal(1))
+          player.m.points = player.m.points.sub(new Decimal(2000))
+      },
+      unlocked() { return hasUpgrade("i", 101)},
+    style() {
         a={
         'border': '1px dotted',
         'border-radius': '2px',
@@ -192,7 +259,7 @@ return a
         'height' : '25px',
         }
         if(hasUpgrade(this.layer, this.id)) a = {
-            'background-color': '#e8e0a0', 
+            'background-color': '#e8e0a0',
             'border': '1px dotted',
             'border-radius': '2px',
             'width' : '250px',
@@ -204,10 +271,21 @@ return a
   },
   202:{
 
-    title: "Automation: 3",
-    description: "Unlocks a method to generate melge essence automatically...",
-    cost: new Decimal(10), 
-    style() {   
+      fullDisplay() {
+          return "<h3><b>Automation: 3</b></h3><p>Melge Upgrade 5 doesn't reset.</p><br><p>Cost: 15 Improvers & 1e6 Melge Essence</p>"
+
+      },
+      canAfford() {
+          if (player.i.points.greaterThan(new Decimal(14)) && player.m.points.greaterThan(new Decimal(1e6))) return true
+          return false
+      },
+
+      pay() {
+          player["i"].points = player["i"].points.sub(new Decimal(15))
+          player.m.points = player.m.points.sub(new Decimal(1e6))
+      },
+      unlocked() { return hasUpgrade("i", 101)},
+    style() {
         a={
         'border': '1px dotted',
         'border-radius': '2px',
@@ -215,7 +293,7 @@ return a
         'height' : '25px',
         }
         if(hasUpgrade(this.layer, this.id)) a = {
-            'background-color': '#e8e0a0', 
+            'background-color': '#e8e0a0',
             'border': '1px dotted',
             'border-radius': '2px',
             'width' : '250px',
@@ -225,9 +303,388 @@ return a
 return a
 },
   },
+  301:{
+
+      fullDisplay() {
+          return "<h3><b>Automation: 4</b></h3><p>Unlocks a method to generate melge essence...</p><br><p>Cost: 15 Improvers & 7500 Melge Essence</p>"
+
+      },
+      canAfford() {
+          if (player.i.points.greaterThan(new Decimal(15)) && player.m.points.greaterThan(new Decimal(7500))) return true
+          return false
+      },
+
+      pay() {
+          player["i"].points = player["i"].points.sub(new Decimal(15))
+          player.m.points = player.m.points.sub(new Decimal(7500))
+      },
+      unlocked() { return hasUpgrade("i", 201) && hasUpgrade("i", 202)},
+      style() {
+          a={
+              'border': '1px dotted',
+              'border-radius': '2px',
+              'width' : '125px',
+              'height' : '25px',
+          }
+          if(hasUpgrade(this.layer, this.id)) a = {
+              'background-color': '#e8e0a0',
+              'border': '1px dotted',
+              'border-radius': '2px',
+              'width' : '125px',
+              'height' : '25px',
+
+          }
+          return a
+      },
+        },
+        302:{
+
+            fullDisplay() {
+                return "<h3><b>Automation: 5</b></h3><p>You can buy 10 Melge Fabricators.</p><br><p>Cost: 999 Improvers & 1 Photon</p>"
+
+            },
+            canAfford() {
+                if (player.i.points.greaterThan(new Decimal(999)) && player.p.points.greaterThan(new Decimal(0))) return true
+                return false
+            },
+
+            pay() {
+                player["i"].points = player["i"].points.sub(new Decimal(999))
+                if (!hasMilestone("p", 2)) {
+                player.p.points = player.p.points.sub(new Decimal(1))
+                }
+            },
+            unlocked() { return hasUpgrade("i", 201) && hasUpgrade("i", 202)},
+            style() {
+                a={
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+                }
+                if(hasUpgrade(this.layer, this.id)) a = {
+                    'background-color': '#e8e0a0',
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+
+                }
+                return a
+            },
+        },
+        303:{
+
+            fullDisplay() {
+                return "<h3><b>Automation: 6</b></h3><p>Unlocks (and keeps) a new melge upgrade.</p><br><p>Cost: 999 Improvers & 1e15 Melge Essence</p>"
+
+            },
+            canAfford() {
+                if (player.i.points.greaterThan(new Decimal(999)) && player.m.points.greaterThan(new Decimal(1e15))) return true
+                return false
+            },
+
+            pay() {
+                player["i"].points = player["i"].points.sub(new Decimal(999))
+                player.m.points = player.m.points.sub(new Decimal(1e15))
+            },
+            unlocked() { return hasUpgrade("i", 201) && hasUpgrade("i", 202)},
+            style() {
+                a={
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+                }
+                if(hasUpgrade(this.layer, this.id)) a = {
+                    'background-color': '#e8e0a0',
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+
+                }
+                return a
+            },
+        },
+        304:{
+
+            fullDisplay() {
+                return "<h3><b>Automation: 7</b></h3><p>Unlocks (and keeps) another new melge upgrade.</p><br><p>Cost: 999 Improvers & 1e15 Melge Essence</p>"
+
+            },
+            canAfford() {
+                if (player.i.points.greaterThan(new Decimal(999)) && player.m.points.greaterThan(new Decimal(1e15))) return true
+                return false
+            },
+
+            pay() {
+                player["i"].points = player["i"].points.sub(new Decimal(999))
+                player.m.points = player.m.points.sub(new Decimal(1e15))
+            },
+            unlocked() { return hasUpgrade("i", 201) && hasUpgrade("i", 202)},
+            style() {
+                a={
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+                }
+                if(hasUpgrade(this.layer, this.id)) a = {
+                    'background-color': '#e8e0a0',
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+
+                }
+                return a
+            },
+        },
+        401:{
+            fullDisplay() {
+                return "<h3><b>Automation: 8</b></h3><p>Keep Subatomic Breakthrough on reset</p><br><p>Cost: 1e30 Light Energy</p>"
+
+            },
+            canAfford() {
+                if ( player.p.power.gte(new Decimal(1e30))) return true
+                return false
+            },
+
+            pay() {
+                //player["i"].points = player["i"].points.sub(new Decimal(1))
+                player.p.power = player.p.power.sub(new Decimal(1e30))
+            },
+
+            style() {
+                a={
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'border-color': '#ffffff',
+                    'width' : '500px',
+                    'height' : '25px',
+                }
+                if(hasUpgrade(this.layer, this.id)) a = {
+                    'background-color': '#e8e0a0',
+                    'border-radius': '2px',
+                    'border': '3px dotted',
+                    'border-color': '#ffffff',
+                    'width' : '500px',
+                    'height' : '25px',
+
+                }
+                return a
+            },
+        },
+        501:{
+
+            fullDisplay() {
+                return "<h3><b>Automation: 9</b></h3><p>Autobuy Photons</p><br><p>Cost: 1 Subatomic Particle & 1e35 light energy</p>"
+
+            },
+            canAfford() {
+                if (player.sp.points.gte(new Decimal(1)) && player.p.power.gte(new Decimal(1e35))) return true
+                return false
+            },
+
+            pay() {
+                player["sp"].points = player["sp"].points.sub(new Decimal(1))
+                player[p].power = player[p].power.sub(new Decimal(1e35))
+            },
+            unlocked() { return hasUpgrade("i", 101)},
+            style() {
+                a={
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '250px',
+                    'height' : '25px',
+                }
+                if(hasUpgrade(this.layer, this.id)) a = {
+                    'background-color': '#e8e0a0',
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '250px',
+                    'height' : '25px',
+
+                }
+                return a
+            },
+        },
+        502:{
+
+            fullDisplay() {
+                return "<h3><b>Automation: 3</b></h3><p>Melge Upgrade 5 doesn't reset.</p><br><p>Cost: 15 Improvers & 1e6 Melge Essence</p>"
+
+            },
+            canAfford() {
+                if (player.i.points.greaterThan(new Decimal(14)) && player.m.points.greaterThan(new Decimal(1e6))) return true
+                return false
+            },
+
+            pay() {
+                player["i"].points = player["i"].points.sub(new Decimal(15))
+                player.m.points = player.m.points.sub(new Decimal(1e6))
+            },
+            unlocked() { return hasUpgrade("i", 101)},
+            style() {
+                a={
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '250px',
+                    'height' : '25px',
+                }
+                if(hasUpgrade(this.layer, this.id)) a = {
+                    'background-color': '#e8e0a0',
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '250px',
+                    'height' : '25px',
+
+                }
+                return a
+            },
+        },
+        601:{
+
+            fullDisplay() {
+                return "<h3><b>Automation: 4</b></h3><p>Unlocks a method to generate melge essence...</p><br><p>Cost: 15 Improvers & 7500 Melge Essence</p>"
+
+            },
+            canAfford() {
+                if (player.i.points.greaterThan(new Decimal(15)) && player.m.points.greaterThan(new Decimal(7500))) return true
+                return false
+            },
+
+            pay() {
+                player["i"].points = player["i"].points.sub(new Decimal(15))
+                player.m.points = player.m.points.sub(new Decimal(7500))
+            },
+            unlocked() { return hasUpgrade("i", 201) && hasUpgrade("i", 202)},
+            style() {
+                let a={
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+                }
+                if(hasUpgrade(this.layer, this.id)) a = {
+                    'background-color': '#e8e0a0',
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+
+                }
+                return a
+            },
+        },
+        602:{
+
+            fullDisplay() {
+                return "<h3><b>Automation: 5</b></h3><p>You can buy 10 Melge Fabricators.</p><br><p>Cost: 999 Improvers & 1 Photon</p>"
+
+            },
+            canAfford() {
+                if (player.i.points.greaterThan(new Decimal(999)) && player.p.points.greaterThan(new Decimal(0))) return true
+                return false
+            },
+
+            pay() {
+                player["i"].points = player["i"].points.sub(new Decimal(999))
+                if (!hasMilestone("p", 2)) {
+                    player.p.points = player.p.points.sub(new Decimal(1))
+                }
+            },
+            unlocked() { return hasUpgrade("i", 201) && hasUpgrade("i", 202)},
+            style() {
+                a={
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+                }
+                if(hasUpgrade(this.layer, this.id)) a = {
+                    'background-color': '#e8e0a0',
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+
+                }
+                return a
+            },
+        },
+        603:{
+
+            fullDisplay() {
+                return "<h3><b>Automation: 6</b></h3><p>Unlocks (and keeps) a new melge upgrade.</p><br><p>Cost: 999 Improvers & 1e15 Melge Essence</p>"
+
+            },
+            canAfford() {
+                if (player.i.points.greaterThan(new Decimal(999)) && player.m.points.greaterThan(new Decimal(1e15))) return true
+                return false
+            },
+
+            pay() {
+                player["i"].points = player["i"].points.sub(new Decimal(999))
+                player.m.points = player.m.points.sub(new Decimal(1e15))
+            },
+            unlocked() { return hasUpgrade("i", 201) && hasUpgrade("i", 202)},
+            style() {
+                a={
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+                }
+                if(hasUpgrade(this.layer, this.id)) a = {
+                    'background-color': '#e8e0a0',
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+
+                }
+                return a
+            },
+        },
+        604:{
+
+            fullDisplay() {
+                return "<h3><b>Automation: 7</b></h3><p>Unlocks (and keeps) another new melge upgrade.</p><br><p>Cost: 999 Improvers & 1e15 Melge Essence</p>"
+
+            },
+            canAfford() {
+                if (player.i.points.greaterThan(new Decimal(999)) && player.m.points.greaterThan(new Decimal(1e15))) return true
+                return false
+            },
+
+            pay() {
+                player["i"].points = player["i"].points.sub(new Decimal(999))
+                player.m.points = player.m.points.sub(new Decimal(1e15))
+            },
+            unlocked() { return hasUpgrade("i", 201) && hasUpgrade("i", 202)},
+            style() {
+                a={
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+                }
+                if(hasUpgrade(this.layer, this.id)) a = {
+                    'background-color': '#e8e0a0',
+                    'border': '1px dotted',
+                    'border-radius': '2px',
+                    'width' : '125px',
+                    'height' : '25px',
+
+                }
+                return a
+            },
+        },
     },
     requires() {
-        x = new Decimal(1500)
+        x = new Decimal(800)
         y = new Decimal(1)
         if (player.i.unlockOrder > 0 && !hasAchievement("a", 23)) x = new Decimal(5e11), y = y.times(3)
         x = x.times(y)
@@ -256,10 +713,10 @@ return a
         effectDescription() { s = "Multiply Improver Effect by 10"
 
         return s
-    }, 
-    style() {                     
+    },
+    style() {
         if(hasMilestone(this.layer, this.id)) return {
-            'background-color': '#e8e0a0' 
+            'background-color': '#e8e0a0'
 }
 },
     unlocked () {x = true; return x},
@@ -269,10 +726,10 @@ return a
     effectDescription() { s = "among us placeholder sus!"
 
     return s
-}, 
-style() {                     
+},
+style() {
     if(hasMilestone(this.layer, this.id)) return {
-        'background-color': '#e8e0a0' 
+        'background-color': '#e8e0a0'
 }
 },
 unlocked () {x = false; if (hasMilestone("i", 0)) x = true; return x},
@@ -284,6 +741,6 @@ unlocked () {x = false; if (hasMilestone("i", 0)) x = true; return x},
 
     increaseUnlockOrder: ["p"],
     layerShown(){return true}
-    
+
 
 })

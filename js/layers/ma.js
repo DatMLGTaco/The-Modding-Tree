@@ -1,4 +1,5 @@
 
+
 addLayer("ma", {
     symbol: "Ma",
     name: "The Machine",
@@ -65,7 +66,7 @@ addLayer("ma", {
 
     compBuff(){
 
-        return format(player.ma.points.log(1.01).add(1).times(tmp.ma.upgrades[43].effect))
+        return format(player.ma.points.log(1.01).add(1).multiply(tmp.ma.upgrades[43].effect).times(tmp.ma.buyables[12].effect))
 
     },
 
@@ -164,42 +165,21 @@ addLayer("ma", {
         
     branches: ["i"],
 
-
-
-
-
-
-
-
-
-
-
 /* upgrades below */
-
-
-
-
-
-
-
-
-
-
-
 
     upgrades: {
         51: {
             title: "Chipset Integration",
             description: "Increases Hz/CPU",
-            cost: new Decimal(0.1),   
+            cost: new Decimal(0.1),
             currencyDisplayName: "research points",
             currencyInternalName: "research",
-            currencyLayer: "ma",  
-            style() {                     
+            currencyLayer: "ma",
+            style() {
                 if(hasUpgrade(this.layer, this.id)) return {
                     'background-color': '#ffcb52' ,
 
-            
+
             }
         },
         branches(){
@@ -210,11 +190,11 @@ addLayer("ma", {
         52: {
             title: "Better Hashing",
             description: "Increases Hz > research point gain.",
-            cost: new Decimal(5),   
+            cost: new Decimal(5),
             currencyDisplayName: "research points",
             currencyInternalName: "research",
-            currencyLayer: "ma",  
-            style() {                     
+            currencyLayer: "ma",
+            style() {
                 if(hasUpgrade(this.layer, this.id)) return {
                     'background-color': '#ffcb52' ,
 
@@ -231,12 +211,12 @@ addLayer("ma", {
     53: {
         title: "Research extraordinaire",
         description: "Heavily improves research generation and unlocks new Tech Tree unlocks.",
-        cost: new Decimal(85),   
+        cost: new Decimal(85),
         currencyDisplayName: "research points",
         currencyInternalName: "research",
-        currencyLayer: "ma", 
+        currencyLayer: "ma",
 
-        style() {                     
+        style() {
             if(hasUpgrade(this.layer, this.id)) return {
                 'background-color': '#ffcb52' ,
                 }
@@ -245,19 +225,19 @@ addLayer("ma", {
         branches(){
             x = "#a0a0a0"
             if (hasUpgrade(this.layer, this.id)) x = tmp.ma.color
-            return [[62, x, 30], [63, x, 30], [52, x, 30], [42, x, 30], [43, x, 30]]}, 
+            return [[62, x, 30], [63, x, 30], [52, x, 30], [42, x, 30], [43, x, 30]]},
 
-        },  
+        },
 
         54: {
             title: "LASER",
             description: "Unlock DISPLAYs.",
-            cost: new Decimal(1000),   
+            cost: new Decimal(1000),
             currencyDisplayName: "research points",
             currencyInternalName: "research",
-            currencyLayer: "ma", 
+            currencyLayer: "ma",
 
-            style() {                     
+            style() {
                 if(hasUpgrade(this.layer, this.id)) return {
                     'background-color': '#ffcb52' ,
                     }
@@ -266,13 +246,13 @@ addLayer("ma", {
             branches(){
                 x = "#a0a0a0"
                 if (hasUpgrade(this.layer, this.id)) x = tmp.ma.color
-                return [[53, x, 30], ]}, 
+                return [[53, x, 30], ]},
 
-            }, 
+            },
 
         41: {
-            fullDisplay: " ",   
-            style() {                     
+            fullDisplay: " ",
+            style() {
                  return {
                     'background-color': 'transparent' ,
                     'border':'0px',
@@ -280,17 +260,17 @@ addLayer("ma", {
 
             }
         },
-        }, 
+        },
 
 
         42: {
             title: "Realistic Microprocessors",
             description: "Replaces the crappy transistors with actual microprocessors. RAM, VRAM, and Hz multiplied by 1024.",
-            cost: new Decimal(10),   
+            cost: new Decimal(10),
             currencyDisplayName: "research points",
             currencyInternalName: "research",
-            currencyLayer: "ma",  
-            style() {                     
+            currencyLayer: "ma",
+            style() {
                 if(hasUpgrade(this.layer, this.id)) return {
                     'background-color': '#ffcb52' ,
 
@@ -302,13 +282,13 @@ addLayer("ma", {
         43: {
             title: "Quantum What?",
             description: "Total Subatomic Particles increase Computational Power effect.",
-            cost: new Decimal(20),   
+            cost: new Decimal(20),
             currencyDisplayName: "research points",
             currencyInternalName: "research",
-            currencyLayer: "ma", 
-            effect() {return format(player.sp.total.pow(0.8).div(5))}, 
+            currencyLayer: "ma",
+            effect() {return format(player.sp.total.pow(0.8).div(5))},
             effectDisplay() {return tmp.ma.upgrades[43].effect + "x"},
-            style() {                     
+            style() {
                 if(hasUpgrade(this.layer, this.id)) return {
                     'background-color': '#ffcb52' ,
                     }
@@ -317,59 +297,59 @@ addLayer("ma", {
             branches(){
                 x = "#a0a0a0"
                 if (hasUpgrade(this.layer, this.id)) x = tmp.ma.color
-                return [[42, x, 30]]}, 
+                return [[42, x, 30]]},
 
-            },    
+            },
             44: {
                 title: "Subatomic Binding.",
                 description: "Unlock the ability to synthesize atoms in the Isotopic Separator",
-                cost: new Decimal(1000),   
+                cost: new Decimal(1000),
                 currencyDisplayName: "research points",
                 currencyInternalName: "research",
-                currencyLayer: "ma", 
-    
-                style() {                     
+                currencyLayer: "ma",
+
+                style() {
                     if(hasUpgrade(this.layer, this.id)) return {
                         'background-color': '#ffcb52' ,
                         }
                     },
-    
+
                 branches(){
                     x = "#a0a0a0"
                     if (hasUpgrade(this.layer, this.id)) x = tmp.ma.color
-                    return [[54, x, 30], ]}, 
-    
-                }, 
+                    return [[54, x, 30], ]},
+
+                },
             62: {
                 title: "Where were the fans",
                 description: "CPUs and GPUs produce more Hz and VRAM, respectively.",
-                cost: new Decimal(15),   
+                cost: new Decimal(15),
                 currencyDisplayName: "research points",
                 currencyInternalName: "research",
-                currencyLayer: "ma", 
-                effect() {if (hasUpgrade("ma", 63))return format(new Decimal(144)); else return format(new Decimal(12))}, 
-                effectDisplay() {return tmp.ma.upgrades[62].effect*100 + "% more efficient."},
-                style() {                     
+                currencyLayer: "ma",
+                effect() {if (hasUpgrade("ma", 63))return new Decimal(144); else return new Decimal(12)},
+                effectDisplay() {return format(tmp.ma.upgrades[62].effect*100) + "% more efficient."},
+                style() {
                     if(hasUpgrade(this.layer, this.id)) return {
                         'background-color': '#ffcb52' ,
                         }
                     },
-    
+
                 branches(){
                     x = "#a0a0a0"
                     if (hasUpgrade(this.layer, this.id)) x = tmp.ma.color
-                    return [[52, x, 30]]}, 
-    
-                },  
+                    return [[52, x, 30]]},
+
+                },
         63: {
-            title: "Better fans",
-            description: "Improves fan effect.",
-            cost: new Decimal(35),   
+            title: "Better Fans",
+            description: "Improves Fan effect.",
+            cost: new Decimal(35),
             currencyDisplayName: "research points",
             currencyInternalName: "research",
-            currencyLayer: "ma", 
+            currencyLayer: "ma",
 
-            style() {                     
+            style() {
                 if(hasUpgrade(this.layer, this.id)) return {
                     'background-color': '#ffcb52' ,
                     }
@@ -378,29 +358,36 @@ addLayer("ma", {
             branches(){
                 x = "#a0a0a0"
                 if (hasUpgrade(this.layer, this.id)) x = tmp.ma.color
-                return [[62, x, 30], [41, x, 30]]}, 
+                return [[62, x, 30], ]},
 
             },
             64: {
-                title: "Shoot a hole into the surface of Mars.",
-                description: "Unlock Hellish Energy.",
-                cost: new Decimal(1000),   
+                title() {
+                    if(!hasUpgrade("ma", 62) && !hasUpgrade("ma", 53)) return ( "LOCKED")
+                    return "Shoot a hole into the surface of Mars."
+                },
+                description(){
+                    if(!hasUpgrade("ma", 62) && !hasUpgrade("ma", 53)) return ( "LOCKED UNLESS YOU HAVE LASER UNLOCKED.")
+
+                    return "Unlock Hellish Energy."
+                },
+                cost: new Decimal(1000),
                 currencyDisplayName: "research points",
                 currencyInternalName: "research",
-                currencyLayer: "ma", 
-    
-                style() {                     
+                currencyLayer: "ma",
+
+                style() {
                     if(hasUpgrade(this.layer, this.id)) return {
                         'background-color': '#ffcb52' ,
                         }
                     },
-    
+
                 branches(){
                     x = "#a0a0a0"
                     if (hasUpgrade(this.layer, this.id)) x = tmp.ma.color
-                    return [[54, x, 30], ]}, 
-    
-                },   
+                    return [[54, x, 30], ]},
+
+                },
         // Look in the upgrades docs to see what goes here!
     },
 
@@ -488,20 +475,22 @@ addLayer("ma", {
         12: {
             title: "MORE FANS",
             // COST FUNCTION.
-            cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
-                return x^1.2
+            cost() { // cost for buying xth buyable, can be an object if there are multiple currencies
+                let x=player[this.layer].buyables[this.id]
+                return format(x.pow(1.2))
             },
             // END COST FUNCTION.
 
             // DESCRIPTION
-            display() { return "Add fans to the machine.\n Amount: " + getBuyableAmount(this.layer, this.id) + "\n Cost: " + tmp.ma.buyables[12].cost+ " research points." + "\n Effect: " + tmp.ma.buyables[12].effect},
+            display() { return "Add fans to the machine.\n Amount: " + getBuyableAmount(this.layer, this.id) + "\n Cost: " + tmp.ma.buyables[12].cost+ " research points." + "\n Effect: " + tmp.ma.buyables[12].effect + "x computational power effect"},
             // END DESCRIPTION
 
             canAfford() { return player.ma.research.gte(tmp.ma.buyables[12].cost) },
 
-            effect(x=player[this.layer].buyables[this.id]) {
-                effect = new Decimal(x).times(20).pow(0.9)
-                return new Decimal(format(effect))
+            effect() {
+                let x=getBuyableAmount(this.layer, this.id)
+                let effect = new Decimal(1).add(new Decimal(x).max(1).times(20)).max(1)
+                return effect
             },
 
             style() { 
@@ -616,8 +605,9 @@ addLayer("ma", {
             canAfford() { return player.ma.threads.gte(tmp.ma.buyables[31].cost) },
 
             effect(x=player[this.layer].buyables[this.id]) {
-                effect = new Decimal(2).pow(player.ma.hz)
-                effect = effect.log(1.2).max(1)
+                if(player[this.layer].buyables[this.id] == 0) return new Decimal(1)
+                let effect = new Decimal(2).pow(player.ma.hz)
+                effect = effect.log(1.1).max(1)
                 if (getBuyableAmount("ma", 31) > 0) return new Decimal(format(effect)).times(tmp.ma.buyables[33].effect)
                 return new Decimal(format(effect))
             },
@@ -703,8 +693,8 @@ addLayer("ma", {
 
             effect() {
                 
-                x = player.ma.ram.log(1.01).max(1)
-                x = x.times(tmp.ma.compBuff)
+                let x = player.ma.ram
+                x = x.times(tmp.ma.compBuff).div(3).log(1.001).max(1)
                 return new Decimal(format(x)).max(1)
             },
 
@@ -772,7 +762,7 @@ addLayer("ma", {
             displayText = displayText +"<style>p {color:" + "#ffffff" + "} p {text-shadow: 0 0 10px " + tmp.ma.color + ";} </style><p>You have " + player.ma.threads +" thread" + isPlural(player.ma.threads) + ".</p> <p>Components and Effects: </p><p>" + motherboards + " Motherboard"+isPlural(motherboards)+": provides functionality to the machine"+isPlural(motherboards)+". </p><p> "
             displayText = displayText + cpus+ " CPU"+isPlural(cpus)+": Your CPU"+isPlural(cpus)+" "+cpuPlural+"  running at " + formatUnit(player.ma.hz, "Hz.") + " The improver effect is multiplied by " + format(tmp.ma.buyables[31].effect)+"x"
             displayText = displayText +"</p><p>"+ gpus+ " GPU"+isPlural(gpus)+": Your GPU"+isPlural(gpus)+" "+gpuPlural+"  providing a capacity of " + formatUnit(player.ma.vram, "b") + " of VRAM which is multiplying improver gain by " + format(tmp.ma.buyables[32].effect)+"x"
-            displayText = displayText +"</p><p>"+ ram+ " RAM: Your RAM Stick" +isPlural(ram)+ " " +ramPlural+ " providing " + formatUnit(player.ma.ram, "b") + " of RAM, which provides a " + format(tmp.ma.buyables[33].effect) + "x buff to your CPU"+isPlural(cpus)+" and your GPU"+isPlural(gpus)+"."
+            displayText = displayText +"</p><p>"+ ram+ " RAM: Your RAM Stick" +isPlural(ram)+ " " +ramPlural+ " providing " + formatUnit(player.ma.ram, "b") + " of RAM, which provides a " + format(tmp.ma.buyables[33].effect) + "x buff to your CPU"+isPlural(cpus)+" and your GPU"+isPlural(gpus)+"."+ this.compBuff + "x"
             if (hasUpgrade("ma", 54)) displayText = displayText +"</p><p>"+ displays+ " DISPLAY"+isPlural(displays)+": Your DISPLAY"+isPlural(displays)+" "+displayPlural+ " providing a " + format(tmp.ma.buyables[24].effect) + "x buff to light energy gain and effect."
             return displayText}]]]
     //<p style='color:      ;'>
@@ -801,7 +791,7 @@ content: [  ["row",[
     ["column", [["display-text", function() {
         cpus = getBuyableAmount(this.layer, 31)
         cpuPlural = "is"
-        displayText = "<h3>Your "+player.ma.points+" computational power and your "+formatUnit(player.ma.hz, "Hz")+" are producing "+ tmp.ma.researchGen +" research points/sec.</h3>"
+        displayText = "<h3>Your "+format(player.ma.points)+" computational power and your "+formatUnit(player.ma.hz, "Hz")+" are producing "+ tmp.ma.researchGen +" research points/sec.</h3>"
         displayText = displayText + "<h3> You have <h1>" + format(player.ma.research) + "</h1><h3> research points. "
 
 

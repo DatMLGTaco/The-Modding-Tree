@@ -85,7 +85,6 @@ addLayer("a", {
                 "achievements"
 
     ],
-
     baseResource: "fabric",                 // The name of the resource your prestige gain is based on.
     baseAmount() { return player.points },  // A function to return the current amount of baseResource.
 
@@ -107,6 +106,7 @@ addLayer("a", {
     upgrades: {
         // Look in the upgrades docs to see what goes here!
     },
+
     clickables: {
         11: {
             display() {return "Gib 1 trillion bobux (1e100 fabric)"},
@@ -229,7 +229,7 @@ addLayer("a", {
         },
         24: {
             name: "Sustainable Sourcing",
-            done() { return getBuyableAmount(this.layer, 11) > 4  },
+            done() { return getBuyableAmount("m", 11) > 4  },
             tooltip() {return "Get 5 Melge Fabricators. Reward: Melge Fabricators add to Melge Essence Multiplier and keep one fabricator on reset. Currently: " + format(new Decimal(1).times(getBuyableAmount("m", 11).times(2.5).pow(5)).max(1))+ "x." },
 
             style() {                     

@@ -23,7 +23,7 @@ var colors = {
 		points: "#FFFF00",
 		locked: "#00FFFF",
 		background: "#B00BEE",
-		background_image: "https://tenor.com/view/le-fishe-au-chocolat-gif-24351030",
+		background_image: "https://i.imgur.com/MaDby7k.gif",
 		background_tooltip: "rgba(0, 15, 31, 0.75)",
 		
 	},

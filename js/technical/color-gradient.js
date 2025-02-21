@@ -37,3 +37,4 @@ getGradientColor = function(start_color, end_color, percent) {
  
     return '#' + diff_red + diff_green + diff_blue;
   };
+// Define the wave initialization globally

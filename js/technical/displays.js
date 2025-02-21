@@ -11,7 +11,10 @@ function prestigeButtonText(layer) {
     
         return "You need prestige button text"
 }
-
+function isPlural(num) {
+	if (num == 1) return "";
+	else return "s";
+}
 function constructNodeStyle(layer){
 	let style = []
 	if ((tmp[layer].isLayer && layerunlocked(layer)) || (!tmp[layer].isLayer && tmp[layer].canClick))

@@ -553,7 +553,169 @@ function loadVue() {
 	`
 	})
 
+	// Add to your components.js
+// Usage: ["wave", {frequency: 0.03, amplitude: 50}]
+	Vue.component('wave', {
+		props: ['layer', 'data'],
+		computed: {
+			waveConfig() {
+				if (typeof this.data === 'string') {
+					return tmp[this.layer].waves[this.data];
+				}
+				return this.data || {};
+			},
+			config() {
+				return Object.assign({
+					frequency: 0.02,
+					amplitude: 30,
+					speed: 0.5,
+					color: '#4CAF50',
+					strokeWidth: 2,
+					width: '100%',
+					height: '150px',
+					background: null,
+					borderColor: null,
+					borderWidth: '0',
+					borderRadius: '0',
+					position: 'left',
+					customClass: '',
+					margin: '10px 0',
+					waveGradient: null
+				}, this.waveConfig);
+			},
+			containerStyle() {
+				return {
+					width: this.config.width,
+					height: this.config.height,
+					background: this.config.background,
+					border: this.config.borderColor ?
+						`${this.config.borderWidth} solid ${this.config.borderColor}` : 'none',
+					borderRadius: this.config.borderRadius,
+					margin: this.config.margin + ' ' + this.positionMargin
+				};
+			},
+			positionMargin() {
+				switch(this.config.position) {
+					case 'center': return 'auto';
+					case 'right': return '0 0 0 auto';
+					default: return '0'; // left
+				}
+			}
+		},
+		template: `
+		<div class="wave-container" ref="waveContainer" 
+			:style="containerStyle"
+			:class="[config.customClass, 'wave-position-' + config.position]">
+			<canvas ref="waveCanvas"></canvas>
+			<div class="wave-content" v-if="config.display" v-html="run(config.display)"></div>
+		</div>
+	`,
+		mounted() {
+			this.initWave();
+		},
+		beforeDestroy() {
+			this.cleanup();
+		},
+		methods: {
+			initWave() {
+				const canvas = this.$refs.waveCanvas;
+				const container = this.$refs.waveContainer;
+				if (!canvas || !container) return;
 
+				this.ctx = canvas.getContext('2d');
+				this.period = 0;
+				this.lastTime = performance.now();
+				this.running = true;
+
+				this.resize();
+				window.addEventListener('resize', this.resize);
+				this.animate();
+			},
+			resize() {
+				const canvas = this.$refs.waveCanvas;
+				const container = this.$refs.waveContainer;
+				canvas.width = container.offsetWidth;
+				canvas.height = container.offsetHeight;
+				this.createGradient();
+			},
+			createGradient() {
+				if (!this.config.waveGradient) return;
+
+				const { ctx } = this;
+				const { width, height } = this.$refs.waveCanvas;
+				const gradientConfig = this.config.waveGradient;
+
+				let gradient;
+
+				if (gradientConfig.type === 'linear') {
+					gradient = ctx.createLinearGradient(
+						gradientConfig.x0 * width,
+						gradientConfig.y0 * height,
+						gradientConfig.x1 * width,
+						gradientConfig.y1 * height
+					);
+				} else if (gradientConfig.type === 'radial') {
+					gradient = ctx.createRadialGradient(
+						gradientConfig.x0 * width,
+						gradientConfig.y0 * height,
+						gradientConfig.r0 * Math.min(width, height),
+						gradientConfig.x1 * width,
+						gradientConfig.y1 * height,
+						gradientConfig.r1 * Math.min(width, height)
+					);
+				}
+
+				gradientConfig.stops.forEach(stop => {
+					gradient.addColorStop(stop.offset, stop.color);
+				});
+
+				this.currentGradient = gradient;
+			},
+			animate() {
+				if (!this.running) return;
+
+				const now = performance.now();
+				const deltaTime = (now - this.lastTime) / 1000;
+				this.lastTime = now;
+
+				this.period = (this.period + this.config.speed * deltaTime) % (Math.PI * 2);
+				this.drawWave();
+				requestAnimationFrame(this.animate);
+			},
+			drawWave() {
+				const { ctx } = this;
+				const { width, height } = this.$refs.waveCanvas;
+				const { frequency, amplitude, strokeWidth } = this.config;
+
+				ctx.clearRect(0, 0, width, height);
+				ctx.beginPath();
+				ctx.moveTo(0, height/2);
+
+				// Draw wave path
+				for(let x = 0; x < width; x++) {
+					const y = height/2 + amplitude * Math.sin(frequency * x + this.period);
+					ctx.lineTo(x, y);
+				}
+
+				// Apply styling
+				ctx.lineWidth = strokeWidth;
+				ctx.strokeStyle = this.currentGradient || this.config.color;
+				ctx.stroke();
+			},
+			cleanup() {
+				this.running = false;
+				window.removeEventListener('resize', this.resize);
+			}
+		},
+		watch: {
+			data: {
+				deep: true,
+				handler() {
+					this.createGradient();
+				}
+			}
+		}
+	});
 	// Updates the value in player[layer][data]
 	Vue.component('text-input', {
 		props: ['layer', 'data'],

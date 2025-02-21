@@ -99,7 +99,7 @@ addLayer("sp", {
         },
         1: {requirementDescription: "5 Total Subatomic Particles",
         done() {return player.sp.total.gte(5)}, // Used to determine when to give the milestone
-        effectDescription() { s = "Photon layer (excluding light energy) doesn't reset on reset"
+        effectDescription() { s = "Unlocks Photon Layer Automation in the Improver Automation Tab"
         return s
         } 
         },
@@ -289,4 +289,6 @@ addLayer("sp", {
         {key: "s", description: "S: Reset for subatomic particles", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
     increaseUnlockOrder: ["ma"]
+
+
 })

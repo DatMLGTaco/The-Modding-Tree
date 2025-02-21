@@ -31,8 +31,8 @@ addLayer("ee", {
 
     requires(){ 
         
-        if (hasAchievement("a", 34)) return new Decimal(1e60).div(player.ma.ram.pow(1.1).times(99.333).plus(6))
-        return new Decimal(1e60)},              // The amount of the base needed to  gain 1 of the prestige currency.
+        if (hasAchievement("a", 34)) return new Decimal(1e100).div(player.ma.ram.pow(1.1).times(99.333).plus(6))
+        return new Decimal(1e100)},              // The amount of the base needed to  gain 1 of the prestige currency.
                                             // Also the amount required to unlock the layer.
 
     type: "static",                         // Determines the formula used for calculating prestige currency.
@@ -60,13 +60,13 @@ addLayer("ee", {
         },
         1: {requirementDescription: "3 EE",
         done() {return player.ee.best.gte(3)}, // Used to determine when to give the milestone
-        effectDescription() { s = "Keep Melge upgrades and milestones on all row 3 resets or below."
+        effectDescription() { s = "Keep Improver Automation on all row 3 resets or below."
         return s
         } 
         },
         2: {requirementDescription: "15 EE",
         done() {return player.ee.best.gte(15)}, // Used to determine when to give the milestone
-        effectDescription() { s = "Keep all row 2 milestones on all row 3 resets."
+        effectDescription() { s = "Keep all row 2 upgrades on all row 3 resets"
         return s
         } 
         },

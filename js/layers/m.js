@@ -10,22 +10,11 @@ addLayer("m", {
     requires: new Decimal(10), // Can be a function that takes requirement increases into account
     resource: "melge essence", // Name of prestige currency
     passiveGeneration() {
+        
         let gen = new Decimal(0)
-        if(getBuyableAmount(this.layer, 11) > 0 ) gen = new Decimal(5).times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))
+        if(getBuyableAmount(this.layer, 11) > 0 ) gen = tmp.m.buyables[11].effect
         return gen
     },
-        tabFormat: ["main-display",
-        "prestige-button",
-        "blank",
-        "resource-display",
-
-        "milestones",
-        "blank",
-        "upgrades",
-        "blank",
-        "blank",
-        "blank", "blank"
-    ],
     upgrades:{
         11:{
         title: "Melge Factor",
@@ -125,8 +114,10 @@ addLayer("m", {
             if (hasUpgrade(this.layer, 12)) x = new Decimal(0.3)
             y = new Decimal(1)
             z = new Decimal(1.45).div(player.points.max(1).log(2).max(1))
-            if (hasUpgrade(this.layer, 32)) y = new Decimal(1.4), z = z.times(0.1) 
-            return new Decimal(1).plus(player.points.add(1).pow(x.times(y)).log(new Decimal(2).pow(z))).max(1).div(3)
+            if (hasUpgrade(this.layer, 32)) y = new Decimal(1.4), z = z.times(0.1)
+            let i = new Decimal(1).plus(player.points.add(1).pow(x.times(y)).log(new Decimal(2).pow(z))).max(1).div(3)
+            if (i < 1) i = 1
+            return i
         },
         effectDisplay() { return format(upgradeEffect(this.layer, this.id))+"x" }, // Add formatting to the effect
         },
@@ -142,7 +133,7 @@ addLayer("m", {
             },
         unlocked() {
             let unlocked1 = false
-            if (hasUpgrade('m', 22)&&hasAchievement("a", 21)) unlocked1 = true
+            if (hasUpgrade('m', 22)&&hasUpgrade("i", 303)) unlocked1 = true
             return unlocked1
         },
         },
@@ -157,18 +148,19 @@ addLayer("m", {
     },
         unlocked() {
             let unlocked1 = false
-            if (hasUpgrade('m', 23)&&hasAchievement("a", 21)) unlocked1 = true
+            if (hasUpgrade('m', 23)&&hasUpgrade("i", 304)) unlocked1 = true
             return unlocked1
         },
         },
 
     },
-
     automate(){
+        //if(player.tab == "m") makeParticles(coolParticle)
         if (hasMilestone('sp', 0)){
-        if (canBuyBuyable("m", 11)) buyBuyable("m", 11)
-        if (canBuyBuyable("p", 11)) buyBuyable("p", 11)
+            if (canReset(this.layer)&&player.p.points<10) doReset(tmp.p.layer)
+            if (canBuyBuyable("p", 11)) buyBuyable("p", 11)
         }
+
     },
 /*    milestones: {
       
@@ -222,13 +214,20 @@ addLayer("m", {
     doReset(resettingLayer) {
         let keep = [];
         let keepupgrades = [];
+
         if (hasUpgrade("i", 101)) keepupgrades.push(11)
         if (hasUpgrade("i", 201)) keepupgrades.push(21,22,23)
+        if (hasUpgrade("i", 202)) keepupgrades.push(12)
+        if (hasUpgrade("i", 303)) keepupgrades.push(31)
+        if (hasUpgrade("i", 304)) keepupgrades.push(32)
         if (hasMilestone("i", 0)) keep.push("milestones")
         if (hasMilestone("ee", 1))keep.push("milestones"), keep.push("upgrades")
+        if (layers[resettingLayer].row <= layers["i"].row) {
+            keep.push("buyables")
+        }
         if (layers[resettingLayer].row > this.row) {
             layerDataReset("m", keep)
-            player[this.layer].upgrades = keepupgrades
+            if (canReset(this.layer)&&player.p.points<10) doReset(this.layer)
         }
     },
     baseResource: "fabric", // Name of resource prestige is based on
@@ -239,7 +238,7 @@ addLayer("m", {
         let mult = new Decimal(1)
         if (hasUpgrade('m', 23)&upgradeEffect('m', 23)>1) mult = mult.times(upgradeEffect('m', 23))
         if(getBuyableAmount(this.layer, 11) > 4 ) mult = mult.times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))
-        if (player.i.unlocked) mult = mult.times(player.i.points.add(1));
+        if (player.i.unlocked && hasUpgrade("i", "22")) mult = mult.times(player.i.points.add(1));
         if (player.ee.unlocked) mult = mult.times(tmp.ee.fireEff)
         if (hasUpgrade('sp', 11)) mult = mult.times(upgradeEffect('sp', 11))
         return mult
@@ -249,21 +248,18 @@ addLayer("m", {
 
         return x 
     },
-
     row: 0, // Row the layer is in on the tree (0 is the first row)
     hotkeys: [
         {key: "m", description: "M: Reset for melge points", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-
     layerShown(){return true},
-
-
     buyables: {
         11: {
             title: "Melge Fabricator",
             cost(x=player[this.layer].buyables[this.id]) { // cost for buying xth buyable, can be an object if there are multiple currencies
                 // if (x.gte(25) && tmp[this.layer].buyables[this.id].costScalingEnabled) x = x.pow(2).div(25)
-                base = x.add(10.25)
+                if (x == 0) return new Decimal(1)
+                let base = x.add(10.25)
                 if (hasUpgrade("p", 13)) base = base.sub(tmp.p.upgrades[13].effect)
                 let cost = Decimal.pow(2, base.pow(1.625))
                 if (hasUpgrade("p", 12)) cost = cost.div(upgradeEffect("p", 12))
@@ -271,9 +267,10 @@ addLayer("m", {
             },
 //leave this space
 //leave this space herea
-//what  
-            display() { return "Effect: Generates " + format(new Decimal(5).times(getBuyableAmount(this.layer, 11).add(1).times(2.5).pow(5))) + "% of melge gain/second" + "\nBuy 1 Melge Fabricator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Melge Fabricators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id)))},
-            canAfford() { return player[this.layer].points.gte(this.cost()) },
+//what      eff
+            effect() {return new Decimal(2).times(getBuyableAmount(this.layer, 11).times(2.5).pow(5)).div(2000)},
+            display() { return "Effect: Generates " + format((tmp.m.buyables[11].effect).times(100)) + "% of melge gain/second" + "\nBuy 1 Melge Fabricator\n Amount: " + getBuyableAmount(this.layer, this.id) + " Melge Fabricators" +"\nCost: " + formatWhole(this.cost(getBuyableAmount(this.layer, this.id))) + " Improvers"},
+            canAfford() { return player["i"].points.gte(this.cost()) },
             style() { if (this.canAfford||tmp[this.layer].buyables[this.id]>0){
                 g = 100 - Math.ceil(6*getBuyableAmount(this.layer, 11)) 
                 b = 50 - Math.ceil(3*getBuyableAmount(this.layer, 11)) 
@@ -284,13 +281,15 @@ addLayer("m", {
                 if(r>254) r = 255  
                 return {"background-color": ("rgb("+r+", "+g+", "+b+")"), } }},
             buy() { //amonger type beat
-                player[this.layer].points = player[this.layer].points.sub(this.cost())
+                player["i"].points = player["i"].points.sub(this.cost())
                 setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
             },
-            purchaseLimit: 10,
+            purchaseLimit() { let x = 1
+                if (hasUpgrade('i', 302)) x = 10
+                return x},
             unlocked() {
-                x = false
-                if(hasUpgrade('i', 22)||tmp.m.buyables[11] > 0) x = true
+                let x = false
+                if(hasUpgrade('i', 301)||tmp.m.buyables[11] > 0) x = true
                 return x
             },
         },
@@ -302,12 +301,13 @@ addLayer("m", {
             height: 25,
             progress() { return getBuyableAmount(this.layer, 11)/10 },
             unlocked() {
-                x = false
-                if (getBuyableAmount(this.layer, 11) > 0) x = true
+                let x = false
+                if(hasUpgrade('i', 301)||tmp.m.buyables[11] > 0) x = true
                 return x
             },
-            display() {
-                return getBuyableAmount(this.layer, 11) + "/10 Fabricators"
+            display() {let x = 1
+                if (hasUpgrade('i', 302)) x = 10
+                return getBuyableAmount(this.layer, 11) + "/" + x + " Fabricators"
             },
             fillStyle() {
                 g = 100 - Math.ceil(6*getBuyableAmount(this.layer, 11)) 
@@ -321,9 +321,11 @@ addLayer("m", {
         },
     
     },
+
     tabFormat: ["main-display",
     "prestige-button",
     "resource-display",
+
 
     //im mile(
 //mile long datmlgfingering your datmlgmom😏)
@@ -345,14 +347,13 @@ addLayer("m", {
     "blank"
 ],
 
-
 })
-/*style() { 
-g = 100 - Math.ceil(10*getBuyableAmount(this.layer, 11)) 
-b = 50 - Math.ceil(10*getBuyableAmount(this.layer, 11)) 
-r = 100 + Math.ceil(10*getBuyableAmount(this.layer, 11)) 
+/*style() {
+g = 100 - Math.ceil(10*getBuyableAmount(this.layer, 11))
+b = 50 - Math.ceil(10*getBuyableAmount(this.layer, 11))
+r = 100 + Math.ceil(10*getBuyableAmount(this.layer, 11))
 if (b<1) b = 0
 if (g<1) g = 0
 if (r<101) r = 100, g = 100, b= 100
-if(r>254) r = 255  
+if(r>254) r = 255
 return {"background-color": ("rgb("+r+", "+g+", "+b+")") } }, */

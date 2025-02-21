@@ -84,3 +84,32 @@
 .hl {
 	border-top: 3px solid var(--color);
 }
+/* Base positioning */
+.wave-container {
+    margin: 10px 0; /* Default top/bottom margin */
+    position: relative;
+}
+
+.wave-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    text-align: center;
+    z-index: 1;
+}
+
+/* Extended positioning options */
+.wave-container.wave-position-center {
+    display: flex !important;
+    justify-content: center;
+}
+
+.wave-container.wave-position-left {
+    margin-right: auto;
+}
+
+.wave-container.wave-position-right {
+    margin-left: auto;
+}
